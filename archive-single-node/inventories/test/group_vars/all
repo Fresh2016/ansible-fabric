@@ -1,0 +1,69 @@
+---
+# file: inventories/test/group_vars/all.yml
+## roles | common
+image_pull_list:
+  - hyperledger/fabric-couchdb:x86_64-1.0.0-alpha
+  - hyperledger/fabric-baseos:x86_64-0.3.0
+  - hyperledger/fabric-baseimage:x86_64-0.3.0
+  - hyperledger/fabric-ccenv:x86_64-1.0.0-alpha
+  - hyperledger/fabric-ca:x86_64-1.0.0-alpha
+  - hyperledger/fabric-orderer:x86_64-1.0.0-alpha
+  - hyperledger/fabric-peer:x86_64-1.0.0-alpha
+
+image_tag_list:
+  - image: hyperledger/fabric-ca:x86_64-1.0.0-alpha
+    tag: hyperledger/fabric-ca:latest
+  - image: hyperledger/fabric-ccenv:x86_64-1.0.0-alpha
+    tag: hyperledger/fabric-ccenv:latest
+  - image: hyperledger/fabric-orderer:x86_64-1.0.0-alpha
+    tag: hyperledger/fabric-orderer:latest
+  - image: hyperledger/fabric-peer:x86_64-1.0.0-alpha
+    tag: hyperledger/fabric-peer:latest
+
+## roles | couchdb
+image_couchdb: hyperledger/fabric-couchdb:x86_64-1.0.0-alpha
+couchdb_node_id: couchdb
+couchdb_expose_port: 5984
+couchdb_listen_port: 5984
+couchdb_user: admin
+couchdb_password: 03cf8b1c37e1
+
+## roles | fabric-ca
+image_fabric_ca: hyperledger/fabric-ca:latest
+ca_listen_port: 7054
+ca_expose_port: 8888
+#ca_org_id: peerOrg1
+
+## roles | fabric-orderer
+image_fabric_orderer: hyperledger/fabric-orderer:latest
+#orderder_listen_port: 8050
+#orderer_expose_port: 8050
+orderder_listen_port: 7050
+orderer_expose_port: 7050
+#orderer_msp_id: OrdererMSP
+#orderer_org_id: ordererOrg1
+#log_level: INFO
+
+
+## roles | fabric-peer
+image_fabric_peer: hyperledger/fabric-peer:latest
+#peer_node_id: peer1
+peer_network_id: jcloud
+#peer_org_id: peerOrg1
+#peer_msp_id: Org1MSP
+peer_listen_port: 7051
+peer_expose_listen_port: 7051
+peer_events_port: 7053
+peer_expose_events_port: 7053
+peer_gossip_orgleader: false
+peer_gossip_ip: peer2
+peer_gossip_port: 7051
+peer_gossip_expose_port: 7051
+#orderer_expose_ip: orderer
+#orderer_expose_port: 8050
+log_level: DEBUG
+ledger_state_database: CouchDB
+#couchdb_expose_ip: couchdb
+#couchdb_expose_port: 5984
+#couchdb_user: admin
+#couchdb_password: 03cf8b1c37e1

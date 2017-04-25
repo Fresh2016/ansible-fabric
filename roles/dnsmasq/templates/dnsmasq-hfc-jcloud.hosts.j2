@@ -1,0 +1,4 @@
+{% for host in groups['all'] %}
+{{ hostvars[host].ansible_host }} {{ hostvars[host].inventory_hostname_short|lower }}
+{% endfor -%} 
+

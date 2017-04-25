@@ -1,0 +1,6 @@
+---
+# file: inventories/prod/group_vars/fabric-ca.yml
+
+ca_listen_port: 7054
+ca_expose_port: 7054
+#ca_org_id: peerOrg1

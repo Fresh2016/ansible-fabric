@@ -1,0 +1,43 @@
+---
+# file: prod.yml
+- name: Run roles - dnsmasq
+  hosts: dnsmasq
+  roles:
+    - dnsmasq
+
+- name: Run roles - monitor-server
+  hosts: monitor-server
+  roles:
+    - monitor-server
+    - monitor-client
+  #remote_user: ubuntu
+  #become: yes
+  #become_method: sudo
+
+#- name: Run roles - couchdb
+#  hosts: fabric-couchdb
+#  roles:
+#    - common
+#    - couchdb
+#    - monitor-client
+
+- name: Run roles - fabric-ca
+  hosts: fabric-ca
+  roles:
+    - common
+    - fabric-ca
+    - monitor-client
+
+- name: Run roles - fabric-orderer
+  hosts: fabric-orderer
+  roles:
+    - common
+    - fabric-orderer
+    - monitor-client
+
+- name: Run roles - fabrice-peer
+  hosts: fabric-peer
+  roles:
+    - common
+    - fabric-peer
+    - monitor-client

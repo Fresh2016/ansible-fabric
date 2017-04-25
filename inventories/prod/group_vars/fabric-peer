@@ -1,0 +1,40 @@
+---
+# file: inventories/prod/group_vars/fabric-peer.yml
+
+#
+# peer node
+#
+peer_log_level: INFO
+peer_network_id: jcloud
+#peer_org_id: peerOrg1
+peer_listen_port: 7051
+peer_expose_listen_port: 7051
+peer_events_port: 7053
+peer_expose_events_port: 7053
+peer_addressautodetect: false
+# TLS
+peer_tls_enabled: true
+# Gossip
+peer_gossip_useleaderelection: true
+peer_gossip_orgleader: false
+#peer_gossip_ip: peer1
+peer_gossip_port: 7051
+peer_gossip_expose_port: 7051
+peer_gossip_skiphandshake: true
+# MSP
+#peer_msp_id: Org1MSP
+peer_profile_enabled: false
+#docker
+vm_docker_hostconfig_networkmode: fixtures_default
+# Orderer
+orderer_expose_ip: 113.209.68.126
+orderer_expose_port: 7050
+#
+# peer state database
+#
+ledger_state_database: goleveldb
+#ledger_state_database: CouchDB
+couchdb_expose_ip: 113.209.68.126
+couchdb_expose_port: 5984
+couchdb_user: admin
+couchdb_password: 03cf8b1c37e1

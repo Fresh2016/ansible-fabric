@@ -1,0 +1,46 @@
+# file: inventories/prod/hosts
+#
+### -- dnsmasq --
+[dnsmasq]
+dnsmasq_server	        ansible_host=103.237.5.178
+
+
+### -- monitor-server --
+[monitor-server]
+monitor_server          ansible_host=103.237.5.178
+
+### -- fabric-couchdb --
+[fabric-couchdb]
+couchdb1                ansible_host=113.209.68.126
+
+### -- fabric-ca --
+[fabric-ca_peerOrg1]
+ca_peerOrg1             ansible_host=113.209.68.127  ca_org_id=peerOrg1
+
+[fabric-ca_peerOrg2]
+ca_peerOrg2             ansible_host=120.132.114.32  ca_org_id=peerOrg2
+
+[fabric-ca:children]
+fabric-ca_peerOrg1
+fabric-ca_peerOrg2
+
+### -- fabric-orderer --
+[fabric-ordererOrg1]
+ordererOrg1Orderer1      ansible_host=113.209.68.126
+
+[fabric-orderer:children]
+fabric-ordererOrg1
+
+### -- fabric-peer --
+[fabric-peerOrg1]
+peerOrg1Peer1        ansible_host=113.209.68.128  peer_gossip_ip=120.132.114.36
+peerOrg1Peer2        ansible_host=120.132.114.36  peer_gossip_ip=113.209.68.128
+
+[fabric-peerOrg2]
+peerOrg2Peer1        ansible_host=120.132.114.37  peer_gossip_ip=113.209.68.131
+peerOrg2Peer2        ansible_host=113.209.68.131  peer_gossip_ip=120.132.114.37
+
+[fabric-peer:children]
+fabric-peerOrg1
+fabric-peerOrg2
+

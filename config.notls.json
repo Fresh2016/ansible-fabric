@@ -1,0 +1,47 @@
+{
+	"test-network": {
+		"orderer": {
+			"url": "grpc://113.209.68.126:7050",
+			"server-hostname": "ordererOrg1Orderer1",
+			"tls_cacerts": "./app/config/tls/orderer/ca-cert.pem"
+		},
+		"org1": {
+			"name": "peerOrg1",
+			"mspid": "Org1MSP",
+			"ca": "http://113.209.68.127:7054",
+			"peer1": {
+				"requests": "grpc://113.209.68.128:7051",
+				"events": "grpc://113.209.68.128:7053",
+				"server-hostname": "peerOrg1Peer1",
+				"tls_cacerts": "./app/config/tls/peers/peer0/ca-cert.pem",
+				"isAnchor": "true"
+			},
+			"peer2": {
+				"requests": "grpc://120.132.114.36:7051",
+				"events": "grpc://120.132.114.36:7053",
+				"server-hostname": "peerOrg1Peer2",
+				"tls_cacerts": "./app/config/tls/peers/peer1/ca-cert.pem",
+				"isAnchor": "true"
+			}
+		},
+		"org2": {
+			"name": "peerOrg2",
+			"mspid": "Org2MSP",
+			"ca": "http://120.132.114.32:7054",
+			"peer1": {
+				"requests": "grpc://120.132.114.37:7051",
+				"events": "grpc://120.132.114.37:7053",
+				"server-hostname": "peerOrg2Peer1",
+				"tls_cacerts": "./app/config/tls/peers/peer2/ca-cert.pem",
+				"isAnchor": "true"
+			},
+			"peer2": {
+				"requests": "grpc://113.209.68.131:7051",
+				"events": "grpc://113.209.68.131:7053",
+				"server-hostname": "peerOrg2Peer2",
+				"tls_cacerts": "./app/config/tls/peers/peer3/ca-cert.pem",
+				"isAnchor": "true"
+			}
+		}
+	}
+}

@@ -1,0 +1,26 @@
+ALERT peerorg2peer1_down
+  IF absent(container_start_time_seconds{name="peerorg2peer1"})
+  FOR 30s
+  LABELS { severity = "critical" }
+  ANNOTATIONS {
+    summary= "peerorg2peer1 down",
+    description= "container{{ name }} on {{ $labels.instance }} is down for more than 30 seconds."
+  }
+
+ ALERT peerorg2peer1_high_cpu
+  IF sum(rate(container_cpu_usage_seconds_total{name="peerorg2peer1"}[1m])) / count(node_cpu{mode="system"}) * 100 > 10
+  FOR 30s
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+    summary= "peerorg2peer1 high CPU usage",
+    description= "peerorg2peer1 on {{ $labels.instance }} CPU usage is {{ humanize $value}}%."
+  }
+
+ALERT peerorg2peer1_high_memory
+  IF sum(container_memory_usage_bytes{name="peerorg2peer1"}) > 1200000000
+  FOR 30s
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "peerorg2peer1 high memory usage",
+      description = "peerorg2peer1 on {{ $labels.instance }} memory consumption is at {{ humanize $value}}.",
+  }

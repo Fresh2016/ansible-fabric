@@ -1,0 +1,51 @@
+---
+# file: roles/monitor-client/tasks/main.yml
+#
+# docker-image: pull image from the list
+- name: monitor-client | pull docker images
+  docker_image:
+    name: "{{ item.value.image }}"
+    state: present
+  with_dict: "{{ monitor_images }}"
+
+# create monitor-net
+- name: monitor-client | create monitor-net
+  docker_network:
+    name: monitor-net
+
+#
+# nodeexporter
+#
+# docker-container: run nodeexporter
+- name: monitor-client | run nodeexporter
+  docker_container:
+    name: nodeexporter
+    hostname: nodeexporter
+    image: "{{ monitor_images.nodeexporter.image }}"
+    ports:
+      - "{{ nodeexporter_expose_port }}:9100"
+    network_mode: host
+    labels:
+      org.label-schema.group: monitoring
+    state: started
+
+#
+# cadvisor
+#
+# docker-container: run cadvisor
+- name: monitor-client | run cadvisor
+  docker_container:
+    name: cadvisor
+    hostname: cadvisor
+    image: "{{ monitor_images.cadvisor.image }}"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "{{ cadvisor_expose_port }}:8080"
+    network_mode: host
+    labels:
+      org.label-schema.group: monitoring
+    state: started

@@ -1,0 +1,75 @@
+---
+# file: inventories/prod/group_vars/all.yml
+#
+# hfc_images used in tasks
+#
+#   MUST:
+#     - tags, 
+#         - latest tags must be the first one, which is used by running docker containers
+#         - if no tags, must put `[]` due to the playbook need an empty list value
+#
+hfc_images:
+  couchdb:
+    image: shiying/fabric-couchdb:x86_64-1.0.0-snapshot-56b6d12
+    tags: 
+      - hyperledger/fabric-couchdb:latest
+  baseos:
+    image: hyperledger/fabric-baseos:x86_64-0.3.0
+    tags: []
+  baseimage:
+    image: hyperledger/fabric-baseimage:x86_64-0.3.0
+    tags: []
+  ca:
+    image: shiying/fabric-ca:x86_64-1.0.0-snapshot-f0f86b7
+    tags: 
+      - hyperledger/fabric-ca:latest
+  ccenv:
+    image: shiying/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
+    tags: 
+      - hyperledger/fabric-ccenv:latest
+      - hyperledger/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
+  orderer:
+    image: shiying/fabric-orderer:x86_64-1.0.0-snapshot-56b6d12
+    tags: 
+      - hyperledger/fabric-orderer:latest
+  peer:
+    image: shiying/fabric-peer:x86_64-1.0.0-snapshot-56b6d12
+    tags: 
+      - hyperledger/fabric-peer:latest
+
+common_apt_pkgs:
+  - jq
+  - python-pip
+  - apt-transport-https
+  - wget
+  - ca-certificates
+  - vim
+  - curl
+  - xfsprogs
+  - python-software-properties
+
+
+#
+# for monitor
+#
+monitor_images:
+  prometheus:
+    image: prom/prometheus:latest
+  alertmanager: 
+    image: prom/alertmanager:latest
+  grafana: 
+    image: grafana/grafana:latest
+  nodeexporter: 
+    image: prom/node-exporter:latest
+  cadvisor: 
+    image: google/cadvisor:latest
+
+#
+# for monitor-clients
+#
+nodeexporter_listen_port: 9100
+nodeexporter_expose_port: 9100
+
+cadvisor_listen_port: 8080
+cadvisor_expose_port: 8080
+

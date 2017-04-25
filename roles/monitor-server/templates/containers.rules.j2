@@ -1,0 +1,33 @@
+{% for host in groups['all'] %}
+  {% if (hostvars[host].inventory_hostname_short|lower != "monitor_server") and (hostvars[host].inventory_hostname_short|lower != "dnsmasq_server") %}
+
+ALERT {{ hostvars[host].inventory_hostname_short|lower }}_down
+  IF absent(container_start_time_seconds{name="{{ hostvars[host].inventory_hostname_short|lower }}"})
+  FOR 30s
+  LABELS { severity = "critical" }
+  ANNOTATIONS {
+    summary= "{{ hostvars[host].inventory_hostname_short|lower }} down",
+    description= "{{ hostvars[host].inventory_hostname_short|lower }} on {{ '{{ $labels.instance }} is down for more than 30 seconds.' }}"
+  }
+
+ALERT {{ hostvars[host].inventory_hostname_short|lower }}_high_cpu
+  IF sum(rate(container_cpu_usage_seconds_total{name="{{ hostvars[host].inventory_hostname_short|lower }}"}[1m])) / count(node_cpu{mode="system"}) * 100 > 10
+  FOR 30s
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+    summary= "{{ hostvars[host].inventory_hostname_short|lower }} high CPU usage",
+    description= "{{ hostvars[host].inventory_hostname_short|lower }} on {{ '{{ $labels.instance }} CPU usage is {{ humanize $value }}%.' }}"
+  }
+
+ALERT {{ hostvars[host].inventory_hostname_short|lower }}_high_memory
+  IF sum(container_memory_usage_bytes{name="{{ hostvars[host].inventory_hostname_short|lower }}"}) > 1200000000
+  FOR 30s
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "{{ hostvars[host].inventory_hostname_short|lower }} high memory usage",
+      description = "{{ hostvars[host].inventory_hostname_short|lower }} on {{ '{{ $labels.instance }} memory consumption is at {{ humanize $value }}.' }}"
+  }
+
+
+  {% endif %}
+{% endfor %}

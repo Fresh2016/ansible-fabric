@@ -1,0 +1,114 @@
+---
+# file: roles/common/tasks/main.yml
+#
+# file: rm /var/lib/cloud/instance/warnings/non_ec2_md
+- name: common | rm /var/lib/cloud/instance/warnings/non_ec2_md
+  shell: if [ -e {{ item }} ]; then rm -rf {{ item }}/* ; fi
+  with_items: 
+    - /var/lib/cloud/instance/warnings/non_ec2_md
+
+# copy: config /etc/apt/resources.list
+- name: common | config apt repository
+  copy:
+    src: sources.list
+    dest: /etc/apt/sources.list
+    #backup: yes
+    owner: root
+    group: root
+    mode: 0644
+
+# apt: make sure packages installed
+- name: common | install apt packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ common_apt_pkgs }}"
+
+# shell: add apt-key
+- name: common | add apt-key for docker-ce
+  #shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+
+# add docker-ce repository
+- name: common | add apt-repository for docker-ce
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    state: present
+
+# apt: install docker-ce
+- name: common | install docker-ce
+  apt:
+    name: docker-ce
+    state: present
+
+# systemd: enable and stop docker
+- name: common | enable docker service
+  systemd:
+    name: docker
+    enabled: yes
+    state: stopped
+
+# copy: config daemon.json for docker
+- name: common | config daemon.json for docker
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    #backup: yes
+    owner: root
+    group: root
+    mode: 0644 
+
+# systemd: start docker
+- name: common | start docker service
+  systemd:
+    name: docker
+    state: started
+
+# pip: install pip packages
+- name: common | install pip packages
+  pip:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+    - name: pip
+    - name: docker-py
+
+# shell: delete containers
+- name: common | remove all existing containers
+  shell: CONTAINERS=$(docker ps -a --format "{{ '{{' }} .Names {{ '}}' }}" --filter "label=org.jcloud.hyperledger=fabric") ; if [ "${CONTAINERS}" ]; then docker rm -f ${CONTAINERS}; fi
+
+# shell: delete images
+- name: common | remove all unnecessary images
+  shell: IMGS=$(docker images | awk '/-peer*.-/ {print $3}') ; if [ "${IMGS}" ]; then docker rmi -f ${IMGS} ; fi
+
+# docker-image: pull image from the list
+- name: common | pull docker images
+  docker_image:
+    name: "{{ item.value.image }}"
+    state: present
+  with_dict: "{{ hfc_images }}"
+
+# shell: retag images
+- name: common | retag docker images
+  shell: for TAG in {{ item.1 }}; do docker tag {{ item.0.image }} $TAG; done
+  with_subelements:
+    - "{{ hfc_images }}"
+    - tags
+  when: "{{ item.1 | count }} >= 1"
+
+# shell: do some clean up
+- name: common | cleanup existing data
+  shell: if [ -e {{ item }} ]; then rm -rf {{ item }}/* ; fi
+  with_items: 
+    - /hfc-data
+
+# copy backup script for hyperledger fabric
+- name: common | copy fabric-backup.sh for hyperledger fabric
+  copy: 
+    src: fabric-backup.sh
+    dest: /usr/local/bin/fabric-backup.sh
+    owner: root
+    group: root
+    mode: 0755   

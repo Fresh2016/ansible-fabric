@@ -1,0 +1,9 @@
+{
+  "registry-mirrors": ["http://103.237.5.178:5000"],
+  "storage-driver": "overlay",
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "5m",
+    "max-file": "3"
+  }
+}
