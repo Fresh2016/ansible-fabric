@@ -13,8 +13,8 @@
 # docker-container: run cadvisor
 - name: mon-cadvisor | run cadvisor
   docker_container:
-    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
-    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    name: cadvisor
+    hostname: cadvisor
     image: "{{ cadvisor_image }}"
     volumes:
       - /:/rootfs:ro
