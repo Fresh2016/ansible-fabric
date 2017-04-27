@@ -31,10 +31,13 @@ route:
 
   # A default receiver
   receiver: 'default'
-    routes:
-    - receiver: 'amexecutor'
-      match:
-        alertname: PromAmExecutor
+
+  # sub routes
+  routes:
+  # sub routes receiver
+  - receiver: 'amexecutor'
+    match:
+      alertname: PromAmExecutor
 
 receivers:
 - name: 'default'
