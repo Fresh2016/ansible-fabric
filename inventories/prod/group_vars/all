@@ -51,21 +51,6 @@ common_apt_pkgs:
 docker_registry_local_mirror_url: http://103.237.5.178:5000
 
 #
-# for monitor
-#
-monitor_images:
-  prometheus:
-    image: prom/prometheus:latest
-  alertmanager: 
-    image: prom/alertmanager:latest
-  grafana: 
-    image: grafana/grafana:latest
-  nodeexporter: 
-    image: prom/node-exporter:latest
-  cadvisor: 
-    image: google/cadvisor:latest
-
-#
 # for mon-nodeexporter
 #
 nodeexporter_image: prom/node-exporter:latest
