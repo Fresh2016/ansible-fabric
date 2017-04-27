@@ -1,5 +1,5 @@
 ---
-# file: inventories/prod/group_vars/all.yml
+# file: roles/fabric-common/defaults/main.yml
 #
 # hfc_images used in tasks
 #
@@ -47,38 +47,5 @@ common_apt_pkgs:
   - curl
   - xfsprogs
   - python-software-properties
-
+  
 docker_registry_local_mirror_url: http://103.237.5.178:5000
-
-#
-# for monitor
-#
-monitor_images:
-  prometheus:
-    image: prom/prometheus:latest
-  alertmanager: 
-    image: prom/alertmanager:latest
-  grafana: 
-    image: grafana/grafana:latest
-  nodeexporter: 
-    image: prom/node-exporter:latest
-  cadvisor: 
-    image: google/cadvisor:latest
-
-#
-# for mon-nodeexporter
-#
-nodeexporter_image: prom/node-exporter:latest
-
-#nodeexporter_listen_port: 9100
-nodeexporter_expose_port: 9100
-
-#
-# for mon-cadvisor
-#
-cadvisor_image: google/cadvisor:latest
-
-#cadvisor_listen_port: 8080
-cadvisor_expose_port: 8080
-
-

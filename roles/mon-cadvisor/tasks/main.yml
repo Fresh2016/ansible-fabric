@@ -1,0 +1,36 @@
+---
+# file: roles/mon-cadvisor/tasks/main.yml
+#
+# docker-image: pull image from the list
+- name: mon-cadvisor | pull docker images
+  docker_image:
+    name: "{{ cadvisor_image }}"
+    state: present
+
+#
+# cadvisor
+#
+# docker-container: run cadvisor
+- name: mon-cadvisor | run cadvisor
+  docker_container:
+    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    image: "{{ cadvisor_image }}"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "{{ cadvisor_expose_port }}:8080"
+    network_mode: host
+    dns_servers:
+      - "{{ hostvars['dnsmasq1'].ansible_host }}"
+      - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    labels:
+      org.label-schema.group: "monitoring"
+      com.jcloud.group: "monitoring"
+      com.jcloud.nodetype: "cadvisor"
+    restart_policy: unless-stopped
+    restart: yes
+    state: started

@@ -1,0 +1,65 @@
+---
+# file: roles/mon-prometheus/tasks/main.yml
+#
+# docker-image: pull image from the list
+- name: mon-prometheus | pull docker images
+  docker_image:
+    name: "{{ prometheus_image }}"
+    state: present
+#
+# config 
+#
+# copy: copy files for prometheus
+- name: mon-prometheus | copy files for prometheus
+  copy:
+    src: prometheus/
+    dest: /monitor-server/prometheus/etc/
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+
+# template: copy containers.rules for prometheus
+- name: mon-prometheus | copy containers.rules for prometheus
+  template: 
+    src: containers.rules.j2
+    dest: /monitor-server/prometheus/etc/containers.rules
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+
+# template: copy prometheus.yml for prometheus
+- name: mon-prometheus | copy prometheus.yml for prometheus
+  template: 
+    src: prometheus.yml.j2
+    dest: /monitor-server/prometheus/etc/prometheus.yml
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+#
+# launch 
+#
+# docker-container: run prometheus
+- name: mon-prometheus | run prometheus
+  docker_container:
+    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    hostname: "{{ nventory_hostname_short|lower|replace('-','_') }}"
+    image: "{{ prometheus_image }}"
+    volumes:
+      - /monitor-server/prometheus/etc/:/etc/prometheus/
+      - /monitor-server/prometheus/data/:/prometheus/
+    command: -config.file=/etc/prometheus/prometheus.yml -storage.local.path=/prometheus -storage.local.memory-chunks=100000
+    ports:
+      - "{{ prometheus_expose_port }}:9090"
+    dns_servers:
+      - "{{ hostvars['dnsmasq1'].ansible_host }}"
+      - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    labels:
+      org.label-schema.group: "monitoring"
+      com.jcloud.group: "monitoring"
+      com.jcloud.nodetype: "prometheus"
+    restart_policy: unless-stopped
+    restart: yes
+    state: started

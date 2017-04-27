@@ -1,0 +1,46 @@
+---
+# file: roles/mon-amexecutor/tasks/main.yml
+#
+# docker-image: pull image from the list
+- name: mon-amexecutor | pull docker images
+  docker_image:
+    name: "{{ amexecutor_image }}"
+    state: present
+
+#
+# amexecutor
+#
+# copy: copy files for amexecutor
+- name: mon-amexecutor | copy files for amexecutor
+  copy:
+    src: amexecutor/
+    dest: /monitor-server/amexecutor/scripts/
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+
+# docker-container: run amexecutor
+- name: mon-amexecutor | run amexecutor
+  docker_container:
+    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    image: "{{ amexecutor_image }}"
+    env:
+      LISTEN_PORT: "{{ amexecutor_listen_port }}"
+      SCRIPT_FULL_PATH: "/am-executor/scripts/restart_container.sh"
+    volumes:
+      - - /monitor-server/amexecutor/scripts/:/am-executor/scripts/
+    ports:
+      - "{{ amexecutor_expose_port }}:{{ amexecutor_listen_port }}"
+    network_mode: host
+    dns_servers:
+      - "{{ hostvars['dnsmasq1'].ansible_host }}"
+      - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    labels:
+      org.label-schema.group: "monitoring"
+      com.jcloud.group: "monitoring"
+      com.jcloud.nodetype: "amexecutor"
+    restart_policy: unless-stopped
+    restart: yes
+    state: started

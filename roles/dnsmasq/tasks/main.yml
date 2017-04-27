@@ -1,44 +1,39 @@
 ---
 # file: roles/dnsmasq/tasks/main.yml
 #
-# apt: install dnsmasq
-- name: dnsmasq | install dnsmasq
-  apt:
-    name: "{{ item }}"
+# docker-image: pull image from the list
+- name: dnsmasq | pull docker images
+  docker_image:
+    name: "{{ dnsmasq_image }}"
     state: present
-  with_items:
-    - dnsmasq
-    - dnsutils
 
-# copy: copy /etc/default/dnsmasq
-- name: dnsmasq | copy /etc/default/dnsmasq
-  copy:
-    src: etc_default_dnsmasq
-    dest: /etc/default/dnsmasq
-    #backup: yes
-    owner: root
-    group: root
-    mode: 0644 
-
-# copy: copy /etc/dnsmasq-hfc-jcloud.conf
-- name: dnsmasq | copy /etc/dnsmasq-hfc-jcloud.conf
-  copy:
-    src: dnsmasq-hfc-jcloud.conf
-    dest: /etc/dnsmasq-hfc-jcloud.conf
-    #backup: yes
-    owner: root
-    group: root
-    mode: 0644 
-
-# template: copy /etc/dnsmasq-hfc-jcloud.hosts
-- name: dnsmasq | copy /etc/dnsmasq-hfc-jcloud.hosts
+# template: copy /etc/dnsmasq-jcloud-hfc.hosts
+- name: dnsmasq | copy /etc/dnsmasq-jcloud-hfc.hosts
   template: 
-    src: dnsmasq-hfc-jcloud.hosts.j2
-    dest: /etc/dnsmasq-hfc-jcloud.hosts
+    src: hosts.conf.j2
+    dest: /monitor-server/dnsmasq/dnsmasq.d/0.hosts.conf
+    owner: root
+    group: root
+    mode: 0644 
+    force: yes
 
-# systemd: enable and start/restart dnsmasq
-- name: dnsmasq | enable dnsmasq service
-  systemd:
-    name: dnsmasq
-    enabled: yes
-    state: restarted
+# docker-container: run dnsmasq
+- name: dnsmasq | run dnsmasq
+  docker_container:
+    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    image: "{{ dnsmasq_image }}"
+    volumes:
+      - /monitor-server/dnsmasq/dnsmasq.d/:/etc/dnsmasq.d/
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+    capabilities:
+      - NET_ADMIN
+    #network_mode: host
+    labels:
+      com.jcloud.group: "common"
+      com.jcloud.nodetype: "dnsmasq"
+    restart_policy: unless-stopped
+    restart: yes
+    state: started

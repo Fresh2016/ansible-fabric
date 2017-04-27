@@ -4,7 +4,7 @@
 # copy: make sure directories exists
 - name: fabric-orderer | make sure direcoties needed by fabric-orderer exists
   file:
-    path: "/hfc-data/{{ inventory_hostname_short | lower }}/{{ item }}/"
+    path: "/hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ item }}/"
     state: directory
     owner: root
     group: root
@@ -17,8 +17,8 @@
 # copy: copy crypto for fabric-orderer
 - name: fabric-orderer | copy crypto for fabric-orderer
   copy:
-    src: "{{ orderer_org_id | lower }}/orderers/{{ inventory_hostname_short | lower }}/"
-    dest: /hfc-data/{{ inventory_hostname_short | lower }}/configtx/
+    src: "{{ orderer_org_id | lower }}/orderers/{{ inventory_hostname_short|lower|replace('-','_') }}/"
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/configtx/
     owner: root
     group: root
     mode: 0644
@@ -27,43 +27,44 @@
 - name: fabric-orderer | copy env_file for fabric-orderer
   template: 
     src: env_file.j2
-    dest: /hfc-data/{{ inventory_hostname_short | lower }}/restore/env_file
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
 
 # docker_container: launch fabric-orderer
 - name: fabric-orderer | launch fabric-orderer
   docker_container:
-    name: "{{ inventory_hostname_short | lower }}"
-    hostname: "{{ inventory_hostname_short | lower }}"
+    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
     image: "{{ hfc_images.orderer.tags.0 }}"
-    env_file: /hfc-data/{{ inventory_hostname_short | lower }}/restore/env_file
+    env_file: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
     volumes:
-      - /hfc-data/{{ inventory_hostname_short | lower }}/configtx/:/etc/hyperledger/configtx/
-      - /hfc-data/{{ inventory_hostname_short | lower }}/data/:/var/hyperledger/
+      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/
+      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/data/:/var/hyperledger/
     ports:
       - "0.0.0.0:{{ orderer_expose_port }}:{{ orderder_listen_port }}"
-    dns_servers:
-      - "{{ hostvars['dnsmasq_server'].ansible_host }}"
     command: orderer
-    state: started
-    restart_policy: unless-stopped
+    dns_servers:
+      - "{{ hostvars['dnsmasq1'].ansible_host }}"
+      - "{{ hostvars['dnsmasq2'].ansible_host }}"
     labels:
-      org.jcloud.hyperledger: "fabric"
-      org.jcloud.hyperledger.role: "fabric-orderer"
-  register: container_up
+      com.jcloud.group: "fabric"
+      com.jcloud.nodetype: "orderer"
+    restart_policy: always
+    restart: yes
+    state: started
 
-# blockinfile: generate restore script for fabric-orderer
+# template: generate restore script for fabric-orderer
 - name: fabric-orderer | generate restore script for fabric-orderer
   template: 
     src: run_new.sh.j2
-    dest: /hfc-data/{{ inventory_hostname_short | lower }}/restore/run-{{ inventory_hostname_short | lower }}.sh
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
     mode: 0755
 
 # cron: setup cron jobs for backup of fabric-orderer
 - name: fabric-orderer | setup cron jobs for backup of fabric-orderer
   cron:
-    name: backup /hfc-data/{{ inventory_hostname_short | lower }}
-    minute: "{{ ( inventory_hostname_short | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ (( inventory_hostname_short | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
+    name: backup /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}
+    minute: "{{ ( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
-    job: "/usr/local/bin/fabric-backup.sh {{ inventory_hostname_short | lower }}"
-    cron_file: "{{ inventory_hostname_short | lower }}-backup"
+    job: "/usr/local/bin/fabric-backup.sh {{ inventory_hostname_short|lower|replace('-','_') }}"
+    cron_file: "{{ inventory_hostname_short|lower|replace('-','_') }}-backup"

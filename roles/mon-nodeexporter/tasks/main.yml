@@ -1,0 +1,31 @@
+---
+# file: roles/mon-nodeexporter/tasks/main.yml
+#
+# docker-image: pull image from the list
+- name: mon-nodeexporter | pull docker images
+  docker_image:
+    name: "{{ nodeexporter_image }}"
+    state: present
+
+#
+# nodeexporter
+#
+# docker-container: run nodeexporter
+- name: mon-nodeexporter | run nodeexporter
+  docker_container:
+    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    image: "{{ nodeexporter_image }}"
+    ports:
+      - "{{ nodeexporter_expose_port }}:9100"
+    network_mode: host
+    dns_servers:
+      - "{{ hostvars['dnsmasq1'].ansible_host }}"
+      - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    labels:
+      org.label-schema.group: "monitoring"
+      com.jcloud.group: "monitoring"
+      com.jcloud.nodetype: "nodeexporter"
+    restart_policy: unless-stopped
+    restart: yes
+    state: started

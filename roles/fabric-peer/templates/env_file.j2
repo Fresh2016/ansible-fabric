@@ -1,7 +1,7 @@
 # Logging level
 CORE_LOGGING_LEVEL={{ peer_log_level }}
 # Peer settings
-CORE_PEER_ID={{ inventory_hostname_short | lower }}
+CORE_PEER_ID={{ inventory_hostname_short|lower|replace('-','_') }}
 CORE_PEER_NETWORKID={{ peer_network_id | lower }}
 CORE_PEER_LISTENADDRESS=0.0.0.0:{{ peer_listen_port }}
 CORE_PEER_ADDRESS=0.0.0.0:{{ peer_listen_port }}
@@ -20,8 +20,8 @@ CORE_PEER_COMMITTER_LEDGER_ORDERER={{ orderer_expose_ip }}:{{ orderer_expose_por
 CORE_PEER_EVENTS_ADDRESS=0.0.0.0:{{ peer_events_port }}
 # TLS
 CORE_PEER_TLS_ENABLED={{ peer_tls_enabled }}
-CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/configtx/keystore/{{ inventory_hostname_short | lower }}-key.pem
-CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/configtx/signcerts/{{ inventory_hostname_short | lower }}-cert.pem
+CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/configtx/keystore/{{ inventory_hostname_short|lower|replace('-','_') }}-key.pem
+CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/configtx/signcerts/{{ inventory_hostname_short|lower|replace('-','_') }}-cert.pem
 CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/configtx/cacerts/{{ peer_org_id | lower }}-cert.pem
 # Msp settings
 CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/configtx/

@@ -1,0 +1,43 @@
+---
+# file: roles/mon-alertmanager/tasks/main.yml
+#
+# docker-image: pull image from the list
+- name: mon-alertmanager | pull docker images
+  docker_image:
+    name: "{{ alertmanager_image }}"
+    state: present
+
+#
+# alertmanager
+#
+# template: copy files for alertmanager
+- name: mon-alertmanager | copy files for alertmanager
+  template: 
+    src: config.yml.j2
+    dest: /monitor-server/alertmanager/etc/config.yml
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+
+# docker-container: run alertmanager
+- name: mon-alertmanager | run alertmanager
+  docker_container:
+    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    image: "{{ monitor_images.alertmanager.image }}"
+    volumes:
+      - /monitor-server/alertmanager/etc/:/etc/alertmanager/
+    command: -config.file=/etc/alertmanager/config.yml -storage.path=/alertmanager
+    ports:
+      - "{{ alertmanager_expose_port }}:9093"
+    dns_servers:
+      - "{{ hostvars['dnsmasq1'].ansible_host }}"
+      - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    labels:
+      org.label-schema.group: "monitoring"
+      com.jcloud.group: "monitoring"
+      com.jcloud.nodetype: "alertmanager"
+    restart_policy: unless-stopped
+    restart: yes
+    state: started
