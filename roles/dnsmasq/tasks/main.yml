@@ -7,6 +7,15 @@
     name: "{{ dnsmasq_image }}"
     state: present
 
+# file: make sure directories exists
+- name: dnsmasq | make sure direcoties needed by dnsmasq exists
+  file:
+    path: /monitor-server/dnsmasq/dnsmasq.d/
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
 # template: copy /etc/dnsmasq-jcloud-hfc.hosts
 - name: dnsmasq | copy /etc/dnsmasq-jcloud-hfc.hosts
   template: 
