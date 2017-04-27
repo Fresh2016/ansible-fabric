@@ -25,7 +25,7 @@
   docker_container:
     name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
     hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
-    image: "{{ monitor_images.alertmanager.image }}"
+    image: "{{ alertmanager_image }}"
     volumes:
       - /monitor-server/alertmanager/etc/:/etc/alertmanager/
     command: -config.file=/etc/alertmanager/config.yml -storage.path=/alertmanager
