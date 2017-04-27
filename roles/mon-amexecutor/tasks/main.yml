@@ -30,7 +30,7 @@
       LISTEN_PORT: "{{ amexecutor_listen_port }}"
       SCRIPT_FULL_PATH: "/am-executor/scripts/restart_container.sh"
     volumes:
-      - - /monitor-server/amexecutor/scripts/:/am-executor/scripts/
+      - /monitor-server/amexecutor/scripts/:/am-executor/scripts/
     ports:
       - "{{ amexecutor_expose_port }}:{{ amexecutor_listen_port }}"
     network_mode: host
