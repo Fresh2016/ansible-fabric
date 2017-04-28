@@ -110,7 +110,7 @@
           },
           "targets": [
             {
-              "expr": "topk(1, sum(rate(container_cpu_user_seconds_total{image!=\"\"}[1m])) / count(node_cpu{mode=\"system\"}) * 100)",
+              "expr": "topk(1, jcloud_container_cpu_usage_sum1m * 100)",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -270,7 +270,7 @@
           },
           "targets": [
             {
-              "expr": "topk(1, (100  -  (node_memory_MemFree+node_memory_Buffers+node_memory_Cached)  / node_memory_MemTotal * 100))",
+              "expr": "topk(1, jcloud_node_mem_usage  * 100)",
               "interval": "10s",
               "intervalFactor": 2,
               "legendFormat": "",
@@ -434,7 +434,7 @@
           },
           "targets": [
             {
-              "expr": "topk(1, (100 - (node_filesystem_free{fstype=\"overlay\"} / node_filesystem_size{fstype=\"overlay\"})  * 100))",
+              "expr": "topk(1, jcloud_node_docker_storage_usage  * 100)",
               "interval": "30s",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -868,9 +868,9 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(container_cpu_user_seconds_total{image!=\"\", container_label_org_label_schema_group!=\"monitoring\"}[1m]) * 100  / count_scalar(node_cpu{mode=\"user\"})) by (name)",
+              "expr": "jcloud_container_cpu_usage_sum1m * 100",
               "intervalFactor": 10,
-              "legendFormat": "{{ name }}",
+              "legendFormat": "{{ name }} @ {{ instance }}",
               "metric": "container_cpu_user_seconds_total",
               "refId": "A",
               "step": 10
@@ -959,9 +959,9 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(container_memory_usage_bytes{image!=\"\",container_label_org_label_schema_group!=\"monitoring\"}) by (name)",
+              "expr": "sum(container_memory_usage_bytes{image!=\"\",}) by (name, instance)",
               "intervalFactor": 1,
-              "legendFormat": "{{ name }}",
+              "legendFormat": "{{ name }} @ {{instance}}",
               "metric": "container_memory_usage",
               "refId": "A",
               "step": 1
@@ -1038,9 +1038,9 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(container_memory_cache{image!=\"\",container_label_org_label_schema_group!=\"monitoring\"}) by (name)",
+              "expr": "sum(container_memory_cache{image!=\"\",}) by (name, instance)",
               "intervalFactor": 2,
-              "legendFormat": "{{name}}",
+              "legendFormat": "{{name}} @ {{instance}}",
               "metric": "container_memory_cache",
               "refId": "A",
               "step": 2
@@ -1129,9 +1129,9 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (name) (rate(container_network_receive_bytes_total{image!=\"\",container_label_org_label_schema_group!=\"monitoring\"}[1m]))",
+              "expr": "sum by (name, instance) (rate(container_network_receive_bytes_total{image!=\"\",}[1m]))",
               "intervalFactor": 10,
-              "legendFormat": "{{ name }}",
+              "legendFormat": "{{ name }} @ {{instance}}",
               "metric": "container_network_receive_bytes_total",
               "refId": "A",
               "step": 10
@@ -1208,9 +1208,9 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (name) (rate(container_network_transmit_bytes_total{image!=\"\",container_label_org_label_schema_group!=\"monitoring\"}[1m]))",
+              "expr": "sum by (name, instance) (rate(container_network_transmit_bytes_total{image!=\"\",}[1m]))",
               "intervalFactor": 10,
-              "legendFormat": "{{ name }}",
+              "legendFormat": "{{ name }} @ {{instance}}",
               "metric": "container_network_transmit_bytes_total",
               "refId": "A",
               "step": 10
@@ -1300,5 +1300,5 @@
   },
   "timezone": "browser",
   "title": "Docker Containers",
-  "version": 19
+  "version": 7
 }

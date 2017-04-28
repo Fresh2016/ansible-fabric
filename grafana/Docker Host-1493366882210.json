@@ -189,7 +189,7 @@
           },
           "targets": [
             {
-              "expr": "topk(1, sum(1 - irate(node_cpu{mode=\"idle\"}[1m])) * 100 / count_scalar(node_cpu{mode=\"user\"}))",
+              "expr": "topk (1, jcloud_node_cpu_usage_sum1m * 100)",
               "interval": "10s",
               "intervalFactor": 2,
               "legendFormat": "",
@@ -269,7 +269,7 @@
           },
           "targets": [
             {
-              "expr": "topk(1, (100  -  (node_memory_MemFree+node_memory_Buffers+node_memory_Cached)  / node_memory_MemTotal * 100))",
+              "expr": "topk(1, (jcloud_node_mem_usage  * 100))",
               "intervalFactor": 2,
               "metric": "machine_cpu_cores",
               "refId": "A",
@@ -428,7 +428,7 @@
           },
           "targets": [
             {
-              "expr": "topk(1, (100 - (node_filesystem_free{fstype=\"overlay\"} / node_filesystem_size{fstype=\"overlay\"}) * 100))",
+              "expr": "topk(1, (jcloud_node_docker_storage_usage{mountpoint=\"/\"} * 100))",
               "interval": "30s",
               "intervalFactor": 2,
               "refId": "A",
@@ -843,7 +843,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum by (instance)(1 - irate(node_cpu{mode=\"idle\"}[1m])) * 100 / count_scalar(node_cpu{mode=\"user\"})",
+              "expr": "jcloud_node_cpu_usage_sum1m * 100",
               "intervalFactor": 10,
               "legendFormat": "{{ instance }}",
               "metric": "node_cpu",
@@ -951,7 +951,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "100  -  (node_memory_MemFree+node_memory_Buffers+node_memory_Cached)  / node_memory_MemTotal * 100",
+              "expr": "jcloud_node_mem_usage * 100",
               "intervalFactor": 1,
               "legendFormat": "{{ instance }}",
               "refId": "A",
@@ -1270,10 +1270,10 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "100 - ( node_filesystem_free{fstype=\"xfs\",mountpoint=~\"/rootfs/hfc-data\"} / node_filesystem_size{fstype=\"xfs\",mountpoint=~\"/rootfs/hfc-data\"} ) * 100",
+              "expr": "jcloud_node_data_storage_usage * 100",
               "interval": "10s",
               "intervalFactor": 1,
-              "legendFormat": "{{ instance }}",
+              "legendFormat": "{{ mountpoint }} @ {{ instance }}:{{device}}",
               "refId": "A",
               "step": 10
             }
@@ -1281,7 +1281,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Volume Storage",
+          "title": "Data Storage",
           "tooltip": {
             "msResolution": true,
             "shared": true,
@@ -1348,10 +1348,10 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "100 - (node_filesystem_free{fstype=\"overlay\"} / node_filesystem_size{fstype=\"overlay\"}) * 100",
+              "expr": "jcloud_node_docker_storage_usage{mountpoint=\"/\"} * 100",
               "interval": "10s",
               "intervalFactor": 1,
-              "legendFormat": "{{ instance }}",
+              "legendFormat": "/var/lib/docker @ {{ instance }}",
               "refId": "A",
               "step": 10
             }
@@ -1440,5 +1440,5 @@
   },
   "timezone": "browser",
   "title": "Docker Host",
-  "version": 35
+  "version": 49
 }
