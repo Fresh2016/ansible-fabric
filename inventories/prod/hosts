@@ -16,7 +16,11 @@ alertmanager1           ansible_host=103.237.5.178
 grafana1                ansible_host=103.237.5.178
 
 [amexecutor]
-amexecutor1             ansible_host=103.237.5.178  amexecutor_private_ip=127.0.0.1
+#
+# amexecutor is recommended to deploy toghether with alertmanager, 
+#            so can be accessed by the private IP address
+#
+amexecutor1             ansible_host=103.237.5.178  amexecutor_private_ip=192.168.10.7
 
 [monitor-server:children]
 prometheus

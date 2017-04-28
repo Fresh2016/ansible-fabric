@@ -12,7 +12,7 @@ global:
   # hipchat_url: 'https://hipchat.foobar.org/'
 
 route:
-  group_by: ['alertname', 'service']
+  group_by: ['alertname', 'service', 'action', 'container_label_com_jcloud_group', 'container_label_com_jcloud_nodetype']
 
   # When a new group of alerts is created by an incoming alert, wait at
   # least 'group_wait' to send the initial notification.
