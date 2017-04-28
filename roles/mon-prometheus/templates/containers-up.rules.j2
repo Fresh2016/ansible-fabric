@@ -7,8 +7,8 @@ ALERT container_down
     action = "amExecReboot"
   }
   ANNOTATIONS {
-    summary= "{{ $labels.name }} down",
-    description= "{{ $labels.name }} is down for more than 30 seconds.' }}"
+    summary= "{{ '{{ $labels.name }}' }} down",
+    description= "{{ '{{ $labels.name }} is down for more than 30 seconds.' }}"
   }
 
 {% endfor %}
