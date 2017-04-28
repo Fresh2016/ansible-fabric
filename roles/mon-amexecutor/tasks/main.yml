@@ -7,6 +7,17 @@
     name: "{{ amexecutor_image }}"
     state: present
 
+# make sure directories exists
+- name: mon-amexecutor | make sure direcoties needed by mon-amexecutor exists
+  file:
+    path: "/monitor-server/amexecutor/{{ item }}/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - scripts
+
 #
 # amexecutor
 #

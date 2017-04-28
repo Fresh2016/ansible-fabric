@@ -7,6 +7,18 @@
     name: "{{ alertmanager_image }}"
     state: present
 
+# make sure directories exists
+- name: mon-alertmanager | make sure direcoties needed by mon-alertmanager exists
+  file:
+    path: "/monitor-server/alertmanager/{{ item }}/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - etc
+    - data
+
 #
 # alertmanager
 #

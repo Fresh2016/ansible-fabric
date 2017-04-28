@@ -7,6 +7,17 @@
     name: "{{ grafana_image }}"
     state: present
 
+# make sure directories exists
+- name: mon-grafana | make sure direcoties needed by mon-grafana exists
+  file:
+    path: "/monitor-server/grafana/{{ item }}/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - data
+
 #
 # grafana
 #

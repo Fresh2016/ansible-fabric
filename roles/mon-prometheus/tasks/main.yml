@@ -6,6 +6,19 @@
   docker_image:
     name: "{{ prometheus_image }}"
     state: present
+
+# make sure directories exists
+- name: mon-prometheus | make sure direcoties needed by mon-prometheus exists
+  file:
+    path: "/monitor-server/prometheus/{{ item }}/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - etc
+    - data
+
 #
 # config 
 #
@@ -53,7 +66,7 @@
     command: 
       -config.file=/etc/prometheus/prometheus.yml 
       -storage.local.path=/prometheus 
-      -storage.local.memory-chunks=100000
+      -storage.local.target-heap-size=536870912
       -web.external-url=http://{{ansible_host}}:{{ prometheus_expose_port }}
     ports:
       - "{{ prometheus_expose_port }}:9090"
