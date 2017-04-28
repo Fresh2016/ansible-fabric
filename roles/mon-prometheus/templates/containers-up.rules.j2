@@ -1,5 +1,5 @@
 {% for host in groups['all'] %}
-ALERT container_{{ hostvars[host].inventory_hostname_short|lower|replace('-','_') }}_down
+ALERT container_down_{{ hostvars[host].inventory_hostname_short|lower|replace('-','_') }}
   IF absent(container_start_time_seconds{name="{{ hostvars[host].inventory_hostname_short|lower|replace('-','_') }}"})
   FOR 30s
   LABELS { 
