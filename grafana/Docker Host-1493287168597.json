@@ -517,7 +517,7 @@
           ],
           "thresholds": "",
           "timeFrom": "10s",
-          "title": "Free Storage (bottomk)",
+          "title": "Free DockerStor (bottomk)",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -1233,7 +1233,7 @@
           "decimals": 2,
           "editable": true,
           "error": false,
-          "fill": 4,
+          "fill": 3,
           "grid": {},
           "id": 14,
           "legend": {
@@ -1266,11 +1266,11 @@
             }
           ],
           "span": 6,
-          "stack": true,
+          "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "expr": "100 - ( node_memory_SwapFree / node_memory_SwapTotal ) * 100",
+              "expr": "100 - ( node_filesystem_free{fstype=\"xfs\",mountpoint=~\"/rootfs/hfc-data\"} / node_filesystem_size{fstype=\"xfs\",mountpoint=~\"/rootfs/hfc-data\"} ) * 100",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{ instance }}",
@@ -1281,7 +1281,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Swap Usage",
+          "title": "Volume Storage",
           "tooltip": {
             "msResolution": true,
             "shared": true,
@@ -1300,7 +1300,7 @@
               "format": "percent",
               "label": null,
               "logBase": 1,
-              "max": "100",
+              "max": null,
               "min": 0,
               "show": true
             },
@@ -1359,7 +1359,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Storage Usage",
+          "title": "Docker Storage",
           "tooltip": {
             "msResolution": true,
             "shared": true,
@@ -1440,5 +1440,5 @@
   },
   "timezone": "browser",
   "title": "Docker Host",
-  "version": 28
+  "version": 35
 }

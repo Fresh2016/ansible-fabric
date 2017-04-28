@@ -39,7 +39,8 @@
       - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/{{ inventory_hostname_short|lower|replace('-','_') }}
     ports:
       - "0.0.0.0:{{ ca_expose_port }}:{{ ca_listen_port }}"
-    command: fabric-ca-server start -b admin:adminpw
+    command: 
+      fabric-ca-server start -b admin:adminpw
     dns_servers:
       - "{{ hostvars['dnsmasq1'].ansible_host }}"
       - "{{ hostvars['dnsmasq2'].ansible_host }}"

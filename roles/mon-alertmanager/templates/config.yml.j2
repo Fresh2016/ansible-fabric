@@ -35,9 +35,20 @@ route:
   # sub routes
   routes:
   # sub routes receiver
-  - receiver: 'amexecutor'
+  - receiver: 'default'
+    group_interval: 3m
+    repeat_interval: 3h
     match:
-      alertname: PromAmExecutor
+      action: 'amExecReboot'
+    continue: true
+
+  - receiver: 'amexecutor'
+    group_interval: 3m
+    repeat_interval: 3h
+    match:
+      action: 'amExecReboot'
+    continue: true
+
 
 receivers:
 - name: 'default'
@@ -46,4 +57,4 @@ receivers:
 
 - name: 'amexecutor'
   webhook_configs:
-  - url: http://{{ hostvars['amexecutor1'].ansible_host }}:{{ hostvars['amexecutor1'].amexecutor_expose_port }}
+  - url: http://{{ hostvars['amexecutor1'].amexecutor_private_ip }}:{{ hostvars['amexecutor1'].amexecutor_expose_port }}

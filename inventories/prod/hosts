@@ -16,7 +16,7 @@ alertmanager1           ansible_host=103.237.5.178
 grafana1                ansible_host=103.237.5.178
 
 [amexecutor]
-amexecutor1             ansible_host=103.237.5.178
+amexecutor1             ansible_host=103.237.5.178  amexecutor_private_ip=127.0.0.1
 
 [monitor-server:children]
 prometheus
@@ -25,8 +25,8 @@ grafana
 amexecutor
 
 ### -- fabric-couchdb --
-[fabric-couchdb]
-couchdb1                ansible_host=113.209.68.126
+#[fabric-couchdb]
+#couchdb1                ansible_host=113.209.68.126
 
 ### -- fabric-ca --
 [fabric-ca_peerOrg1]

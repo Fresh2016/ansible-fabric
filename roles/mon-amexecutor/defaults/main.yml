@@ -4,3 +4,5 @@ amexecutor_image: jack6liu/prom-am-executor:latest
 
 amexecutor_listen_port: 8088
 amexecutor_expose_port: 8088
+
+amexecutor_private_ip: 127.0.0.1

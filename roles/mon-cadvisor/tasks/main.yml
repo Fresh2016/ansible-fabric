@@ -28,7 +28,6 @@
       - "{{ hostvars['dnsmasq1'].ansible_host }}"
       - "{{ hostvars['dnsmasq2'].ansible_host }}"
     labels:
-      org.label-schema.group: "monitoring"
       com.jcloud.group: "monitoring"
       com.jcloud.nodetype: "cadvisor"
     restart_policy: unless-stopped

@@ -19,11 +19,11 @@
     group: root
     mode: 0644
 
-# template: copy containers.rules for prometheus
-- name: mon-prometheus | copy containers.rules for prometheus
+# template: copy containers-up.rules for prometheus
+- name: mon-prometheus | copy containers-up.rules for prometheus
   template: 
-    src: containers.rules.j2
-    dest: /monitor-server/prometheus/etc/containers.rules
+    src: containers-up.rules.j2
+    dest: /monitor-server/prometheus/etc/containers-up.rules
     force: yes
     owner: root
     group: root
@@ -50,14 +50,17 @@
     volumes:
       - /monitor-server/prometheus/etc/:/etc/prometheus/
       - /monitor-server/prometheus/data/:/prometheus/
-    command: -config.file=/etc/prometheus/prometheus.yml -storage.local.path=/prometheus -storage.local.memory-chunks=100000
+    command: 
+      -config.file=/etc/prometheus/prometheus.yml 
+      -storage.local.path=/prometheus 
+      -storage.local.memory-chunks=100000
+      -web.external-url=http://{{ansible_host}}:{{ prometheus_expose_port }}
     ports:
       - "{{ prometheus_expose_port }}:9090"
     dns_servers:
       - "{{ hostvars['dnsmasq1'].ansible_host }}"
       - "{{ hostvars['dnsmasq2'].ansible_host }}"
     labels:
-      org.label-schema.group: "monitoring"
       com.jcloud.group: "monitoring"
       com.jcloud.nodetype: "prometheus"
     restart_policy: unless-stopped
