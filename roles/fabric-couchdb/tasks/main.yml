@@ -34,7 +34,7 @@
     labels:
       com.jcloud.group: "fabric"
       com.jcloud.nodetype: "couchdb"
-    restart_policy: unless-stopped
+    restart_policy: always
     restart: yes
     state: started
 

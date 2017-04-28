@@ -43,6 +43,6 @@
     labels:
       com.jcloud.group: "common"
       com.jcloud.nodetype: "dnsmasq"
-    restart_policy: unless-stopped
+    restart_policy: always
     restart: yes
     state: started

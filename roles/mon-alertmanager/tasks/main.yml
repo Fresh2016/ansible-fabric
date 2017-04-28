@@ -52,6 +52,6 @@
     labels:
       com.jcloud.group: "monitoring"
       com.jcloud.nodetype: "alertmanager"
-    restart_policy: unless-stopped
+    restart_policy: always
     restart: yes
     state: started
