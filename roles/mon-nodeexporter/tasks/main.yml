@@ -7,6 +7,17 @@
     name: "{{ nodeexporter_image }}"
     state: present
 
+# make sure directories exists
+- name: mon-cadvisor | make sure direcoties needed by mon-cadvisor exists
+  file:
+    path: "/hfc-data/nodeexporter/{{ item }}/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - restore
+
 #
 # nodeexporter
 #
@@ -20,15 +31,49 @@
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
+    command: 
+      -collector.procfs /host/proc
+      -collector.sysfs /host/sys
+      -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"
     ports:
-      - "{{ nodeexporter_expose_port }}:9100"
+      - "0.0.0.0:{{ nodeexporter_expose_port }}:9100"
     network_mode: host
     dns_servers:
       - "{{ hostvars['dnsmasq1'].ansible_host }}"
       - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    dns_search_domains:
+      - "{{ dnsmasq_domain }}"
     labels:
       com.jcloud.group: "monitoring"
       com.jcloud.nodetype: "nodeexporter"
     restart_policy: always
     restart: yes
     state: started
+
+# template: generate restore script for nodeexporter
+- name: mon-nodeexporter | generate restore script for nodeexporter
+  template: 
+    src: run_new.sh.j2
+    dest: /hfc-data/nodeexporter/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    mode: 0755
+
+# copy: copy backup script for monitoring
+- name: mon-nodeexporter | copy monitoring-backup.sh for monitoring
+  copy: 
+    src: monitoring-backup.sh
+    dest: /usr/local/bin/monitoring-backup.sh
+    force: yes
+    owner: root
+    group: root
+    mode: 0755   
+
+# cron: setup cron jobs for backup of nodeexporter
+- name: mon-nodeexporter | setup cron jobs for backup of nodeexporter
+  cron:
+    name: backup /hfc-data/nodeexporter/
+    minute: "{{ (ansible_host | hash | list | map('int',0,16) | sum) % 60 }}"
+    hour: "{{ (ansible_host | hash | list | map('int',0,16) | sum) % 2) + 1 }}"
+    user: root
+    job: "/usr/local/bin/monitoring-backup.sh nodeexporter"
+    cron_file: "nodeexporter-backup"
+    

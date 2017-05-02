@@ -10,7 +10,7 @@
 # make sure directories exists
 - name: mon-grafana | make sure direcoties needed by mon-grafana exists
   file:
-    path: "/monitor-server/grafana/{{ item }}/"
+    path: "/hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ item }}/"
     state: directory
     owner: root
     group: root
@@ -18,10 +18,17 @@
   with_items:
     - data
     - logs
+    - restore
 
 #
 # grafana
 #
+# template: copy env_file for grafana
+- name: mon-grafana | copy env_file for grafana
+  template: 
+    src: env_file.j2
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
+
 # docker-container: run grafana
 - name: mon-grafana | run grafana
   docker_container:
@@ -29,22 +36,46 @@
     hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
     image: "{{ grafana_image }}"
     volumes:
-      - /monitor-server/grafana/data:/grafana/data
-      - /monitor-server/grafana/logs:/grafana/logs
-    env:
-      GF_SECURITY_ADMIN_USER: "{{ grafana_admin_user }}"
-      GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password }}"
-      GF_USERS_ALLOW_SIGN_UP: "{{ grafana_allow_sign_up }}"
-      GF_PATHS_DATA: /grafana/data
-      GF_PATHS_LOGS: /grafana/logs
+      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/data:/grafana/data
+      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/logs:/grafana/logs
+    env_file: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
     ports:
-      - "{{ grafana_expose_port }}:3000"
+      - "0.0.0.0:{{ grafana_expose_port }}:3000"
     dns_servers:
       - "{{ hostvars['dnsmasq1'].ansible_host }}"
       - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    dns_search_domains:
+      - "{{ dnsmasq_domain }}"
     labels:
       com.jcloud.group: "monitoring"
       com.jcloud.nodetype: "grafana"
     restart_policy: always
     restart: yes
     state: started
+
+# template: generate restore script for grafana
+- name: mon-grafana | generate restore script for grafana
+  template: 
+    src: run_new.sh.j2
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    mode: 0755
+
+# copy: copy backup script for monitoring
+- name: mon-grafana | copy monitoring-backup.sh for monitoring
+  copy: 
+    src: monitoring-backup.sh
+    dest: /usr/local/bin/monitoring-backup.sh
+    force: yes
+    owner: root
+    group: root
+    mode: 0755   
+
+# cron: setup cron jobs for backup of grafana
+- name: mon-grafana | setup cron jobs for backup of grafana
+  cron:
+    name: backup /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/
+    minute: "{{ ( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
+    user: root
+    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname_short|lower|replace('-','_') }}"
+    cron_file: "{{ inventory_hostname_short|lower|replace('-','_') }}-backup"

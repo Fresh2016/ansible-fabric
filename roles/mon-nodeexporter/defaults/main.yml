@@ -1,6 +1,6 @@
 ---
 # file: roles/mon-nodeexporter/defaults/main.yml
-nodeexporter_image: prom/node-exporter:latest
+nodeexporter_image: jack6liu/nodeexporter:latest
 
 #nodeexporter_listen_port: 9100
 nodeexporter_expose_port: 9100

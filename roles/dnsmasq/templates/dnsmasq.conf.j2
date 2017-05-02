@@ -1,0 +1,10 @@
+# general config
+bogus-priv
+
+domain={{ dnsmasq_domain }}
+expand-hosts
+
+local=/{{ dnsmasq_domain }}/
+
+# for hosts records
+conf-dir=/etc/dnsmasq.d,*.conf

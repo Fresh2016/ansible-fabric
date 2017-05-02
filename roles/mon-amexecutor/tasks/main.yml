@@ -10,13 +10,14 @@
 # make sure directories exists
 - name: mon-amexecutor | make sure direcoties needed by mon-amexecutor exists
   file:
-    path: "/monitor-server/amexecutor/{{ item }}/"
+    path: "/hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ item }}/"
     state: directory
     owner: root
     group: root
     mode: 0644
   with_items:
     - scripts
+    - restore
 
 #
 # amexecutor
@@ -25,11 +26,17 @@
 - name: mon-amexecutor | copy files for amexecutor
   copy:
     src: amexecutor/
-    dest: /monitor-server/amexecutor/scripts/
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/scripts/
     force: yes
     owner: root
     group: root
     mode: 0755
+
+# template: copy env_file for amexecutor
+- name: mon-amexecutor | copy env_file for amexecutor
+  template: 
+    src: env_file.j2
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
 
 # docker-container: run amexecutor
 - name: mon-amexecutor | run amexecutor
@@ -37,20 +44,46 @@
     name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
     hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
     image: "{{ amexecutor_image }}"
-    env:
-      LISTEN_PORT: "{{ amexecutor_listen_port }}"
-      SCRIPT_FULL_PATH: "/am-executor/scripts/restart_container.sh"
+    env_file: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
     volumes:
-      - /monitor-server/amexecutor/scripts/:/am-executor/scripts/
+      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/scripts/:/am-executor/scripts/
     ports:
-      - "{{ amexecutor_expose_port }}:{{ amexecutor_listen_port }}"
-    network_mode: host
+      - "0.0.0.0:{{ amexecutor_expose_port }}:{{ amexecutor_listen_port }}"
     dns_servers:
       - "{{ hostvars['dnsmasq1'].ansible_host }}"
       - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    dns_search_domains:
+      - "{{ dnsmasq_domain }}"
     labels:
       com.jcloud.group: "monitoring"
       com.jcloud.nodetype: "amexecutor"
     restart_policy: always
     restart: yes
     state: started
+
+# template: generate restore script for amexecutor
+- name: mon-amexecutor | generate restore script for amexecutor
+  template: 
+    src: run_new.sh.j2
+    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    mode: 0755
+
+# copy: copy backup script for monitoring
+- name: mon-amexecutor | copy monitoring-backup.sh for monitoring
+  copy: 
+    src: monitoring-backup.sh
+    dest: /usr/local/bin/monitoring-backup.sh
+    force: yes
+    owner: root
+    group: root
+    mode: 0755   
+
+# cron: setup cron jobs for backup of amexecutor
+- name: mon-amexecutor | setup cron jobs for backup of amexecutor
+  cron:
+    name: backup /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/
+    minute: "{{ ( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
+    user: root
+    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname_short|lower|replace('-','_') }}"
+    cron_file: "{{ inventory_hostname_short|lower|replace('-','_') }}-backup"

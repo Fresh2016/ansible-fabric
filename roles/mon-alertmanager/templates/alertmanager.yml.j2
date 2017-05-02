@@ -39,14 +39,14 @@ route:
     group_interval: 3m
     repeat_interval: 3h
     match:
-      action: 'amExecReboot'
+      action: 'recover'
     continue: true
 
   - receiver: 'amexecutor'
     group_interval: 3m
     repeat_interval: 3h
     match:
-      action: 'amExecReboot'
+      action: 'recover'
     continue: true
 
 

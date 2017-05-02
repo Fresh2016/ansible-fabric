@@ -45,6 +45,8 @@
     dns_servers:
       - "{{ hostvars['dnsmasq1'].ansible_host }}"
       - "{{ hostvars['dnsmasq2'].ansible_host }}"
+    dns_search_domains:
+      - "{{ dnsmasq_domain }}"
     labels:
       com.jcloud.group: "fabric"
       com.jcloud.nodetype: "orderer"

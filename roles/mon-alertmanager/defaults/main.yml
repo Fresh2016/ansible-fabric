@@ -1,6 +1,6 @@
 ---
 # file: roles/monitor-server/defaults/main.yml
-alertmanager_image: prom/alertmanager:latest
+alertmanager_image: jack6liu/alertmanager:latest
 
 #alertmanager_listen_port: 9093
 alertmanager_expose_port: 9093

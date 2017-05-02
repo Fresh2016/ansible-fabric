@@ -19,6 +19,7 @@ run_container() {
       --publish 0.0.0.0:{{ peer_expose_events_port }}:{{ peer_events_port }}	\
       --dns {{ hostvars['dnsmasq1'].ansible_host }}               \
       --dns {{ hostvars['dnsmasq2'].ansible_host }}               \
+      --dns-search {{ dnsmasq_domain }}                           \
       --label com.jcloud.group="fabric"                           \
       --label com.jcloud.nodetype="peer"                          \
       --restart always                                            \

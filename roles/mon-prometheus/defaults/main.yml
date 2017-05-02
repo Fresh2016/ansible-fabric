@@ -1,6 +1,6 @@
 ---
 # file: roles/mon-prometheus/defaults/main.yml
-prometheus_image: prom/prometheus:latest
+prometheus_image: jack6liu/prometheus:latest
 
 #prometheus_listen_port: 9090
 prometheus_expose_port: 9090
