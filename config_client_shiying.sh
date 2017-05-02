@@ -1,3 +1,4 @@
+#!/bin/bash
 export _FileName=$(readlink -f $0)
 export _DirName=$(dirname ${_FileName})
 export _ScriptVersion="2017.03.02"
@@ -62,14 +63,16 @@ echo "   Copy config.tls.json ... "
 docker cp ./config.tls.json ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
 
 echo "   Create directories ... "
-docker exec ${CONTAINER_NAME} sh -c 'cd /jcloud-blockchain/app/config/tls/; mkdir -p clliu && cd clliu; for DIR in ordererorg1orderer1 peerorg1peer1 peerorg1peer2 peerorg2peer1 peerorg2peer2 ; do mkdir -p $DIR ; done'
+docker exec ${CONTAINER_NAME} sh -c 'cd /jcloud-blockchain/app/config/tls/; mkdir -p clliu && cd clliu; for DIR in ordererorg1orderer1 peerorg1peer1 peerorg1peer2 peerorg1peer3 peerorg2peer1 peerorg2peer2 peerorg2peer3; do mkdir -p $DIR ; done'
 
 echo "   Copy certs  ... "
 docker cp ./roles/fabric-orderer/files/ordererorg1/orderers/ordererorg1orderer1/cacerts/ordererorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/ordererorg1orderer1/
 docker cp ./roles/fabric-peer/files/peerorg1/peers/peerorg1peer1/cacerts/peerorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg1peer1/
 docker cp ./roles/fabric-peer/files/peerorg1/peers/peerorg1peer2/cacerts/peerorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg1peer2/
+docker cp ./roles/fabric-peer/files/peerorg1/peers/peerorg1peer3/cacerts/peerorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg1peer3/
 docker cp ./roles/fabric-peer/files/peerorg2/peers/peerorg2peer1/cacerts/peerorg2-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg2peer1/
 docker cp ./roles/fabric-peer/files/peerorg2/peers/peerorg2peer2/cacerts/peerorg2-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg2peer2/
+docker cp ./roles/fabric-peer/files/peerorg2/peers/peerorg2peer3/cacerts/peerorg2-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg2peer3/
 
 echo "   Config config.json ... "
 if [[ "${TLS}" == "yes" ]]; then
