@@ -8,7 +8,7 @@
     state: present
 
 # make sure directories exists
-- name: mon-cadvisor | make sure direcoties needed by mon-cadvisor exists
+- name: mon-nodeexporter | make sure direcoties needed by mon-nodeexporter exists
   file:
     path: "/hfc-data/nodeexporter/{{ item }}/"
     state: directory
