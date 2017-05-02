@@ -4,7 +4,7 @@ ALERT container_down_{{ hostvars[host].inventory_hostname_short|lower|replace('-
   FOR 30s
   LABELS { 
     severity = "critical" ,
-    action = "amExecReboot"
+    action = "recover"
   }
   ANNOTATIONS {
     summary= "{{ '{{ $labels.name }}' }} down",
