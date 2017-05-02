@@ -42,7 +42,7 @@ Organizations:
 
         # MSPDir is the filesystem path which contains the MSP configuration
         #MSPDir: examples/e2e_cli/crypto/orderer/localMspConfig
-        MSPDir: examples/e2e_cli/crypto/ordererOrganizations/ordererOrg1/orderers/ordererOrg1Orderer1
+        MSPDir: examples/e2e_cli/crypto/ordererorganizations/ordererorg1/orderers/ordererorg1orderer1
 
         # BCCSP (Blockchain crypto provider): Select which crypto implementation or
         # library to use
@@ -65,7 +65,7 @@ Organizations:
         ID: Org1MSP
 
         #MSPDir: examples/e2e_cli/crypto/peer/peer0/localMspConfig
-        MSPDir: examples/e2e_cli/crypto/peerOrganizations/peerOrg1/peers/peerOrg1Peer1
+        MSPDir: examples/e2e_cli/crypto/peerorganizations/peerorg1/peers/peerorg1peer1
 
         # BCCSP (Blockchain crypto provider): Select which crypto implementation or
         # library to use
@@ -83,9 +83,11 @@ Organizations:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peerOrg1Peer1
+            - Host: peerorg1peer1
               Port: 7051
-            - Host: peerOrg1Peer2
+            - Host: peerorg1peer2
+              Port: 7051
+            - Host: peerorg1peer3
               Port: 7051
 
     - &Org2
@@ -97,7 +99,7 @@ Organizations:
         ID: Org2MSP
 
         #MSPDir: examples/e2e_cli/crypto/peer/peer2/localMspConfig
-        MSPDir: examples/e2e_cli/crypto/peerOrganizations/peerOrg2/peers/peerOrg2Peer1
+        MSPDir: examples/e2e_cli/crypto/peerorganizations/peerorg2/peers/peerorg2peer1
 
         # BCCSP (Blockchain crypto provider): Select which crypto implementation or
         # library to use
@@ -115,9 +117,11 @@ Organizations:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peerOrg2Peer1
+            - Host: peerorg2peer1
               Port: 7051
-            - Host: peerOrg2Peer2
+            - Host: peerorg2peer2
+              Port: 7051
+            - Host: peerorg2peer3
               Port: 7051
 
 ################################################################################
@@ -135,7 +139,7 @@ Orderer: &OrdererDefaults
     OrdererType: solo
 
     Addresses:
-        - ordererOrg1orderer1:7050
+        - ordererorg1orderer1:7050
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s

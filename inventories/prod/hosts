@@ -52,12 +52,14 @@ fabric-ordererOrg1
 
 ### -- fabric-peer --
 [fabric-peerOrg1]
-peerOrg1Peer1        ansible_host=113.209.68.128  peer_gossip_ip=120.132.114.36
+peerOrg1Peer1        ansible_host=113.209.68.128  peer_gossip_ip=113.209.68.128
 peerOrg1Peer2        ansible_host=120.132.114.36  peer_gossip_ip=113.209.68.128
+peerOrg1Peer3        ansible_host=103.235.241.129  peer_gossip_ip=113.209.68.128
 
 [fabric-peerOrg2]
-peerOrg2Peer1        ansible_host=120.132.114.37  peer_gossip_ip=113.209.68.131
+peerOrg2Peer1        ansible_host=120.132.114.37  peer_gossip_ip=120.132.114.37
 peerOrg2Peer2        ansible_host=113.209.68.131  peer_gossip_ip=120.132.114.37
+peerOrg2Peer3        ansible_host=120.132.114.193  peer_gossip_ip=120.132.114.37
 
 [fabric-peer:children]
 fabric-peerOrg1
