@@ -16,7 +16,6 @@ run_container() {
       --volume /sys:/host/sys:ro                        \
       --volume /:/rootfs:ro                             \
       --publish 0.0.0.0:{{ nodeexporter_expose_port }}:9100 \
-      --network host                                    \
       --dns {{ hostvars['dnsmasq1'].ansible_host }}     \
       --dns {{ hostvars['dnsmasq2'].ansible_host }}     \
       --dns-search {{ dnsmasq_domain }}                 \
@@ -28,7 +27,9 @@ run_container() {
       -collector.procfs /host/proc                      \
       -collector.sysfs /host/sys                        \
       -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"
-      
+
+      ##--network host                                    \
+
 }
 echo ">> BEGIN"
 if [[ $# != '1' ]]; then
