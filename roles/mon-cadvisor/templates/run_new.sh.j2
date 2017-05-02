@@ -18,6 +18,7 @@ run_container() {
       --volume /var/lib/docker/:/var/lib/docker:ro  \
       --volume /hfc-data/cadvisor/etc/cadvisor.htpasswd:/etc/cadvisor/cadvisor.htpasswd \
       --publish 0.0.0.0:{{ cadvisor_expose_port }}:8080 \
+      --network host                                    \
       --dns {{ hostvars['dnsmasq1'].ansible_host }}     \
       --dns {{ hostvars['dnsmasq2'].ansible_host }}     \
       --dns-search {{ dnsmasq_domain }}                 \
@@ -28,8 +29,6 @@ run_container() {
       {{ cadvisor_image }}                              \
       --http_auth_file /etc/cadvisor/cadvisor.htpasswd  \
       --http_auth_realm Restricted
-
-      ##--network host                                    \
       
 }
 echo ">> BEGIN"
