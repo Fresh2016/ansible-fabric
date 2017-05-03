@@ -17,7 +17,7 @@ peer_gossip_expose_port: 7051
 peer_gossip_skiphandshake: true
 peer_msp_id: Org1MSP
 peer_profile_enabled: false
-vm_docker_hostconfig_networkmode: fixtures_default
+vm_docker_hostconfig_networkmode: bridge
 orderer_expose_ip: orderer
 orderer_expose_port: 8050
 ledger_state_database: goleveldb

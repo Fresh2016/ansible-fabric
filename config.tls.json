@@ -12,21 +12,21 @@
             "peer1": {
                 "requests": "grpcs://113.209.68.128:7051",
                 "events": "grpcs://113.209.68.128:7053",
-                "server-hostname": "peerorg1peer1",
+                "server-hostname": "peerOrg1Peer1",
                 "tls_cacerts": "./app/config/tls/clliu/peerorg1peer1/peerorg1-cert.pem",
                 "isAnchor": "true"
             },
             "peer2": {
                 "requests": "grpcs://120.132.114.36:7051",
                 "events": "grpcs://120.132.114.36:7053",
-                "server-hostname": "peerorg1peer2",
+                "server-hostname": "peerOrg1Peer2",
                 "tls_cacerts": "./app/config/tls/clliu/peerorg1peer2/peerorg1-cert.pem",
                 "isAnchor": "true"
             },
             "peer3": {
                 "requests": "grpcs://103.235.241.129:7051",
                 "events": "grpcs://103.235.241.129:7053",
-                "server-hostname": "peerorg1peer3",
+                "server-hostname": "peerOrg1Peer3",
                 "tls_cacerts": "./app/config/tls/clliu/peerorg1peer3/peerorg1-cert.pem",
                 "isAnchor": "true"
             }
@@ -38,21 +38,21 @@
             "peer1": {
                 "requests": "grpcs://120.132.114.37:7051",
                 "events": "grpcs://120.132.114.37:7053",
-                "server-hostname": "peerorg2peer1",
+                "server-hostname": "peerOrg2Peer1",
                 "tls_cacerts": "./app/config/tls/clliu/peerorg2peer1/peerorg2-cert.pem",
                 "isAnchor": "true"
             },
             "peer2": {
                 "requests": "grpcs://113.209.68.131:7051",
                 "events": "grpcs://113.209.68.131:7053",
-                "server-hostname": "peerorg2peer2",
+                "server-hostname": "peerOrg2Peer2",
                 "tls_cacerts": "./app/config/tls/clliu/peerorg2peer2/peerorg2-cert.pem",
                 "isAnchor": "true"
             },
             "peer3": {
-                "requests": "grpcs://113.209.68.131:7051",
-                "events": "grpcs://113.209.68.131:7053",
-                "server-hostname": "peerorg2peer3",
+                "requests": "grpcs://120.132.114.193:7051",
+                "events": "grpcs://120.132.114.193:7053",
+                "server-hostname": "peerOrg2Peer3",
                 "tls_cacerts": "./app/config/tls/clliu/peerorg2peer3/peerorg2-cert.pem",
                 "isAnchor": "true"
             }

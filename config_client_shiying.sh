@@ -84,5 +84,5 @@ fi
 docker exec ${CONTAINER_NAME} sh -c 'ls -lh /jcloud-blockchain/app/config/'
 echo ">> DONE ... "
 
-echo "   Login to ${CONTAINER_NAME} ... "
-docker exec -it ${CONTAINER_NAME} bash
+#echo "   Login to ${CONTAINER_NAME} ... "
+#docker exec -it ${CONTAINER_NAME} bash
