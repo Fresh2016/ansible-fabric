@@ -68,6 +68,7 @@
       -config.file=/etc/prometheus/prometheus.yml 
       -storage.local.path=/prometheus 
       -storage.local.target-heap-size=536870912
+      -query.staleness-delta=10s
       -web.external-url=http://{{ansible_host}}:{{ prometheus_expose_port }}
     ports:
       - "0.0.0.0:{{ prometheus_expose_port }}:9090"

@@ -52,6 +52,7 @@
     labels:
       com.jcloud.group: "fabric"
       com.jcloud.nodetype: "peer"
+    privileged: yes
     restart_policy: always
     restart: yes
     state: started

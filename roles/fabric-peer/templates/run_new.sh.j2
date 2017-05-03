@@ -22,6 +22,7 @@ run_container() {
       --dns-search {{ dnsmasq_domain }}                           \
       --label com.jcloud.group="fabric"                           \
       --label com.jcloud.nodetype="peer"                          \
+      --privileged                                                \
       --restart always                                            \
       --detach                                                    \
       {{ hfc_images.peer.tags.0 }}                                \
