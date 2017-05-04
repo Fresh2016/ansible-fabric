@@ -1,5 +1,5 @@
-jcloud_container_absent = 
-    container_start_time_seconds
+#jcloud_container_absent = 
+#    container_start_time_seconds
 
 jcloud_container_cpu_usage_sum1m = 
     sum(rate(container_cpu_usage_seconds_total{image!=''}[1m])) 
