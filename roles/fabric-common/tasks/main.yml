@@ -26,9 +26,11 @@
 
 # shell: do some clean up
 - name: fabric-common | cleanup existing data
-  shell: if [ -e {{ item }} ]; then rm -rf {{ item }}/* ; fi
+  shell: if [ -e "/hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}" ]; then rm -rf /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}/ ; fi
   with_items: 
-    - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}
+    - configtx
+    - data
+    - restore
 
 # copy backup script for hyperledger fabric
 - name: fabric-common | copy fabric-backup.sh for hyperledger fabric
