@@ -1,87 +1,13 @@
 ---
 # file: roles/fabric-common/tasks/main.yml
 #
-# file: rm /var/lib/cloud/instance/warnings/non_ec2_md
-- name: fabric-common | rm /var/lib/cloud/instance/warnings/non_ec2_md
-  shell: if [ -e {{ item }} ]; then rm -rf {{ item }}/* ; fi
-  with_items: 
-    - /var/lib/cloud/instance/warnings/non_ec2_md
-
-# copy: config /etc/apt/resources.list
-- name: fabric-common | config apt repository
-  copy:
-    src: sources.list
-    dest: /etc/apt/sources.list
-    force: yes
-    owner: root
-    group: root
-    mode: 0644
-
-# apt: make sure packages installed
-- name: fabric-common | install apt packages
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items: "{{ common_apt_pkgs }}"
-
-# shell: add apt-key
-- name: fabric-common | add apt-key for docker-ce
-  #shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-  apt_key:
-    url: "https://download.docker.com/linux/ubuntu/gpg"
-    state: present
-
-# add docker-ce repository
-- name: fabric-common | add apt-repository for docker-ce
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
-    state: present
-
-# apt: install docker-ce
-- name: fabric-common | install docker-ce
-  apt:
-    name: docker-ce
-    state: present
-
-# systemd: enable and stop docker
-- name: fabric-common | enable docker service
-  systemd:
-    name: docker
-    enabled: yes
-    state: stopped
-
-# template: config daemon.json for docker
-- name: fabric-common | config daemon.json for docker
-  template:
-    src: daemon.json.j2
-    dest: /etc/docker/daemon.json
-    force: yes
-    owner: root
-    group: root
-    mode: 0644
-
-# systemd: start docker
-- name: fabric-common | start docker service
-  systemd:
-    name: docker
-    state: started
-
-# pip: install pip packages
-- name: fabric-common | install pip packages
-  pip:
-    name: "{{ item.name }}"
-    state: latest
-  with_items:
-    - name: pip
-    - name: docker-py
-
 # shell: delete containers
 - name: fabric-common | remove all existing containers
   shell: CONTAINERS=$(docker ps -a --format "{{ '{{' }} .Names {{ '}}' }}" --filter "label=com.jcloud.group=fabric") ; if [ "${CONTAINERS}" ]; then docker rm -f ${CONTAINERS}; fi
 
 # shell: delete images
 - name: fabric-common | remove all unnecessary images
-  shell: IMGS=$(docker images | awk '/-peer*.-/ {print $3}') ; if [ "${IMGS}" ]; then docker rmi -f ${IMGS} ; fi
+  shell: IMGS=$(docker images -a | awk '/<none>|-peer.*-v.*/ {print $3}') ; if [ "${IMGS}" ]; then docker rmi -f ${IMGS} ; fi
 
 # docker-image: pull image from the list
 - name: fabric-common | pull docker images
@@ -102,7 +28,7 @@
 - name: fabric-common | cleanup existing data
   shell: if [ -e {{ item }} ]; then rm -rf {{ item }}/* ; fi
   with_items: 
-    - /hfc-data
+    - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}
 
 # copy backup script for hyperledger fabric
 - name: fabric-common | copy fabric-backup.sh for hyperledger fabric

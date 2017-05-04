@@ -1,0 +1,15 @@
+---
+# file: prod_prepare.yml
+- name: Run roles - system-common
+  hosts: all
+  roles:
+    - system-common
+  #remote_user: ubuntu
+  #become: yes
+  #become_method: sudo
+
+- name: Run roles - mon-nodeexporter & mon-cadvisor
+  hosts: all
+  roles: 
+    - mon-nodeexporter
+    - mon-cadvisor
