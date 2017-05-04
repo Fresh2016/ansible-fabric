@@ -1,7 +1,7 @@
 #/bin/bash
 help() {
     echo "help:"
-    echo "    ./run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh [OPTIONS]"
+    echo "    ./run-{{ inventory_hostname|lower|replace('-','_') }}.sh [OPTIONS]"
     echo "    [OPTIONS]"
     echo "    --force -> to remove existing docker instance, then deploy new one."
     echo "    --safe  -> will not remove existing docker instance with same name."
@@ -39,11 +39,11 @@ if [[ $# != '1' ]]; then
     help
 fi
 if [[ "$1" == "--force" ]]; then
-    echo ">> Deleting existing {{ inventory_hostname_short|lower|replace('-','_') }} ..."
-    docker rm -f {{ inventory_hostname_short|lower|replace('-','_') }} 
-    echo ">> Try to run new {{ inventory_hostname_short|lower|replace('-','_') }} ..."  
+    echo ">> Deleting existing {{ inventory_hostname|lower|replace('-','_') }} ..."
+    docker rm -f {{ inventory_hostname|lower|replace('-','_') }} 
+    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."  
 elif [[ "$1" == "--safe" ]]; then
-    echo ">> Try to run new {{ inventory_hostname_short|lower|replace('-','_') }} ..."
+    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 else
     help
 fi

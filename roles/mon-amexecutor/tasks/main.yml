@@ -10,7 +10,7 @@
 # make sure directories exists
 - name: mon-amexecutor | make sure direcoties needed by mon-amexecutor exists
   file:
-    path: "/hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ item }}/"
+    path: "/hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}/"
     state: directory
     owner: root
     group: root
@@ -26,7 +26,7 @@
 - name: mon-amexecutor | copy files for amexecutor
   copy:
     src: amexecutor/
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/scripts/
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/scripts/
     force: yes
     owner: root
     group: root
@@ -36,17 +36,17 @@
 - name: mon-amexecutor | copy env_file for amexecutor
   template: 
     src: env_file.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
 
 # docker-container: run amexecutor
 - name: mon-amexecutor | run amexecutor
   docker_container:
-    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
-    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    name: "{{ inventory_hostname|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname|lower|replace('-','_') }}"
     image: "{{ amexecutor_image }}"
-    env_file: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
+    env_file: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
     volumes:
-      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/scripts/:/am-executor/scripts/
+      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/scripts/:/am-executor/scripts/
     ports:
       - "0.0.0.0:{{ amexecutor_expose_port }}:{{ amexecutor_listen_port }}"
     dns_servers:
@@ -65,7 +65,7 @@
 - name: mon-amexecutor | generate restore script for amexecutor
   template: 
     src: run_new.sh.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
 
 # copy: copy backup script for monitoring
@@ -81,9 +81,9 @@
 # cron: setup cron jobs for backup of amexecutor
 - name: mon-amexecutor | setup cron jobs for backup of amexecutor
   cron:
-    name: backup /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/
-    minute: "{{ ( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ (( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
+    name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/
+    minute: "{{ ( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
-    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname_short|lower|replace('-','_') }}"
-    cron_file: "{{ inventory_hostname_short|lower|replace('-','_') }}-backup"
+    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
+    cron_file: "{{ inventory_hostname|lower|replace('-','_') }}-backup"

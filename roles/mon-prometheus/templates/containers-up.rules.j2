@@ -1,6 +1,6 @@
 {% for host in groups['all'] %}
-ALERT container_down_{{ hostvars[host].inventory_hostname_short|lower|replace('-','_') }}
-  IF absent(container_start_time_seconds{name="{{ hostvars[host].inventory_hostname_short|lower|replace('-','_') }}"})
+ALERT container_down_{{ hostvars[host].inventory_hostname|lower|replace('-','_') }}
+  IF absent(container_start_time_seconds{name="{{ hostvars[host].inventory_hostname|lower|replace('-','_') }}"})
   FOR 30s
   LABELS { 
     severity = "critical" ,

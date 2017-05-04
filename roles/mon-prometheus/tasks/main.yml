@@ -10,7 +10,7 @@
 # make sure directories exists
 - name: mon-prometheus | make sure direcoties needed by mon-prometheus exists
   file:
-    path: "/hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ item }}/"
+    path: "/hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}/"
     state: directory
     owner: root
     group: root
@@ -27,7 +27,7 @@
 - name: mon-prometheus | copy files for prometheus
   copy:
     src: prometheus/
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/etc/
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/
     force: yes
     owner: root
     group: root
@@ -37,7 +37,7 @@
 - name: mon-prometheus | copy containers-up.rules for prometheus
   template: 
     src: containers-up.rules.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/etc/containers-up.rules
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/containers-up.rules
     force: yes
     owner: root
     group: root
@@ -47,7 +47,7 @@
 - name: mon-prometheus | copy prometheus.yml for prometheus
   template: 
     src: prometheus.yml.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/etc/prometheus.yml
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/prometheus.yml
     force: yes
     owner: root
     group: root
@@ -58,12 +58,12 @@
 # docker-container: run prometheus
 - name: mon-prometheus | run prometheus
   docker_container:
-    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
-    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    name: "{{ inventory_hostname|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname|lower|replace('-','_') }}"
     image: "{{ prometheus_image }}"
     volumes:
-      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/etc/:/etc/prometheus/
-      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/data/:/prometheus/
+      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/:/etc/prometheus/
+      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/data/:/prometheus/
     command: 
       -config.file=/etc/prometheus/prometheus.yml 
       -storage.local.path=/prometheus 
@@ -88,7 +88,7 @@
 - name: mon-prometheus | generate restore script for prometheus
   template: 
     src: run_new.sh.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
 
 # copy: copy backup script for monitoring
@@ -104,9 +104,9 @@
 # cron: setup cron jobs for backup of prometheus
 - name: mon-prometheus | setup cron jobs for backup of prometheus
   cron:
-    name: backup /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/
-    minute: "{{ ( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ (( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
+    name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/
+    minute: "{{ ( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
-    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname_short|lower|replace('-','_') }}"
-    cron_file: "{{ inventory_hostname_short|lower|replace('-','_') }}-backup"
+    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
+    cron_file: "{{ inventory_hostname|lower|replace('-','_') }}-backup"

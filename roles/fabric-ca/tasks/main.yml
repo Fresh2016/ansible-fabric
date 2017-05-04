@@ -4,7 +4,7 @@
 # file: make sure directories exists
 - name: fabric-ca | make sure direcoties needed by fabric-ca exists
   file:
-    path: "/hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ item }}/"
+    path: "/hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}/"
     state: directory
     owner: root
     group: root
@@ -17,7 +17,7 @@
 - name: fabric-ca | copy crypto for fabric-ca
   copy:
     src: "{{ ca_org_id | lower }}/ca/"
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/configtx/
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/
     owner: root
     group: root
     mode: 0644
@@ -26,17 +26,17 @@
 - name: fabric-ca | copy env_file for fabric-ca
   template: 
     src: env_file.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
 
 # docker_container: start containers of fabric-ca
 - name: fabric-ca | launch fabric-ca
   docker_container:
-    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
-    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    name: "{{ inventory_hostname|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname|lower|replace('-','_') }}"
     image: "{{ hfc_images.ca.tags.0 }}"
-    env_file: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/env_file
+    env_file: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
     volumes:
-      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/{{ inventory_hostname_short|lower|replace('-','_') }}
+      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/{{ inventory_hostname|lower|replace('-','_') }}
     ports:
       - "0.0.0.0:{{ ca_expose_port }}:{{ ca_listen_port }}"
     command: 
@@ -57,15 +57,15 @@
 - name: fabric-ca | generate restore script for fabric-ca
   template: 
     src: run_new.sh.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
   
 # cron: setup cron jobs for backup of fabric-ca
 - name: fabric-ca | setup cron jobs for backup of fabric-ca
   cron:
-    name: backup /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}
-    minute: "{{ ( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ (( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
+    name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}
+    minute: "{{ ( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
-    job: "/usr/local/bin/fabric-backup.sh {{ inventory_hostname_short|lower|replace('-','_') }}"
-    cron_file: "{{ inventory_hostname_short|lower|replace('-','_') }}-backup"
+    job: "/usr/local/bin/fabric-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
+    cron_file: "{{ inventory_hostname|lower|replace('-','_') }}-backup"

@@ -1,27 +1,26 @@
 # Logging level
 CORE_LOGGING_LEVEL={{ peer_log_level }}
 # Peer settings
-CORE_PEER_ID={{ inventory_hostname_short|lower|replace('-','_') }}
+CORE_PEER_ID={{ inventory_hostname|lower|replace('-','_') }}
 CORE_PEER_NETWORKID={{ peer_network_id | lower }}
-CORE_PEER_LISTENADDRESS=0.0.0.0:{{ peer_listen_port }}
-CORE_PEER_ADDRESS=0.0.0.0:{{ peer_listen_port }}
+CORE_PEER_LISTENADDRESS={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_listen_port }}
+CORE_PEER_ADDRESS={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_listen_port }}
 CORE_PEER_ADDRESSAUTODETECT={{ peer_addressautodetect }}
 # Gossip settings
 CORE_PEER_GOSSIP_BOOTSTRAP={{ peer_gossip_ip }}:{{ peer_gossip_expose_port }}
 CORE_PEER_GOSSIP_USELEADERELECTION={{ peer_gossip_useleaderelection }}
 CORE_PEER_GOSSIP_ORGLEADER={{ peer_gossip_orgleader }}
-CORE_PEER_GOSSIP_ENDPOINT=0.0.0.0:{{ peer_gossip_port }}
-CORE_PEER_GOSSIP_EXTERNALENDPOINT=0.0.0.0:{{ peer_gossip_port }}
+CORE_PEER_GOSSIP_ENDPOINT={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_gossip_port }}
+CORE_PEER_GOSSIP_EXTERNALENDPOINT={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_gossip_port }}
 CORE_PEER_GOSSIP_SKIPHANDSHAKE={{ peer_gossip_skiphandshake }}
 # Committer settings
 CORE_PEER_COMMITTER_ENABLED=true
-CORE_PEER_COMMITTER_LEDGER_ORDERER={{ orderer_expose_ip }}:{{ orderer_expose_port }}
 # Event settings
-CORE_PEER_EVENTS_ADDRESS=0.0.0.0:{{ peer_events_port }}
+CORE_PEER_EVENTS_ADDRESS={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_events_port }}
 # TLS
 CORE_PEER_TLS_ENABLED={{ peer_tls_enabled }}
-CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/configtx/keystore/{{ inventory_hostname_short|lower|replace('-','_') }}-key.pem
-CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/configtx/signcerts/{{ inventory_hostname_short|lower|replace('-','_') }}-cert.pem
+CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/configtx/keystore/{{ inventory_hostname|lower|replace('-','_') }}-key.pem
+CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/configtx/signcerts/{{ inventory_hostname|lower|replace('-','_') }}-cert.pem
 CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/configtx/cacerts/{{ peer_org_id | lower }}-cert.pem
 # Msp settings
 CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/configtx/

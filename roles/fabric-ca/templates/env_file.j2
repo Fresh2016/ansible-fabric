@@ -1,6 +1,6 @@
 FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/configtx/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ ca_org_id|lower }}-cert.pem
-FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/configtx/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ ca_org_id|lower }}-key.pem
+FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/configtx/{{ inventory_hostname|lower|replace('-','_') }}/{{ ca_org_id|lower }}-cert.pem
+FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/configtx/{{ inventory_hostname|lower|replace('-','_') }}/{{ ca_org_id|lower }}-key.pem
 FABRIC_CA_SERVER_TLS_ENABLED=true
-FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/configtx/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ ca_org_id|lower }}-cert.pem
-FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/configtx/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ ca_org_id|lower }}-key.pem
+FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/configtx/{{ inventory_hostname|lower|replace('-','_') }}/{{ ca_org_id|lower }}-cert.pem
+FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/configtx/{{ inventory_hostname|lower|replace('-','_') }}/{{ ca_org_id|lower }}-key.pem

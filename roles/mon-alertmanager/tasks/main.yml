@@ -10,7 +10,7 @@
 # make sure directories exists
 - name: mon-alertmanager | make sure direcoties needed by mon-alertmanager exists
   file:
-    path: "/hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/{{ item }}/"
+    path: "/hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}/"
     state: directory
     owner: root
     group: root
@@ -27,7 +27,7 @@
 - name: mon-alertmanager | copy files for alertmanager
   template: 
     src: alertmanager.yml.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/etc/alertmanager.yml
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/alertmanager.yml
     force: yes
     owner: root
     group: root
@@ -36,11 +36,11 @@
 # docker-container: run alertmanager
 - name: mon-alertmanager | run alertmanager
   docker_container:
-    name: "{{ inventory_hostname_short|lower|replace('-','_') }}"
-    hostname: "{{ inventory_hostname_short|lower|replace('-','_') }}"
+    name: "{{ inventory_hostname|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname|lower|replace('-','_') }}"
     image: "{{ alertmanager_image }}"
     volumes:
-      - /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/etc/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     command: 
       -config.file=/etc/alertmanager/alertmanager.yml 
       -storage.path=/alertmanager
@@ -63,7 +63,7 @@
 - name: mon-alertmanager | generate restore script for alertmanager
   template: 
     src: run_new.sh.j2
-    dest: /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
 
 # copy: copy backup script for monitoring
@@ -79,10 +79,10 @@
 # cron: setup cron jobs for backup of alertmanager
 - name: mon-alertmanager | setup cron jobs for backup of alertmanager
   cron:
-    name: backup /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}
-    minute: "{{ ( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ (( inventory_hostname_short|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
+    name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}
+    minute: "{{ ( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
-    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname_short|lower|replace('-','_') }}"
-    cron_file: "{{ inventory_hostname_short|lower|replace('-','_') }}-backup"
+    job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
+    cron_file: "{{ inventory_hostname|lower|replace('-','_') }}-backup"
     

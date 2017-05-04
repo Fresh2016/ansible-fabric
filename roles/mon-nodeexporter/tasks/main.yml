@@ -56,7 +56,7 @@
 - name: mon-nodeexporter | generate restore script for nodeexporter
   template: 
     src: run_new.sh.j2
-    dest: /hfc-data/nodeexporter/restore/run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh
+    dest: /hfc-data/nodeexporter/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
 
 # copy: copy backup script for monitoring

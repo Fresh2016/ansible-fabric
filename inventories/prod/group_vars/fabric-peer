@@ -26,9 +26,6 @@ peer_gossip_skiphandshake: true
 peer_profile_enabled: false
 #docker
 vm_docker_hostconfig_networkmode: bridge
-# Orderer
-orderer_expose_ip: 113.209.68.126
-orderer_expose_port: 7050
 #
 # peer state database
 #

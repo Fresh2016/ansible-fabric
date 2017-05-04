@@ -1,7 +1,7 @@
 # General
 ORDERER_GENERAL_LOGLEVEL={{ orderer_log_level }}
 ORDERER_GENERAL_LEDGERTYPE=file
-ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+ORDERER_GENERAL_LISTENADDRESS={{ inventory_hostname|lower|replace('-','_') }}
 ORDERER_GENERAL_LISTENPORT={{ orderder_listen_port }}
 ORDERER_GENERAL_GENESISMETHOD=file
 ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/orderer.block
@@ -9,8 +9,8 @@ ORDERER_GENERAL_LOCALMSPID={{ orderer_msp_id }}
 ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/configtx/
 # TLS
 ORDERER_GENERAL_TLS_ENABLED={{ orderer_tls_enabled }}
-ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/configtx/keystore/{{ inventory_hostname_short|lower|replace('-','_') }}-key.pem
-ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/configtx/signcerts/{{ inventory_hostname_short|lower|replace('-','_') }}-cert.pem
+ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/configtx/keystore/{{ inventory_hostname|lower|replace('-','_') }}-key.pem
+ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/configtx/signcerts/{{ inventory_hostname|lower|replace('-','_') }}-cert.pem
 ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/configtx/cacerts/{{ orderer_org_id | lower }}-cert.pem]
 # Fileledger
 ORDERER_FILELEDGER_LOCATION=/var/hyperledger/fileledger/

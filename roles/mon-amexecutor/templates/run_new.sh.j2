@@ -1,7 +1,7 @@
 #/bin/bash
 help() {
     echo "help:"
-    echo "    ./run-{{ inventory_hostname_short|lower|replace('-','_') }}.sh [OPTIONS]"
+    echo "    ./run-{{ inventory_hostname|lower|replace('-','_') }}.sh [OPTIONS]"
     echo "    [OPTIONS]"
     echo "    --force -> to remove existing docker instance, then deploy new one."
     echo "    --safe  -> will not remove existing docker instance with same name."
@@ -10,10 +10,10 @@ help() {
 
 run_container() {
     docker run      \
-      --name {{ inventory_hostname_short|lower|replace('-','_') }}      \
-      --hostname {{ inventory_hostname_short|lower|replace('-','_') }}  \
+      --name {{ inventory_hostname|lower|replace('-','_') }}      \
+      --hostname {{ inventory_hostname|lower|replace('-','_') }}  \
       --env-file ./env_file                                             \
-      --volume /hfc-data/{{ inventory_hostname_short|lower|replace('-','_') }}/scripts/:/am-executor/scripts/     \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/scripts/:/am-executor/scripts/     \
       --publish 0.0.0.0:{{ amexecutor_expose_port }}:{{ amexecutor_listen_port }}     \
       --dns {{ hostvars['dnsmasq1'].ansible_host }}     \
       --dns {{ hostvars['dnsmasq2'].ansible_host }}     \
@@ -33,11 +33,11 @@ if [[ $# != '1' ]]; then
     help
 fi
 if [[ "$1" == "--force" ]]; then
-    echo ">> Deleting existing {{ inventory_hostname_short|lower|replace('-','_') }} ..."
-    docker rm -f {{ inventory_hostname_short|lower|replace('-','_') }} 
-    echo ">> Try to run new {{ inventory_hostname_short|lower|replace('-','_') }} ..."  
+    echo ">> Deleting existing {{ inventory_hostname|lower|replace('-','_') }} ..."
+    docker rm -f {{ inventory_hostname|lower|replace('-','_') }} 
+    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."  
 elif [[ "$1" == "--safe" ]]; then
-    echo ">> Try to run new {{ inventory_hostname_short|lower|replace('-','_') }} ..."
+    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 else
     help
 fi
