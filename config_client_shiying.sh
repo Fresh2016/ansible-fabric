@@ -1,4 +1,11 @@
-#!/bin/bash
+TGZ=crypto-config.v1.0.0-6peers-$(date +%Y%m%d%H%M%S-%N).tgz
+tar -czvf ${TGZ} crypto-config/
+
+```
+
+## Optional, For fabric-sdk
+
+```bash
 export _FileName=$(readlink -f $0)
 export _DirName=$(dirname ${_FileName})
 export _ScriptVersion="2017.03.02"
@@ -44,37 +51,50 @@ else
     exit 1
 fi
 echo ">> Cleanup old config files from ${CONTAINER_NAME} ... "
-docker exec ${CONTAINER_NAME} sh -c 'rm -f /jcloud-blockchain/app/config/mychannel.tx'
-docker exec ${CONTAINER_NAME} sh -c 'rm -f /jcloud-blockchain/app/config/configtx.yaml'
-docker exec ${CONTAINER_NAME} sh -c 'rm -f /jcloud-blockchain/app/config/config.json'
-docker exec ${CONTAINER_NAME} sh -c 'ls -lh /jcloud-blockchain/app/config/'
+docker exec ${CONTAINER_NAME} \
+       sh -c 'rm -f /jcloud-blockchain/app/config/supplychain.tx ; \
+              rm -f /jcloud-blockchain/app/config/configtx.yaml ;  \
+              rm -f /jcloud-blockchain/app/config/config.json ;    \
+              ls -lh /jcloud-blockchain/app/config/'
 
 echo ">> Copy new config files to ${CONTAINER_NAME} ... "
-echo "   Copy mychannel.tx ... "
-docker cp ./roles/fabric-orderer/files/ordererorg1/orderers/ordererorg1orderer1/mychannel.tx ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
+docker cp roles/fabric-orderer/files/hfc.jcloud.com/orderers/orderer.hfc.jcloud.com/supplychain.tx ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
+docker cp roles/fabric-orderer/files/hfc.jcloud.com/orderers/orderer.hfc.jcloud.com/configtx.yaml ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
 
-echo "   Copy configtx.yaml ... "
-docker cp ./roles/fabric-orderer/files/ordererorg1/orderers/ordererorg1orderer1/configtx.yaml ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
+docker cp config.notls.json ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
+docker cp config.tls.json ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
 
-echo "   Copy config.notls.json ... "
-docker cp ./config.notls.json ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
+NODES_LIST='orderer.hfc.jcloud.com 
+peer1.org1.hfc.jcloud.com 
+peer2.org1.hfc.jcloud.com 
+peer3.org1.hfc.jcloud.com 
+peer1.org2.hfc.jcloud.com 
+peer2.org2.hfc.jcloud.com 
+peer3.org2.hfc.jcloud.com '
 
-echo "   Copy config.tls.json ... "
-docker cp ./config.tls.json ${CONTAINER_NAME}:/jcloud-blockchain/app/config/
+for NODE in ${NODES_LIST} ; do
+    echo "cleanup old files for ${NODE} ..."
+    docker exec ${CONTAINER_NAME} \
+       sh -c "rm -rf /jcloud-blockchain/app/config/tls/clliu/${NODE}/*"
+    docker exec ${CONTAINER_NAME} \
+       sh -c "mkdir -p /jcloud-blockchain/app/config/tls/clliu/${NODE}"
+done
 
-echo "   Create directories ... "
-docker exec ${CONTAINER_NAME} sh -c 'cd /jcloud-blockchain/app/config/tls/; mkdir -p clliu && cd clliu; for DIR in ordererorg1orderer1 peerorg1peer1 peerorg1peer2 peerorg1peer3 peerorg2peer1 peerorg2peer2 peerorg2peer3; do mkdir -p $DIR ; done'
+echo "copying new certs files ..."
+docker cp roles/fabric-orderer/files/hfc.jcloud.com/orderers/orderer.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/orderer.hfc.jcloud.com/
 
-echo "   Copy certs  ... "
-docker cp ./roles/fabric-orderer/files/ordererorg1/orderers/ordererorg1orderer1/cacerts/ordererorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/ordererorg1orderer1/
-docker cp ./roles/fabric-peer/files/peerorg1/peers/peerorg1peer1/cacerts/peerorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg1peer1/
-docker cp ./roles/fabric-peer/files/peerorg1/peers/peerorg1peer2/cacerts/peerorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg1peer2/
-docker cp ./roles/fabric-peer/files/peerorg1/peers/peerorg1peer3/cacerts/peerorg1-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg1peer3/
-docker cp ./roles/fabric-peer/files/peerorg2/peers/peerorg2peer1/cacerts/peerorg2-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg2peer1/
-docker cp ./roles/fabric-peer/files/peerorg2/peers/peerorg2peer2/cacerts/peerorg2-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg2peer2/
-docker cp ./roles/fabric-peer/files/peerorg2/peers/peerorg2peer3/cacerts/peerorg2-cert.pem ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peerorg2peer3/
+docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer1.org1.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer1.org1.hfc.jcloud.com/
 
-echo "   Config config.json ... "
+docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer2.org1.hfc.jcloud.com/tls/server.crt  ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer2.org1.hfc.jcloud.com/
+
+docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer3.org1.hfc.jcloud.com/tls/server.crt  ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer3.org1.hfc.jcloud.com/
+
+docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer1.org2.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer1.org2.hfc.jcloud.com/
+
+docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer2.org2.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer2.org2.hfc.jcloud.com/
+
+docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer3.org2.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer3.org2.hfc.jcloud.com/
+
 if [[ "${TLS}" == "yes" ]]; then
     docker exec ${CONTAINER_NAME} sh -c 'cp -f /jcloud-blockchain/app/config/config.tls.json /jcloud-blockchain/app/config/config.json'
 else
@@ -84,5 +104,4 @@ fi
 docker exec ${CONTAINER_NAME} sh -c 'ls -lh /jcloud-blockchain/app/config/'
 echo ">> DONE ... "
 
-#echo "   Login to ${CONTAINER_NAME} ... "
 #docker exec -it ${CONTAINER_NAME} bash

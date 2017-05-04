@@ -1,47 +1,61 @@
 {
-	"test-network": {
-		"orderer": {
-			"url": "grpc://113.209.68.126:7050",
-			"server-hostname": "ordererOrg1Orderer1",
-			"tls_cacerts": "./app/config/tls/orderer/ca-cert.pem"
-		},
-		"org1": {
-			"name": "peerOrg1",
-			"mspid": "Org1MSP",
-			"ca": "http://113.209.68.127:7054",
-			"peer1": {
-				"requests": "grpc://113.209.68.128:7051",
-				"events": "grpc://113.209.68.128:7053",
-				"server-hostname": "peerOrg1Peer1",
-				"tls_cacerts": "./app/config/tls/peers/peer0/ca-cert.pem",
-				"isAnchor": "true"
-			},
-			"peer2": {
-				"requests": "grpc://120.132.114.36:7051",
-				"events": "grpc://120.132.114.36:7053",
-				"server-hostname": "peerOrg1Peer2",
-				"tls_cacerts": "./app/config/tls/peers/peer1/ca-cert.pem",
-				"isAnchor": "true"
-			}
-		},
-		"org2": {
-			"name": "peerOrg2",
-			"mspid": "Org2MSP",
-			"ca": "http://120.132.114.32:7054",
-			"peer1": {
-				"requests": "grpc://120.132.114.37:7051",
-				"events": "grpc://120.132.114.37:7053",
-				"server-hostname": "peerOrg2Peer1",
-				"tls_cacerts": "./app/config/tls/peers/peer2/ca-cert.pem",
-				"isAnchor": "true"
-			},
-			"peer2": {
-				"requests": "grpc://113.209.68.131:7051",
-				"events": "grpc://113.209.68.131:7053",
-				"server-hostname": "peerOrg2Peer2",
-				"tls_cacerts": "./app/config/tls/peers/peer3/ca-cert.pem",
-				"isAnchor": "true"
-			}
-		}
-	}
+    "test-network": {
+        "orderer": {
+            "url": "grpc://113.209.68.126:7050",
+            "server-hostname": "orderer.hfc.jcloud.com",
+            "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/orderer.hfc.jcloud.com/server.crt"
+        },
+        "org1": {
+            "name": "org1",
+            "mspid": "Org1MSP",
+            "ca": "http://113.209.68.127:7054",
+            "peer1": {
+                "requests": "grpc://113.209.68.128:7051",
+                "events": "grpc://113.209.68.128:7053",
+                "server-hostname": "peer1.org1.hfc.jcloud.com",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer1.org1.hfc.jcloud.com/server.crt",
+                "isAnchor": "true"
+            },
+            "peer2": {
+                "requests": "grpc://120.132.114.36:7051",
+                "events": "grpc://120.132.114.36:7053",
+                "server-hostname": "peer2.org1.hfc.jcloud.com",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer2.org1.hfc.jcloud.com/server.crt",
+                "isAnchor": "true"
+            },
+            "peer3": {
+                "requests": "grpc://103.235.241.129:7051",
+                "events": "grpc://103.235.241.129:7053",
+                "server-hostname": "peer3.org1.hfc.jcloud.com",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer3.org1.hfc.jcloud.com/server.crt",
+                "isAnchor": "true"
+            }
+        },
+        "org2": {
+            "name": "org2",
+            "mspid": "Org2MSP",
+            "ca": "http://120.132.114.32:7054",
+            "peer1": {
+                "requests": "grpc://120.132.114.37:7051",
+                "events": "grpc://120.132.114.37:7053",
+                "server-hostname": "peer1.org2.hfc.jcloud.com",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer1.org2.hfc.jcloud.com/server.crt",
+                "isAnchor": "true"
+            },
+            "peer2": {
+                "requests": "grpc://113.209.68.131:7051",
+                "events": "grpc://113.209.68.131:7053",
+                "server-hostname": "peer2.org2.hfc.jcloud.com",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer2.org2.hfc.jcloud.com/server.crt",
+                "isAnchor": "true"
+            },
+            "peer3": {
+                "requests": "grpc://120.132.114.193:7051",
+                "events": "grpc://120.132.114.193:7053",
+                "server-hostname": "peer3.org2.hfc.jcloud.com",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer3.org2.hfc.jcloud.com/server.crt",
+                "isAnchor": "true"
+            }
+        }
+    }
 }
