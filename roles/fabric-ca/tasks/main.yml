@@ -36,7 +36,7 @@
     image: "{{ hfc_images.ca.tags.0 }}"
     env_file: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
     volumes:
-      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/{{ inventory_hostname|lower|replace('-','_') }}
+      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/
     ports:
       - "0.0.0.0:{{ ca_expose_port }}:{{ ca_listen_port }}"
     command: 

@@ -12,7 +12,7 @@ run_container() {
     docker run  --name {{ inventory_hostname|lower|replace('-','_') }}       \
       --hostname {{ inventory_hostname|lower|replace('-','_') }}             \
       --env-file ./env_file                                          \
-      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/{{ inventory_hostname|lower|replace('-','_') }}/            \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/            \
       --publish 0.0.0.0:{{ ca_expose_port }}:{{ ca_listen_port }}    \
       --dns {{ hostvars[groups['dns-server'].0].ansible_host }}                  \
       --dns {{ hostvars[groups['dns-server'].1].ansible_host }}                  \
