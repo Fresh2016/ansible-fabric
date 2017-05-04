@@ -15,8 +15,8 @@ run_container() {
       --env-file ./env_file                                             \
       --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/scripts/:/am-executor/scripts/     \
       --publish 0.0.0.0:{{ amexecutor_expose_port }}:{{ amexecutor_listen_port }}     \
-      --dns {{ hostvars['dnsmasq1'].ansible_host }}     \
-      --dns {{ hostvars['dnsmasq2'].ansible_host }}     \
+      --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
+      --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
       --dns-search {{ dnsmasq_domain }}                 \
       --label com.jcloud.group="monitoring"             \
       --label com.jcloud.nodetype="amexecutor"          \

@@ -16,8 +16,8 @@ run_container() {
       --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/data:/grafana/data  \
       --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/logs:/grafana/logs  \
       --publish 0.0.0.0:{{ grafana_expose_port }}:3000  \
-      --dns {{ hostvars['dnsmasq1'].ansible_host }}     \
-      --dns {{ hostvars['dnsmasq2'].ansible_host }}     \
+      --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
+      --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
       --dns-search {{ dnsmasq_domain }}                 \
       --label com.jcloud.group="monitoring"             \
       --label com.jcloud.nodetype="grafana"             \

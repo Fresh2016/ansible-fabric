@@ -31,7 +31,7 @@ CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
 CORE_NEXT=true
 CORE_PEER_ENDORSER_ENABLED=true
 CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE={{ vm_docker_hostconfig_networkmode }}
-CORE_VM_DOCKER_HOSTCONFIG_DNS={{ hostvars['dnsmasq1'].ansible_host }} {{ hostvars['dnsmasq2'].ansible_host }}
+CORE_VM_DOCKER_HOSTCONFIG_DNS={{ hostvars[groups['dns-server'].0].ansible_host }} {{ hostvars[groups['dns-server'].1].ansible_host }}
 # Ledger settings
 CORE_LEDGER_STATE_STATEDATABASE={{ ledger_state_database }}
 CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS={{ couchdb_expose_ip }}:{{ couchdb_expose_port }}

@@ -19,8 +19,8 @@ run_container() {
       --volume /hfc-data/cadvisor/etc/cadvisor.htpasswd:/etc/cadvisor/cadvisor.htpasswd \
       --publish 0.0.0.0:{{ cadvisor_expose_port }}:8080 \
       --network host                                    \
-      --dns {{ hostvars['dnsmasq1'].ansible_host }}     \
-      --dns {{ hostvars['dnsmasq2'].ansible_host }}     \
+      --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
+      --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
       --dns-search {{ dnsmasq_domain }}                 \
       --label com.jcloud.group="monitoring"             \
       --label com.jcloud.nodetype="cadvisor"            \

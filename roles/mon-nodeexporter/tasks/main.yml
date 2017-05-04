@@ -41,8 +41,8 @@
       - "0.0.0.0:{{ nodeexporter_expose_port }}:9100"
     network_mode: host
     dns_servers:
-      - "{{ hostvars['dnsmasq1'].ansible_host }}"
-      - "{{ hostvars['dnsmasq2'].ansible_host }}"
+      - "{{ hostvars[groups['dns-server'].0].ansible_host }}"
+      - "{{ hostvars[groups['dns-server'].1].ansible_host }}"
     dns_search_domains:
       - "{{ dnsmasq_domain }}"
     labels:
