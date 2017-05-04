@@ -57,4 +57,4 @@ receivers:
 
 - name: 'amexecutor'
   webhook_configs:
-  - url: http://{{ hostvars['amexecutor1'].amexecutor_private_ip }}:{{ hostvars['amexecutor1'].amexecutor_expose_port }}
+  - url: http://{{ hostvars[groups['amexecutor'].0].amexecutor_private_ip }}:{{ hostvars[groups['amexecutor'].0].amexecutor_expose_port }}
