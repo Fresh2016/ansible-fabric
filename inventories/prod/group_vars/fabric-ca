@@ -3,4 +3,4 @@
 
 ca_listen_port: 7054
 ca_expose_port: 7054
-#ca_org_id: peerOrg1
+#ca_org_id: org1.hfc.jcloud.com

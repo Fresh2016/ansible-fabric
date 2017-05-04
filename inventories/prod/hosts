@@ -2,25 +2,25 @@
 #
 ### -- dnsmasq --
 [dns-server]
-dnsmasq1	            ansible_host=103.237.5.178
-dnsmasq2	            ansible_host=120.132.114.32
+dnsmasq1.hfc.jcloud.com	        ansible_host=103.237.5.178
+dnsmasq2.hfc.jcloud.com	        ansible_host=120.132.114.32
 
 ### -- monitor-server --
 [prometheus]
-prometheus1             ansible_host=103.237.5.178
+prometheus1.hfc.jcloud.com      ansible_host=103.237.5.178
 
 [alertmanager]
-alertmanager1           ansible_host=103.237.5.178
+alertmanager1.hfc.jcloud.com    ansible_host=103.237.5.178
 
 [grafana]
-grafana1                ansible_host=103.237.5.178
+grafana1.hfc.jcloud.com         ansible_host=103.237.5.178
 
 [amexecutor]
 #
 # amexecutor is recommended to deploy toghether with alertmanager, 
 #            so can be accessed by the private IP address
 #
-amexecutor1             ansible_host=103.237.5.178  amexecutor_private_ip=192.168.10.7
+amexecutor1.hfc.jcloud.com      ansible_host=103.237.5.178  amexecutor_private_ip=192.168.10.7
 
 [monitor-server:children]
 prometheus
@@ -30,14 +30,14 @@ amexecutor
 
 ### -- fabric-couchdb --
 #[fabric-couchdb]
-#couchdb1                ansible_host=113.209.68.126
+#couchdb1.hfc.jcloud.com        ansible_host=113.209.68.126
 
 ### -- fabric-ca --
 [fabric-ca_peerOrg1]
-ca_peerOrg1             ansible_host=113.209.68.127  ca_org_id=peerOrg1
+ca.org1.hfc.jcloud.com          ansible_host=113.209.68.127  ca_org_id=org1.hfc.jcloud.com
 
 [fabric-ca_peerOrg2]
-ca_peerOrg2             ansible_host=120.132.114.32  ca_org_id=peerOrg2
+ca.org2.hfc.jcloud.com          ansible_host=120.132.114.32  ca_org_id=org2.hfc.jcloud.com
 
 [fabric-ca:children]
 fabric-ca_peerOrg1
@@ -45,21 +45,21 @@ fabric-ca_peerOrg2
 
 ### -- fabric-orderer --
 [fabric-ordererOrg1]
-ordererOrg1Orderer1      ansible_host=113.209.68.126
+orderer.hfc.jcloud.com          ansible_host=113.209.68.126
 
 [fabric-orderer:children]
 fabric-ordererOrg1
 
 ### -- fabric-peer --
 [fabric-peerOrg1]
-peerOrg1Peer1        ansible_host=113.209.68.128  peer_gossip_ip=113.209.68.128
-peerOrg1Peer2        ansible_host=120.132.114.36  peer_gossip_ip=113.209.68.128
-peerOrg1Peer3        ansible_host=103.235.241.129  peer_gossip_ip=113.209.68.128
+peer1.org1.hfc.jcloud.com        ansible_host=113.209.68.128  peer_gossip_ip=113.209.68.128
+peer2.org1.hfc.jcloud.com        ansible_host=120.132.114.36  peer_gossip_ip=113.209.68.128
+peer3.org1.hfc.jcloud.com        ansible_host=103.235.241.129  peer_gossip_ip=113.209.68.128
 
 [fabric-peerOrg2]
-peerOrg2Peer1        ansible_host=120.132.114.37  peer_gossip_ip=120.132.114.37
-peerOrg2Peer2        ansible_host=113.209.68.131  peer_gossip_ip=120.132.114.37
-peerOrg2Peer3        ansible_host=120.132.114.193  peer_gossip_ip=120.132.114.37
+peer1.org2.hfc.jcloud.com        ansible_host=120.132.114.37  peer_gossip_ip=120.132.114.37
+peer2.org2.hfc.jcloud.com        ansible_host=113.209.68.131  peer_gossip_ip=120.132.114.37
+peer3.org2.hfc.jcloud.com        ansible_host=120.132.114.193  peer_gossip_ip=120.132.114.37
 
 [fabric-peer:children]
 fabric-peerOrg1

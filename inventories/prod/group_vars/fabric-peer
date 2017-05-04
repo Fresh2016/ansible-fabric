@@ -6,7 +6,7 @@
 #
 peer_log_level: INFO
 peer_network_id: jcloud
-#peer_org_id: peerOrg1
+#peer_org_id: org1.hfc.jcloud.com
 peer_listen_port: 7051
 peer_expose_listen_port: 7051
 peer_events_port: 7053

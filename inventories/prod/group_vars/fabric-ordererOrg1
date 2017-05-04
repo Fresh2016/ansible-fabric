@@ -2,4 +2,4 @@
 # file: inventories/prod/group_vars/fabric-ordererOrg1.yml
 
 orderer_msp_id: OrdererMSP
-orderer_org_id: ordererOrg1
+orderer_org_id: hfc.jcloud.com

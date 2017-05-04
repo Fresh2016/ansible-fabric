@@ -19,11 +19,11 @@ CORE_PEER_COMMITTER_ENABLED=true
 CORE_PEER_EVENTS_ADDRESS={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_events_port }}
 # TLS
 CORE_PEER_TLS_ENABLED={{ peer_tls_enabled }}
-CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/configtx/keystore/{{ inventory_hostname|lower|replace('-','_') }}-key.pem
-CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/configtx/signcerts/{{ inventory_hostname|lower|replace('-','_') }}-cert.pem
-CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/configtx/cacerts/{{ peer_org_id | lower }}-cert.pem
+CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/configtx/tls/server.key
+CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/configtx/tls/server.crt
+CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/configtx/tls/ca.crt
 # Msp settings
-CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/configtx/
+CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/configtx/msp/
 CORE_PEER_LOCALMSPID={{ peer_msp_id }}
 CORE_PEER_PROFILE_ENABLED={{ peer_profile_enabled }}
 # VM settings
