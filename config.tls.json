@@ -3,7 +3,7 @@
         "orderer": {
             "url": "grpcs://113.209.68.126:7050",
             "server-hostname": "orderer.hfc.jcloud.com",
-            "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/orderer.hfc.jcloud.com/server.crt"
+            "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/orderer.hfc.jcloud.com/ca.crt"
         },
         "org1": {
             "name": "org1",
@@ -13,21 +13,21 @@
                 "requests": "grpcs://113.209.68.128:7051",
                 "events": "grpcs://113.209.68.128:7053",
                 "server-hostname": "peer1.org1.hfc.jcloud.com",
-                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer1.org1.hfc.jcloud.com/server.crt",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer1.org1.hfc.jcloud.com/ca.crt",
                 "isAnchor": "true"
             },
             "peer2": {
                 "requests": "grpcs://120.132.114.36:7051",
                 "events": "grpcs://120.132.114.36:7053",
                 "server-hostname": "peer2.org1.hfc.jcloud.com",
-                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer2.org1.hfc.jcloud.com/server.crt",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer2.org1.hfc.jcloud.com/ca.crt",
                 "isAnchor": "true"
             },
             "peer3": {
                 "requests": "grpcs://103.235.241.129:7051",
                 "events": "grpcs://103.235.241.129:7053",
                 "server-hostname": "peer3.org1.hfc.jcloud.com",
-                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer3.org1.hfc.jcloud.com/server.crt",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer3.org1.hfc.jcloud.com/ca.crt",
                 "isAnchor": "true"
             }
         },
@@ -39,21 +39,21 @@
                 "requests": "grpcs://120.132.114.37:7051",
                 "events": "grpcs://120.132.114.37:7053",
                 "server-hostname": "peer1.org2.hfc.jcloud.com",
-                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer1.org2.hfc.jcloud.com/server.crt",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer1.org2.hfc.jcloud.com/ca.crt",
                 "isAnchor": "true"
             },
             "peer2": {
                 "requests": "grpcs://113.209.68.131:7051",
                 "events": "grpcs://113.209.68.131:7053",
                 "server-hostname": "peer2.org2.hfc.jcloud.com",
-                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer2.org2.hfc.jcloud.com/server.crt",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer2.org2.hfc.jcloud.com/ca.crt",
                 "isAnchor": "true"
             },
             "peer3": {
                 "requests": "grpcs://120.132.114.193:7051",
                 "events": "grpcs://120.132.114.193:7053",
                 "server-hostname": "peer3.org2.hfc.jcloud.com",
-                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer3.org2.hfc.jcloud.com/server.crt",
+                "tls_cacerts": "/jcloud-blockchain/app/config/tls/clliu/peer3.org2.hfc.jcloud.com/ca.crt",
                 "isAnchor": "true"
             }
         }

@@ -75,19 +75,19 @@ for NODE in ${NODES_LIST} ; do
 done
 
 echo "copying new certs files ..."
-docker cp roles/fabric-orderer/files/hfc.jcloud.com/orderers/orderer.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/orderer.hfc.jcloud.com/
+docker cp roles/fabric-orderer/files/hfc.jcloud.com/orderers/orderer.hfc.jcloud.com/tls/ca.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/orderer.hfc.jcloud.com/
 
-docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer1.org1.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer1.org1.hfc.jcloud.com/
+docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer1.org1.hfc.jcloud.com/tls/ca.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer1.org1.hfc.jcloud.com/
 
-docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer2.org1.hfc.jcloud.com/tls/server.crt  ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer2.org1.hfc.jcloud.com/
+docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer2.org1.hfc.jcloud.com/tls/ca.crt  ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer2.org1.hfc.jcloud.com/
 
-docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer3.org1.hfc.jcloud.com/tls/server.crt  ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer3.org1.hfc.jcloud.com/
+docker cp roles/fabric-peer/files/org1.hfc.jcloud.com/peers/peer3.org1.hfc.jcloud.com/tls/ca.crt  ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer3.org1.hfc.jcloud.com/
 
-docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer1.org2.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer1.org2.hfc.jcloud.com/
+docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer1.org2.hfc.jcloud.com/tls/ca.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer1.org2.hfc.jcloud.com/
 
-docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer2.org2.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer2.org2.hfc.jcloud.com/
+docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer2.org2.hfc.jcloud.com/tls/ca.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer2.org2.hfc.jcloud.com/
 
-docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer3.org2.hfc.jcloud.com/tls/server.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer3.org2.hfc.jcloud.com/
+docker cp roles/fabric-peer/files/org2.hfc.jcloud.com/peers/peer3.org2.hfc.jcloud.com/tls/ca.crt ${CONTAINER_NAME}:/jcloud-blockchain/app/config/tls/clliu/peer3.org2.hfc.jcloud.com/
 
 if [[ "${TLS}" == "yes" ]]; then
     docker exec ${CONTAINER_NAME} sh -c 'cp -f /jcloud-blockchain/app/config/config.tls.json /jcloud-blockchain/app/config/config.json'
