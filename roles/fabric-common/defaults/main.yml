@@ -37,15 +37,3 @@ hfc_images:
     tags: 
       - hyperledger/fabric-peer:latest
 
-common_apt_pkgs:
-  - jq
-  - python-pip
-  - apt-transport-https
-  - wget
-  - ca-certificates
-  - vim
-  - curl
-  - xfsprogs
-  - python-software-properties
-  
-docker_registry_local_mirror_url: http://103.237.5.178:5000
