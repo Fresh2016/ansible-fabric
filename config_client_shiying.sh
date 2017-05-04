@@ -1,11 +1,5 @@
-TGZ=crypto-config.v1.0.0-6peers-$(date +%Y%m%d%H%M%S-%N).tgz
-tar -czvf ${TGZ} crypto-config/
+#!/bin/bash
 
-```
-
-## Optional, For fabric-sdk
-
-```bash
 export _FileName=$(readlink -f $0)
 export _DirName=$(dirname ${_FileName})
 export _ScriptVersion="2017.03.02"
