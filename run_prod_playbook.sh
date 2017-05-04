@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPTS=${OPTS:='-C'}
+OPTS=${OPTS:='-d'}
 if [[ $1 ]]; then
     OPTS=$1
 fi
