@@ -8,8 +8,3 @@
   #become: yes
   #become_method: sudo
 
-- name: Run roles - mon-nodeexporter & mon-cadvisor
-  hosts: all
-  roles: 
-    - mon-nodeexporter
-    - mon-cadvisor

@@ -8,6 +8,12 @@
   #become: yes
   #become_method: sudo
 
+- name: Run roles - mon-nodeexporter & mon-cadvisor
+  hosts: all
+  roles: 
+    - mon-nodeexporter
+    - mon-cadvisor
+
 - name: Run roles - mon-prometheus
   hosts: prometheus
   roles:
