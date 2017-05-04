@@ -3,7 +3,7 @@
 #
 # shell: delete containers
 - name: fabric-common | remove all existing containers
-  shell: CONTAINERS=$(docker ps -a --format "{{ '{{' }} .Names {{ '}}' }}" | awk '/{{ inventory_hostname|lower|replace('-','_') }}/') ; if [ "${CONTAINERS}" ]; then docker rm -f ${CONTAINERS}; fi
+  shell: CONTAINERS=$(docker ps -a --format "{{ '{{' }} .Names {{ '}}' }}" | awk '/{{ inventory_hostname|lower|replace('-','_') }}/') ; if [ "${CONTAINERS}" ]; then docker rm -f ${CONTAINERS} 2>&1 > /dev/null; exit 0 ; fi
 
 # shell: delete images
 - name: fabric-common | remove all unnecessary images
