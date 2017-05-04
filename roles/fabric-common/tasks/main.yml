@@ -7,7 +7,7 @@
 
 # shell: delete images
 - name: fabric-common | remove all unnecessary images
-  shell: IMGS=$(docker images -a | awk '/<none>|-{{ inventory_hostname|lower|replace('-','_') }}.*-v.*/ {print $3}') ; if [ "${IMGS}" ]; then docker rmi -f ${IMGS} ; fi
+  shell: IMGS=$(docker images -a | awk '/<none>|-{{ inventory_hostname|lower|replace('-','_') }}.*-v.*/ {print $3}') ; if [ "${IMGS}" ]; then docker rmi -f ${IMGS} 2>&1 > /dev/null ; exit 0 ; fi
 
 # docker-image: pull image from the list
 - name: fabric-common | pull docker images
