@@ -14,6 +14,7 @@ CORE_PEER_GOSSIP_ORGLEADER={{ peer_gossip_orgleader }}
 CORE_PEER_GOSSIP_ENDPOINT={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_gossip_port }}
 CORE_PEER_GOSSIP_EXTERNALENDPOINT={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_gossip_port }}
 CORE_PEER_GOSSIP_SKIPHANDSHAKE={{ peer_gossip_skiphandshake }}
+CORE_PEER_GOSSIP_SKIPBLOCKVERIFICATION=true
 # Committer settings
 CORE_PEER_COMMITTER_ENABLED=true
 # Event settings
