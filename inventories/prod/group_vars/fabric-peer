@@ -11,7 +11,7 @@ peer_listen_port: 7051
 peer_expose_listen_port: 7051
 peer_events_port: 7053
 peer_expose_events_port: 7053
-peer_addressautodetect: false
+peer_addressautodetect: true
 # TLS
 peer_tls_enabled: true
 # Gossip
@@ -20,7 +20,7 @@ peer_gossip_orgleader: false
 #peer_gossip_ip: peer1
 peer_gossip_port: 7051
 peer_gossip_expose_port: 7051
-peer_gossip_skiphandshake: false
+peer_gossip_skiphandshake: true
 # MSP
 #peer_msp_id: Org1MSP
 peer_profile_enabled: false

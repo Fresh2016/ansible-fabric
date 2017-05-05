@@ -32,7 +32,7 @@
 - name: fabric-peer | launch fabric-peer
   docker_container:
     name: "{{ inventory_hostname|lower|replace('-','_') }}"
-    #hostname: "{{ inventory_hostname|lower|replace('-','_') }}"
+    hostname: "{{ inventory_hostname|lower|replace('-','_') }}"
     image: "{{ hfc_images.peer.tags.0 }}"
     env_file: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
     volumes:
