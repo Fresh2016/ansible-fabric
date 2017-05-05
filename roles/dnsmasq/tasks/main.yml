@@ -71,13 +71,13 @@
 
 # copy: copy backup script for dnsmasq
 - name: dnsmasq | copy dnsmasq-backup.sh for dnsmasq
-  copy: 
+  copy:
     src: dnsmasq-backup.sh
     dest: /usr/local/bin/dnsmasq-backup.sh
     force: yes
     owner: root
     group: root
-    mode: 0755   
+    mode: 0755
 
 # cron: setup cron jobs for backup of dnsmasq
 - name: dnsmasq | setup cron jobs for backup of dnsmasq

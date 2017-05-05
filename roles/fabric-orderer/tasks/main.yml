@@ -25,7 +25,7 @@
 
 # template: copy env_file for fabric-orderer
 - name: fabric-orderer | copy env_file for fabric-orderer
-  template: 
+  template:
     src: env_file.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
 
@@ -56,7 +56,7 @@
 
 # template: generate restore script for fabric-orderer
 - name: fabric-orderer | generate restore script for fabric-orderer
-  template: 
+  template:
     src: run_new.sh.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755

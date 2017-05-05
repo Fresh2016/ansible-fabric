@@ -10,7 +10,7 @@
 
 - name: Run roles - mon-nodeexporter & mon-cadvisor
   hosts: all
-  roles: 
+  roles:
     - mon-nodeexporter
     - mon-cadvisor
 
@@ -28,7 +28,7 @@
   hosts: grafana
   roles:
     - mon-grafana
-  
+
 - name: Run roles - mon-amexecutor
   hosts: amexecutor
   roles:

@@ -27,17 +27,17 @@
 # shell: do some clean up
 - name: fabric-common | cleanup existing data
   shell: if [ -e "/hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}" ]; then rm -rf /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/{{ item }}/ ; fi
-  with_items: 
+  with_items:
     - configtx
     - data
     - restore
 
 # copy backup script for hyperledger fabric
 - name: fabric-common | copy fabric-backup.sh for hyperledger fabric
-  copy: 
+  copy:
     src: fabric-backup.sh
     dest: /usr/local/bin/fabric-backup.sh
     force: yes
     owner: root
     group: root
-    mode: 0755   
+    mode: 0755

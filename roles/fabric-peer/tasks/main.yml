@@ -24,7 +24,7 @@
 
 # template: copy env_file for fabric-peer
 - name: fabric-peer | copy env_file for fabric-peer
-  template: 
+  template:
     src: env_file.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
 
@@ -42,7 +42,7 @@
     ports:
       - "0.0.0.0:{{ peer_expose_listen_port }}:{{ peer_listen_port }}"
       - "0.0.0.0:{{ peer_expose_events_port }}:{{ peer_events_port }}"
-    command: 
+    command:
       peer node start --peer-defaultchain=false
     dns_servers:
       - "{{ hostvars[groups['dns-server'].0].ansible_host }}"
@@ -59,7 +59,7 @@
 
 # template: generate restore script for fabric-peer
 - name: fabric-peer | generate restore script for fabric-peer
-  template: 
+  template:
     src: run_new.sh.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755

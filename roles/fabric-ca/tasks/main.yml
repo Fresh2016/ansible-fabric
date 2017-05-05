@@ -39,7 +39,7 @@
       - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/
     ports:
       - "0.0.0.0:{{ ca_expose_port }}:{{ ca_listen_port }}"
-    command: 
+    command:
       fabric-ca-server start -b admin:adminpw
     dns_servers:
       - "{{ hostvars[groups['dns-server'].0].ansible_host }}"
@@ -55,11 +55,11 @@
 
 # template: generate restore script for fabric-ca
 - name: fabric-ca | generate restore script for fabric-ca
-  template: 
+  template:
     src: run_new.sh.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
-  
+
 # cron: setup cron jobs for backup of fabric-ca
 - name: fabric-ca | setup cron jobs for backup of fabric-ca
   cron:
