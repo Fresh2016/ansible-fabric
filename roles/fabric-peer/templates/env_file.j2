@@ -24,6 +24,7 @@ CORE_PEER_TLS_ENABLED={{ peer_tls_enabled }}
 CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/configtx/tls/server.key
 CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/configtx/tls/server.crt
 CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/configtx/tls/ca.crt
+CORE_PEER_TLS_SERVERHOSTOVERRIDE={{ inventory_hostname|lower|replace('-','_') }}
 # Msp settings
 CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/configtx/msp/
 CORE_PEER_LOCALMSPID={{ peer_msp_id }}
