@@ -24,7 +24,7 @@
 
 # template: copy env_file for fabric-ca
 - name: fabric-ca | copy env_file for fabric-ca
-  template: 
+  template:
     src: env_file.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
 

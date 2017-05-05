@@ -7,7 +7,8 @@ CORE_PEER_LISTENADDRESS={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_
 CORE_PEER_ADDRESS={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_listen_port }}
 CORE_PEER_ADDRESSAUTODETECT={{ peer_addressautodetect }}
 # Gossip settings
-CORE_PEER_GOSSIP_BOOTSTRAP={{ peer_gossip_ip }}:{{ peer_gossip_expose_port }}
+#CORE_PEER_GOSSIP_BOOTSTRAP={{ peer_gossip_ip }}:{{ peer_gossip_expose_port }}
+CORE_PEER_GOSSIP_BOOTSTRAP={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_gossip_port }}
 CORE_PEER_GOSSIP_USELEADERELECTION={{ peer_gossip_useleaderelection }}
 CORE_PEER_GOSSIP_ORGLEADER={{ peer_gossip_orgleader }}
 CORE_PEER_GOSSIP_ENDPOINT={{ inventory_hostname|lower|replace('-','_') }}:{{ peer_gossip_port }}
