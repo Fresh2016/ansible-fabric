@@ -11,7 +11,7 @@ peer_listen_port: 7051
 peer_expose_listen_port: 7051
 peer_events_port: 7053
 peer_expose_events_port: 7053
-peer_addressautodetect: true
+peer_addressautodetect: false
 # TLS
 peer_tls_enabled: true
 # Gossip
