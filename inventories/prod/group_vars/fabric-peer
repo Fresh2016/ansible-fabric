@@ -23,7 +23,7 @@ peer_gossip_expose_port: 7051
 peer_gossip_skiphandshake: true
 # MSP
 #peer_msp_id: Org1MSP
-peer_profile_enabled: false
+peer_profile_enabled: true
 #docker
 vm_docker_hostconfig_networkmode: bridge
 #
