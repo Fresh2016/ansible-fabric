@@ -17,6 +17,7 @@
     mode: 0644
   with_items:
     - restore
+    - textfile
 
 #
 # nodeexporter
@@ -33,10 +34,13 @@
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
-    command: 
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /hfc-data/cadvisor/textfile:/textfile
+    command:
       -collector.procfs /host/proc
       -collector.sysfs /host/sys
       -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"
+      -collector.textfile.directory "/textfile"
     ports:
       - "0.0.0.0:{{ nodeexporter_expose_port }}:9100"
     network_mode: host
@@ -54,20 +58,20 @@
 
 # template: generate restore script for nodeexporter
 - name: mon-nodeexporter | generate restore script for nodeexporter
-  template: 
+  template:
     src: run_new.sh.j2
-    dest: /hfc-data/nodeexporter/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
+    dest: /hfc-data/nodeexporter/restore/run-nodeexporter.sh
     mode: 0755
 
 # copy: copy backup script for monitoring
 - name: mon-nodeexporter | copy monitoring-backup.sh for monitoring
-  copy: 
+  copy:
     src: monitoring-backup.sh
     dest: /usr/local/bin/monitoring-backup.sh
     force: yes
     owner: root
     group: root
-    mode: 0755   
+    mode: 0755
 
 # cron: setup cron jobs for backup of nodeexporter
 - name: mon-nodeexporter | setup cron jobs for backup of nodeexporter
@@ -78,4 +82,3 @@
     user: root
     job: "/usr/local/bin/monitoring-backup.sh nodeexporter"
     cron_file: "nodeexporter-backup"
-    

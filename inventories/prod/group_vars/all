@@ -4,14 +4,14 @@
 # hfc_images used in tasks
 #
 #   MUST:
-#     - tags, 
+#     - tags,
 #         - latest tags must be the first one, which is used by running docker containers
 #         - if no tags, must put `[]` due to the playbook need an empty list value
 #
 hfc_images:
   couchdb:
     image: shiying/fabric-couchdb:x86_64-1.0.0-snapshot-56b6d12
-    tags: 
+    tags:
       - hyperledger/fabric-couchdb:latest
   baseos:
     image: hyperledger/fabric-baseos:x86_64-0.3.0
@@ -21,20 +21,20 @@ hfc_images:
     tags: []
   ca:
     image: shiying/fabric-ca:x86_64-1.0.0-snapshot-f0f86b7
-    tags: 
+    tags:
       - hyperledger/fabric-ca:latest
   ccenv:
     image: shiying/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
-    tags: 
+    tags:
       - hyperledger/fabric-ccenv:latest
       - hyperledger/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
   orderer:
     image: shiying/fabric-orderer:x86_64-1.0.0-snapshot-56b6d12
-    tags: 
+    tags:
       - hyperledger/fabric-orderer:latest
   peer:
     image: shiying/fabric-peer:x86_64-1.0.0-snapshot-56b6d12
-    tags: 
+    tags:
       - hyperledger/fabric-peer:latest
 
 common_apt_pkgs:
@@ -94,7 +94,7 @@ grafana_allow_sign_up: false
 
 #
 # amexecutor
-# 
+#
 amexecutor_image: jack6liu/prom-am-executor:latest
 
 amexecutor_listen_port: 8088
@@ -116,4 +116,9 @@ cadvisor_image: google/cadvisor:latest
 #cadvisor_listen_port: 8080
 cadvisor_expose_port: 8080
 
-
+#
+# Disable tls for now
+#
+ca_tls_enabled: false
+orderer_tls_enabled: false
+peer_tls_enabled: false
