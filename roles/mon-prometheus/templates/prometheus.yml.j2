@@ -14,6 +14,7 @@ rule_files:
   - "targets.rules"
   - "hosts.rules"
   - "containers-perf.rules"
+  - "containers-isup.rules"
   #- "containers-up.rules"
 
 # A scrape configuration containing exactly one endpoint to scrape.
@@ -27,7 +28,7 @@ scrape_configs:
     - targets:
 {% for host in groups['all'] %}
       - "{{ hostvars[host].ansible_host }}:{{ nodeexporter_expose_port }}"
-{% endfor %} 
+{% endfor %}
 
   - job_name: 'cadvisor'
     scrape_interval: 5s
@@ -38,7 +39,7 @@ scrape_configs:
     - targets :
 {% for host in groups['all'] %}
       - "{{ hostvars[host].ansible_host }}:{{ cadvisor_expose_port }}"
-{% endfor %} 
+{% endfor %}
 
   - job_name: 'prometheus'
     scrape_interval: 5s
@@ -49,7 +50,7 @@ scrape_configs:
     - targets:
 {% for host in groups['prometheus'] %}
       - "{{ hostvars[host].ansible_host }}:{{ prometheus_expose_port }}"
-{% endfor %} 
+{% endfor %}
 
 alerting:
   alertmanagers:
@@ -61,7 +62,7 @@ alerting:
     - targets:
 {% for host in groups['alertmanager'] %}
       - "{{ hostvars[host].ansible_host }}:{{ alertmanager_expose_port }}"
-{% endfor %} 
+{% endfor %}
 
 #  - job_name: 'nginx'
 #    scrape_interval: 10s

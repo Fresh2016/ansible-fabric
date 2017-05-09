@@ -1,7 +1,7 @@
 ALERT container_high_cpu_usage
   IF jcloud_container_cpu_usage_sum1m * 100 > 50
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "warning" ,
     action = "notify"
   }
@@ -11,9 +11,9 @@ ALERT container_high_cpu_usage
   }
 
 ALERT container_high_memory_load
-  IF container_memory_usage_bytes{image!=''} > 1024 * 1024 * 1024
+  IF container_memory_usage_bytes{image!=''} > 1024 * 1024 * 1024 * 2
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "warning" ,
     action = "notify"
   }

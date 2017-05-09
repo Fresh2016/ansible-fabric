@@ -2,7 +2,7 @@
 ALERT container_down_{{ hostvars[host].inventory_hostname|lower|replace('-','_') }}
   IF absent(container_start_time_seconds{name="{{ hostvars[host].inventory_hostname|lower|replace('-','_') }}"})
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "critical" ,
     action = "recover"
   }

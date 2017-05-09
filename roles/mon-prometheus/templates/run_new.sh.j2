@@ -28,7 +28,7 @@ run_container() {
       -storage.local.target-heap-size=536870912         \
       -query.staleness-delta=10s                        \
       -web.external-url=http://{{ansible_host}}:{{ prometheus_expose_port }}
-      
+
 }
 echo ">> BEGIN"
 if [[ $# != '1' ]]; then
@@ -39,8 +39,8 @@ if [[ $# != '1' ]]; then
 fi
 if [[ "$1" == "--force" ]]; then
     echo ">> Deleting existing {{ inventory_hostname|lower|replace('-','_') }} ..."
-    docker rm -f {{ inventory_hostname|lower|replace('-','_') }} 
-    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."  
+    docker rm -f {{ inventory_hostname|lower|replace('-','_') }}
+    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 elif [[ "$1" == "--safe" ]]; then
     echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 else

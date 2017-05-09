@@ -1,7 +1,7 @@
 ALERT host_high_cpu_load
   IF node_load1 > 1.5
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "warning" ,
     action = "notify"
   }
@@ -13,7 +13,7 @@ ALERT host_high_cpu_load
 ALERT host_high_cpu_usage
   IF jcloud_node_cpu_usage_sum1m * 100 > 60
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "warning" ,
     action = "notify"
   }
@@ -25,7 +25,7 @@ ALERT host_high_cpu_usage
 ALERT host_high_memory_usage
   IF jcloud_node_mem_usage * 100 > 85
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "warning" ,
     action = "notify"
   }
@@ -37,7 +37,7 @@ ALERT host_high_memory_usage
 ALERT host_hight_docker_storage_usage
   IF jcloud_node_docker_storage_usage * 100 > 85
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "warning" ,
     action = "notify"
   }
@@ -49,7 +49,7 @@ ALERT host_hight_docker_storage_usage
 ALERT host_hight_data_storage_usage
   IF jcloud_node_data_storage_usage * 100 > 85
   FOR 30s
-  LABELS { 
+  LABELS {
     severity = "warning" ,
     action = "notify"
   }
