@@ -17,7 +17,7 @@ run_container() {
       --volume /sys:/host/sys:ro                        \
       --volume /:/rootfs:ro                             \
       --volume /var/lib/docker/:/var/lib/docker:ro      \
-      --volume /hfc-data/cadvisor/textfile:/textfile    \
+      --volume /hfc-data/nodeexporter/textfile:/textfile    \
       --publish 0.0.0.0:{{ nodeexporter_expose_port }}:9100 \
       --network host                                    \
       --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \

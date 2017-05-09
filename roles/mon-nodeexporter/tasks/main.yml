@@ -35,7 +35,7 @@
       - /sys:/host/sys:ro
       - /:/rootfs:ro
       - /var/lib/docker/:/var/lib/docker:ro
-      - /hfc-data/cadvisor/textfile:/textfile
+      - /hfc-data/nodeexporter/textfile:/textfile
     command:
       -collector.procfs /host/proc
       -collector.sysfs /host/sys
