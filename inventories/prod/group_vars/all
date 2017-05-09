@@ -115,10 +115,3 @@ cadvisor_image: google/cadvisor:latest
 
 #cadvisor_listen_port: 8080
 cadvisor_expose_port: 8080
-
-#
-# Disable tls for now
-#
-ca_tls_enabled: false
-orderer_tls_enabled: false
-peer_tls_enabled: false
