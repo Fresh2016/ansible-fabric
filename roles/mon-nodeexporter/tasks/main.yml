@@ -34,7 +34,7 @@
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /hfc-data/nodeexporter/textfile:/textfile
     command:
       -collector.procfs /host/proc

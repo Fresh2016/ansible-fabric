@@ -16,7 +16,7 @@ run_container() {
       --volume /proc:/host/proc:ro                      \
       --volume /sys:/host/sys:ro                        \
       --volume /:/rootfs:ro                             \
-      --volume /var/lib/docker/:/var/lib/docker:ro      \
+      --volume /var/run/docker.sock:/var/run/docker.sock:ro \
       --volume /hfc-data/nodeexporter/textfile:/textfile    \
       --publish 0.0.0.0:{{ nodeexporter_expose_port }}:9100 \
       --network host                                    \
