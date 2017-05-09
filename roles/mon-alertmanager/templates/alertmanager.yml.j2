@@ -17,8 +17,8 @@ route:
   # When a new group of alerts is created by an incoming alert, wait at
   # least 'group_wait' to send the initial notification.
   # This way ensures that you get multiple alerts for the same group that start
-  # firing shortly after another are batched together on the first 
-  # notification.  
+  # firing shortly after another are batched together on the first
+  # notification.
   group_wait: {{ alert_group_wait }}
 
   # When the first notification was sent, wait 'group_interval' to send a batch
@@ -27,7 +27,7 @@ route:
 
   # If an alert has successfully been sent, wait 'repeat_interval' to
   # resend them.
-  repeat_interval: {{ alert_repeat_interval }} 
+  repeat_interval: {{ alert_repeat_interval }}
 
   # A default receiver
   receiver: 'default'
@@ -36,15 +36,17 @@ route:
   routes:
   # sub routes receiver
   - receiver: 'default'
-    group_interval: 3m
-    repeat_interval: 3h
+    group_wait: {{ recover_group_wait }}
+    group_interval: {{ recover_group_interval }}
+    repeat_interval: {{ recover_repeat_interval }}
     match:
       action: 'recover'
     continue: true
 
   - receiver: 'amexecutor'
-    group_interval: 3m
-    repeat_interval: 3h
+    group_wait: {{ recover_group_wait }}
+    group_interval: {{ recover_group_interval }}
+    repeat_interval: {{ recover_repeat_interval }}
     match:
       action: 'recover'
     continue: true
