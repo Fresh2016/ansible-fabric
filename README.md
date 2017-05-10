@@ -17,7 +17,7 @@
     - 2x ca, 1x orderer, 4x peer, ~~1x couchdb~~, 1x monitor server
     - 每台云主机均部署1x nodeexport + 1x cadvisor
   - 节点部署结构如下
-  
+
   ```bash
     Ansible_host:                   103.237.5.178 @ Huabei
         |---- monitor_server        103.237.5.178 @ Huabei
@@ -30,7 +30,7 @@
         |---- ca_peerorg2:          120.132.114.32 @ ${Huanan}
         |---- peerorg2peer1:        120.132.114.37 @ ${Huanan}
         |---- peerorg2peer2:        113.209.68.131 @ Huabei
-    
+
   ```
 
 - 安装后，
