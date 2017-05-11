@@ -4,8 +4,8 @@ CONTAINER_NAME=$1
 #CONTAINER_NAME=$(docker ps --format "{{.ID}}\t{{.Names}}" | awk '/peer[0-9]?$/ {print $2}')
 DATA_SRC_DIR=/hfc-data/${CONTAINER_NAME}
 BACKUP_DEST_DIR=/var/lib/docker/hfc-backup
-TIME_STAMP=$(printf "%.19s" "$(date +%Y%m%d.%H%M%S.%N)")
-BACKUP_FILENAME=${BACKUP_DEST_DIR}/${CONTAINER_NAME}.${TIME_STAMP}.tgz
+TIME_STAMP=$(printf "%.19s" "$(date +%Y%m%d-%H%M%S-%N)")
+BACKUP_FILENAME=${BACKUP_DEST_DIR}/${CONTAINER_NAME}_${TIME_STAMP}.tgz
 
 export CONTAINER_NAME
 export DATA_SRC_DIR

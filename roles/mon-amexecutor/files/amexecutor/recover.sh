@@ -165,6 +165,29 @@ func script() {
         printf "`ls ${backup_dir}/${instance_name}* 2>/dev/null | sort | tail -1`"
     }
 
+    set_restore_file_from_backup_tgz() {
+        #
+        # backup_tgz should be tar.gz file with full path archived
+        # target_dir should be /hfc-data/${instance_name}
+        #
+        local backup_tgz=$1
+        local target_dir=$2
+
+        local timestamp=`get_timestamp`
+        # backup existing */restore file
+        if [[ -e "${target_dir}" ]]; then
+            mv -f ${target_dir} ${target_dir}.${timestamp}
+        fi
+
+        # replace with backup file
+        temp_dir=$(mktemp -d)
+        tar -zxf ${backup_tgz} -C ${temp_dir}
+
+        # make sure /hfc-data exists, for some cases that the volume may not mounted to the host
+        mkdir -p /hfc-data/
+        mv -f ${temp_dir}/hfc-data/${target_instance_name} /hfc-data/
+    }
+
     try_to_start_instance_by_id() {
         #
     }
