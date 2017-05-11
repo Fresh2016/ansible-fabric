@@ -168,6 +168,8 @@ func script() {
     set_restore_file_from_backup_tgz() {
         #
         # backup_tgz should be tar.gz file with full path archived
+        #                   eg: /hfc-data/ca.org1.hfc.jcloud.com
+        #                   backup tgz file name: ca.org1.hfc.jcloud.com_20170511-105501-998.tgz
         # target_dir should be /hfc-data/${instance_name}
         #
         local backup_tgz=$1

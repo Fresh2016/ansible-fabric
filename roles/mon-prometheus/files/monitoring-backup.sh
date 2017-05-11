@@ -37,7 +37,7 @@ backup() {
 prune_old_backup() {
     DATE_LIMIT=$(date +%Y%m%d --date="-7 day")
     for BAK_FILE in $(ls ${BACKUP_DEST_DIR}); do
-        BAK_DATE=$(echo ${BAK_FILE} | sed "s/${CONTAINER_NAME}//g" | cut -d '.' -f 2)
+        BAK_DATE=$(echo ${BAK_FILE} | sed "s/${CONTAINER_NAME}_//g" | cut -d '-' -f 1)
         if [[ "${BAK_DATE}" -lt "${DATE_LIMIT}" ]]; then
             echo "---- Deleting ${BAK_FILE} ..."
             rm -f ${BAK_FILE}
