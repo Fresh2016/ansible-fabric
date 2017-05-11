@@ -26,29 +26,39 @@ export recover_script=${_dir_name}/recover_docker_instance.sh
 export pidfile="/var/run/hfc-jcloud-com-backup-restore.pid"
 export retry_interval=5
 
-echo "INFO:  prechecking before running this script ..."
+echo -e "
+                   INFO:  prechecking before running this script ...
+                   "
 
 # totally try to check for (1 + 3) * ${retry_interval} seconds
 exist_pid=`cat ${pidfile} 2>/dev/null`
 
 if [[ -e "${pidfile}" ]] && [[ "${exist_pid}" != "$$" ]] ; then
-    echo "WARN:  \"${exist_pid_cmd}\" is running ..."
-    echo "WARN:   we will retry after ${retry_interval}s ..."
+    echo -e "
+                   WARN:  \"${exist_pid_cmd}\" is running ...
+                   WARN:   we will retry after ${retry_interval}s ...
+                   "
     sleep ${retry_interval}
     # try sleep 3 more times before exit
     for cnt in {1..3}; do
         exist_pid=`cat ${pidfile} 2>/dev/null`
-        echo "WARN:  this is the ${cnt} retry ..."
+        echo -e "
+                   WARN:  this is the ${cnt} retry ...
+                   "
         if [[ -e "${pidfile}" ]] && [[ "${exist_pid}" != "$$" ]] ; then
-            echo "WARN:  \"${exist_pid_cmd}\" is running ..."
-            echo "WARN:   we will retry after ${retry_interval}s ..."
+            echo -e "
+                   WARN:  \"${exist_pid_cmd}\" is running ...
+                   WARN:   we will retry after ${retry_interval}s ...
+                   "
         fi
         sleep ${retry_interval}
     done
     # exit after 1 + 3 checks
     exist_pid_cmd=`ps -o cmd --no-headers ${exist_pid}`
-    echo "WARN:  \"${exist_pid_cmd}\" is running ..."
-    echo "WARN:  so we exit with nothing did ..."
+    echo -e "
+                   WARN:  \"${exist_pid_cmd}\" is running ...
+                   WARN:  so we exit with nothing did ...
+                   "
     exit 1
 fi
 
@@ -71,7 +81,9 @@ set_ssh_opts() {
 
     local KEYPAIR_FILE=${KEYPAIR_FILE:="/am-executor/scripts/id_rsa"}
     if [[ ! -e "${KEYPAIR_FILE}" ]]; then
-        echo "ERROR: ${KEYPAIR_FILE} is not found!!! "
+        echo -e "
+                   ERROR: ${KEYPAIR_FILE} is not found!!!
+                   "
         exit 1
     fi
 
@@ -120,15 +132,19 @@ copy_and_run_on_host() {
 # main process
 #
 
-printf "+------------------------------------------------------+\n"
-printf "+  %-50s  +\n" "${_script_name}"
-printf "+------------------------------------------------------+\n"
+echo -e "
+                   +------------------------------------------------------+
+                   +  ${_script_name}               +
+                   +------------------------------------------------------+
+                   "
 
 # 1. loop for all alerts
 
 counter=1
 while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
-    echo "+--> started to fix the ${counter} alert ..."
+    echo "
+                   +--> started to fix the ${counter} alert ...
+                   "
 
     # 1.1 set alert information needed
     alert_action=''
@@ -138,7 +154,7 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
     alert_container_id=''
     alert_status=''
 
-     SKIP=0
+    SKIP=0
 
     eval "alert_action=\${AMX_ALERT_${counter}_LABEL_action}"
     eval "alert_host_uri=\${AMX_ALERT_${counter}_LABEL_instance}"
@@ -150,13 +166,15 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
     # 1.2 check ${alert_status}
     #           possible value is resolved, firing?
     if [[ "${alert_status}" == "resolved" ]]; then
-        echo "INFO:  the alert ${counter} is ${alert_status} !!!"
-        echo "           container id     -- ${alert_container_id}"
-        echo "           container name   -- ${alert_container_name}"
-        echo "           container host   -- ${alert_host}"
-        echo "           container action -- ${alert_action}"
-        echo "           container status -- ${alert_status}"
-        echo "INFO:  exit with nothing did ..."
+        echo -e "
+                   INFO:  the alert ${counter} is ${alert_status} !!!
+                          container id     -- ${alert_container_id}
+                          container name   -- ${alert_container_name}
+                          container host   -- ${alert_host}
+                          container action -- ${alert_action}
+                          container status -- ${alert_status}
+                   INFO:  exit with nothing did ...
+                   "
 
         # skip actions
         SKIP=1
@@ -166,13 +184,15 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
     # 1.3 check ${alert_action}
     #           defined value is recover
     if [[ "${alert_action}" != "recover" ]]; then
-        echo "INFO:  the alert ${counter} is intend for ${alert_action} !!!"
-        echo "           container id     -- ${alert_container_id}"
-        echo "           container name   -- ${alert_container_name}"
-        echo "           container host   -- ${alert_host}"
-        echo "           container action -- ${alert_action}"
-        echo "           container status -- ${alert_status}"
-        echo "INFO:  exit with nothing did ..."
+        echo -e "
+                   INFO:  the alert ${counter} is intend for ${alert_action} !!!
+                          container id     -- ${alert_container_id}
+                          container name   -- ${alert_container_name}
+                          container host   -- ${alert_host}
+                          container action -- ${alert_action}
+                          container status -- ${alert_status}
+                   INFO:  exit with nothing did ...
+                   "
 
         # skip actions
         SKIP=1
