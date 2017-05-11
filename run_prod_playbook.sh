@@ -22,7 +22,7 @@ case ${OPTS} in
         ansible-playbook -i inventories/prod/hosts prod.yml
         ;;
     -m|-M)
-        ansible-playbook -i inventories/prod/hosts prod_prepare.yml
+        ansible-playbook -i inventories/prod/hosts prod_monitoring.yml
         ;;
     *)
         echo "Only 1 options accept: -vvv, -C, -p|-P, -d|-D"
