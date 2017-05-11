@@ -63,22 +63,12 @@
     dest: /hfc-data/nodeexporter/restore/run-nodeexporter.sh
     mode: 0755
 
-# copy: copy backup script for monitoring
-- name: mon-nodeexporter | copy monitoring-backup.sh for monitoring
-  copy:
-    src: monitoring-backup.sh
-    dest: /usr/local/bin/monitoring-backup.sh
-    force: yes
-    owner: root
-    group: root
-    mode: 0755
-
 # cron: setup cron jobs for backup of nodeexporter
 - name: mon-nodeexporter | setup cron jobs for backup of nodeexporter
   cron:
     name: backup /hfc-data/nodeexporter/
-    minute: "{{ ( ansible_host | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ ( ansible_host | hash | list | map('int',0,16) | sum ) % 2  + 1 }}"
+    minute: "{{ (( ansible_host | hash('sha1') | list | map('int',0,16) | sum ) % 20 ) * 3 }}"
+    hour: "{{ ( ansible_host | hash | list | map('int',0,16) | sum ) % 3 + 1 }}"
     user: root
     job: "/usr/local/bin/monitoring-backup.sh nodeexporter"
     cron_file: "nodeexporter-backup"

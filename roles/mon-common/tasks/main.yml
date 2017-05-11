@@ -1,0 +1,12 @@
+---
+# file: roles/mon-common/tasks/main.yml
+#
+# copy: copy backup script for monitoring
+- name: mon-common | copy monitoring-backup.sh for monitoring
+  copy:
+    src: monitoring-backup.sh
+    dest: /usr/local/bin/monitoring-backup.sh
+    force: yes
+    owner: root
+    group: root
+    mode: 0755

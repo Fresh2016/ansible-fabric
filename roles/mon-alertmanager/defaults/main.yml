@@ -1,5 +1,5 @@
 ---
-# file: roles/monitor-server/defaults/main.yml
+# file: roles/mon-alertmanager/defaults/main.yml
 alertmanager_image: jack6liu/alertmanager:latest
 
 alertmanager_listen_port: 9093

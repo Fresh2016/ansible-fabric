@@ -12,6 +12,49 @@ export DATA_SRC_DIR
 export BACKUP_DEST_DIR
 export BACKUP_FILENAME
 
+#
+# precheck script status by checking pid
+#   VERY IMPORTANT: there are some cases that some script is running and caused the container down for temporarily
+#                   eg: fabric-backup.sh, monitoring-backup.sh, dnsmasq-backup.sh AND recover_docker_instance.sh
+#               SO: these script share the same pidfile in order to avoid run these scripts at the sametime
+#                   It is hardcoded to be /var/run/hfc-jcloud-com-backup-restore.pid
+#
+export pidfile="/var/run/hfc-jcloud-com-backup-restore.pid"
+export retry_interval=5
+
+echo "INFO:  prechecking before running this script ..."
+
+# totally try to check for (1 + 3) * ${retry_interval} seconds
+exist_pid=`cat ${pidfile} 2>/dev/null`
+
+if [[ -e "${pidfile}" ]] && [[ "${exist_pid}" != "$$" ]] ; then
+    echo "WARN:  \"${exist_pid_cmd}\" is running ..."
+    echo "WARN:   we will retry after ${retry_interval}s ..."
+    sleep ${retry_interval}
+    # try sleep 3 more times before exit
+    for cnt in {1..3}; do
+        exist_pid=`cat ${pidfile} 2>/dev/null`
+        echo "WARN:  this is the ${cnt} retry ..."
+        if [[ -e "${pidfile}" ]] && [[ "${exist_pid}" != "$$" ]] ; then
+            echo "WARN:  \"${exist_pid_cmd}\" is running ..."
+            echo "WARN:   we will retry after ${retry_interval}s ..."
+        fi
+        sleep ${retry_interval}
+    done
+    # exit after 1 + 3 checks
+    exist_pid_cmd=`ps -o cmd --no-headers ${exist_pid}`
+    echo "WARN:  \"${exist_pid_cmd}\" is running ..."
+    echo "WARN:  so we exit with nothing did ..."
+    exit 1
+fi
+
+#
+# write current pid to ${pidfile}
+#
+trap "rm -f -- \"${pidfile}\"" EXIT INT KILL TERM
+echo "$$" > "${pidfile}"
+
+
 local_time() {
     printf "%.23s" "$(date '+%Y-%m-%d %H:%M:%S.%N')"
 }

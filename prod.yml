@@ -11,6 +11,7 @@
 - name: Run roles - mon-nodeexporter & mon-cadvisor
   hosts: all
   roles:
+    - mon-common
     - mon-nodeexporter
     - mon-cadvisor
 

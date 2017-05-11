@@ -70,22 +70,12 @@
     dest: /hfc-data/cadvisor/restore/run-cadvisor.sh
     mode: 0755
 
-# copy: copy backup script for monitoring
-- name: mon-cadvisor | copy monitoring-backup.sh for monitoring
-  copy:
-    src: monitoring-backup.sh
-    dest: /usr/local/bin/monitoring-backup.sh
-    force: yes
-    owner: root
-    group: root
-    mode: 0755
-
 # cron: setup cron jobs for backup of cadvisor
 - name: mon-cadvisor | setup cron jobs for backup of cadvisor
   cron:
     name: backup /hfc-data/cadvisor/
-    minute: "{{ ( ansible_host | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ ( ansible_host | hash | list | map('int',0,16) | sum ) % 2  + 1 }}"
+    minute: "{{ (( ansible_host | hash('md5') | list | map('int',0,16) | sum ) % 20 ) * 3 }}"
+    hour: "{{ ( ansible_host | hash | list | map('int',0,16) | sum ) % 3 + 1 }}"
     user: root
     job: "/usr/local/bin/monitoring-backup.sh cadvisor"
     cron_file: "cadvisor-backup"
