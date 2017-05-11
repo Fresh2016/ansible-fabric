@@ -92,6 +92,7 @@ set_ssh_opts() {
                    "
         exit 1
     fi
+    chmod 644 ${KEYPAIR_FILE}
 
     local SSH_OPTS=${SSH_BASE_OPTS}" -i ${KEYPAIR_FILE}"
 
