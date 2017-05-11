@@ -51,12 +51,13 @@ route:
       action: 'recover'
     continue: true
 
-
 receivers:
 - name: 'default'
   email_configs:
   - to: '{{ receiver_email_account }}'
+    send_resolved: true
 
 - name: 'amexecutor'
   webhook_configs:
   - url: http://{{ hostvars[groups['amexecutor'].0].amexecutor_private_ip }}:{{ hostvars[groups['amexecutor'].0].amexecutor_expose_port }}
+    send_resolved: true

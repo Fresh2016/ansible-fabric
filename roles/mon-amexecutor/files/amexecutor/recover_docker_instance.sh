@@ -1,0 +1,218 @@
+#!/bin/bash
+
+#
+# recover_docker_instance.sh
+#   usage: bash recover_docker_instance.sh "${target_instance_id}"
+#   note: must be running by root
+#
+
+#
+# get args from stdin
+#
+target_instance_id=$1
+
+#
+# set global variables
+#
+export _file_name=$(readlink -f $0)
+export _script_name=$(basename ${_file_name})
+export _dir_name=$(dirname ${_file_name})
+
+#
+# functions predefined
+#
+get_timestamp() {
+    printf "%.19s" "$(date +%Y%m%d.%H%M%S.%N)"
+}
+
+get_dockerd_version() {
+    printf "`docker version --format {{.Server.Version}} 2>/dev/null`"
+}
+
+get_name_by_id(){
+    local instance_id=$1
+    printf "`docker ps -a -f id="${instance_id}" --format {{.Names}}`"
+}
+
+get_image_by_id(){
+    local instance_id=$1
+    printf "`docker ps -a -f id="${instance_id}" --format {{.Image}} | awk -F '/|-|:' '{print $2}'`"
+}
+
+get_stopped_instances(){
+    printf "`docker ps -qa -f "status=exited" -f "status=dead" -f "status=paused"`"
+}
+
+is_instance_running() {
+    local instance_id=$1
+    printf "`docker ps -q -f id="${instance_id}"`"
+}
+
+get_backup_file_by_image() {
+    #
+    # usage: get_backup_file_by_image "${instance_name}" "${instance_image}"
+    # check backup files from
+    #              /var/lib/docker/dnsmasq-backup     for dnsmasq
+    #              /var/lib/docker/hfc-backup         for fabric nodes
+    #              /var/lib/docker/monitoring-backup  for monitoring nodes
+    #
+    local instance_name=$1
+    local instance_image=$2
+    local backup_dir
+
+    case ${instance_image,,} in
+        dnsmasq)
+            backup_dir=/var/lib/docker/dnsmasq-backup
+            ;;
+        fabric)
+            backup_dir=/var/lib/docker/hfc-backup
+            ;;
+        *)
+            backup_dir=/var/lib/docker/monitoring-backup
+            ;;
+    esac
+
+    printf "`ls ${backup_dir}/${instance_name}* 2>/dev/null | sort | tail -1`"
+}
+
+set_restore_file_from_backup_tgz() {
+    #
+    # usage: set_restore_file_from_backup_tgz "${backup_tgz}"
+    # backup_tgz should be tar.gz file with full path archived
+    #                   eg: /hfc-data/ca.org1.hfc.jcloud.com
+    #                   backup tgz file name: ca.org1.hfc.jcloud.com_20170511-105501-998.tgz
+    #
+    local backup_tgz=$1
+
+    local instance_name=`echo ${backup_tgz} | cut -d '_' -f 1`
+    local timestamp=`get_timestamp`
+
+    # backup existing /hfc-data/${instance_name}
+    local target_dir=/hfc-data/${instance_name}
+    if [[ -e "${target_dir}" ]]; then
+        mv -f ${target_dir} ${target_dir}.${timestamp}
+    fi
+
+    # replace with backup file
+    temp_dir=$(mktemp -d)
+    tar -zxf ${backup_tgz} -C ${temp_dir}
+
+    # make sure /hfc-data exists, for some cases that the volume may not mounted to the host
+    mkdir -p /hfc-data/
+    mv -f ${temp_dir}/hfc-data/${instance_name} /hfc-data/
+}
+
+#
+# main process
+#
+
+# 0. precheck the ${target_instance_id}
+if [[ ! ${target_instance_id} ]]; then
+    echo "ERROR: no instance_id provided !!!"
+    echo "ERROR: exited with nothing done !!!"
+    exit 1
+fi
+
+# 1. check dockerd status
+#    check dockerd running status by checking dockerd version
+dockerd_version=`get_dockerd_version`
+
+if [[ ! ${dockerd_version} ]]; then
+    #    if dockerd is not running, try to start
+    echo "ERROR: docker daemon is stopped !!!"
+    echo "WARN:  trying to restart docker daemon ..."
+
+    #    try to start dockerd
+    systemctl start docker.service
+
+    #    verify dockerd running status again
+    daemon_state=`get_dockerd_version`
+
+    if [[ ! ${daemon_state} ]]; then
+        echo "ERROR: docker daemon cannot started !!!"
+        echo "ERROR: Exit recovery operation now ..."
+        exit 1
+    fi
+
+    #    try to start all instances not in running state (exited, dead, paused)
+    echo "WARN:  trying to start all docker instances (exited, dead, paused) ..."
+    stopped_instances=`get_stopped_instances`
+    for instance in ${stopped_instances} ; do
+        #    try to start ${instance}
+        docker start ${instance}
+
+        #    verify ${instance} state
+        state=`is_instance_running "${instance}"`
+        if [[ ! ${state} ]]; then
+            name=`get_name_by_id "${instance}"`
+            echo "ERROR: instance id=${instance} name=${name} cannot be started !!!"
+        fi
+    done
+fi
+
+# 2. till now, dockerd should be running
+echo "INFO:  docker daemon is running ..."
+
+# 3. try to start the target_instance
+#    3.1 set instance info
+target_instance_name=`get_name_by_id "${target_instance_id}"`
+target_instance_image=`get_image_by_id "${target_instance_id}"`
+target_restore_script="/hfc-data/${target_instance_name}/restore/run-${target_instance_name}.sh"
+
+#    3.2 check the ${target_instance_id} exists or not
+if [[ ! ${target_instance_name} ]]; then
+    echo "ERROR: the target instance id=${target_instance_id} was not found !!!"
+    echo "ERROR: IS id=${target_instance_id} running on this host???"
+    echo "ERROR: Exit recovery operation now ..."
+    exit 1
+fi
+
+#    3.3 check ${target_instance_id} running state
+state=`is_instance_running "${target_instance_id}"`
+if [[ ! ${state} ]]; then
+    #    3.3.1 start ${target_instance_id} if not running
+    docker start ${target_instance_id}
+
+    #    3.3.2 verify ${target_instance_id} state
+    state=`is_instance_running "${target_instance_id}"`
+    if [[ ! ${state} ]]; then
+        echo "ERROR: target instance id=${target_instance_id} name=${target_instance_name} cannot be started !!!"
+
+        #    3.3.2.1 try to restore from backup if start failed
+        echo "WARN:  Try to restore from backup ..."
+
+        #    3.3.2.1.1 check ${target_restore_script} exists or not
+        if [[ ! -f "${target_restore_script}" ]]; then
+            echo "WARN:  ${target_restore_script} is not found !!!"
+
+            #    3.3.2.1.2 try to recover from ${latest_backup_tgz} if not found
+            latest_backup_tgz=`get_backup_file_by_image "${target_instance_name}" "${target_instance_image}"`
+
+            if [[ ${latest_backup_tgz} ]]; then
+                echo "ERROR: NO backup tgz file found !!!"
+                echo "ERROR: target instance id=${target_instance_id} name=${target_instance_name} cannot be restored !!!"
+                echo "ERROR: IS IT the right host??? CHECK it manually !!!"
+                echo "ERROR: Exit recovery operation now ..."
+                exit 1
+            else
+                #    3.3.2.1.3 extract /hfc-data/${target_instance_name} files
+                echo "INFO:  recover restore files from ${latest_backup_tgz} ..."
+                set_restore_file_from_backup_tgz "${latest_backup_tgz}"
+            fi
+        fi
+        #    3.3.2.2 try to restore ${target_instance_id} by run ${target_restore_script}
+        bash ${target_restore_script} --force
+
+        #    3.3.3.3 verify ${target_instance_id} state after restored
+        state=`is_instance_running "${target_instance_id}"`
+        if [[ ! ${state} ]]; then
+            echo "ERROR: target instance id=${target_instance_id} name=${target_instance_name} was restored but cannot started !!!"
+            echo "ERROR: CHECK it manually !!!"
+            echo "ERROR: Exit recovery operation now ..."
+            exit 1
+        fi
+    fi
+else
+    echo "WARN:  instance id=${target_instance_id} is already running !!!"
+    echo "WARN:  There must be something wrong with the monitoring system or network !!!"
+fi
