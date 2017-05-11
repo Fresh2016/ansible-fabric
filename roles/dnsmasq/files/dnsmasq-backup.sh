@@ -4,8 +4,8 @@ CONTAINER_NAME=$1
 #CONTAINER_NAME=$(docker ps --format "{{.ID}}\t{{.Names}}" | awk '/peer[0-9]?$/ {print $2}')
 DATA_SRC_DIR=/hfc-data/${CONTAINER_NAME}/
 BACKUP_DEST_DIR=/var/lib/docker/dnsmasq-backup
-TIME_STAMP=$(printf "%.19s" "$(date +%Y%m%d.%H%M%S.%N)")
-BACKUP_FILENAME=${BACKUP_DEST_DIR}/${CONTAINER_NAME}.${TIME_STAMP}.tgz
+TIME_STAMP=$(printf "%.19s" "$(date +%Y%m%d-%H%M%S-%N)")
+BACKUP_FILENAME=${BACKUP_DEST_DIR}/${CONTAINER_NAME}_${TIME_STAMP}.tgz
 
 export CONTAINER_NAME
 export DATA_SRC_DIR
@@ -37,7 +37,7 @@ backup() {
 prune_old_backup() {
     DATE_LIMIT=$(date +%Y%m%d --date="-7 day")
     for BAK_FILE in $(ls ${BACKUP_DEST_DIR}); do
-        BAK_DATE=$(echo ${BAK_FILE} | sed "s/${CONTAINER_NAME}//g" | cut -d '.' -f 2)
+        BAK_DATE=$(echo ${BAK_FILE} | sed "s/${CONTAINER_NAME}_//g" | cut -d '-' -f 1)
         if [[ "${BAK_DATE}" -lt "${DATE_LIMIT}" ]]; then
             echo "---- Deleting ${BAK_FILE} ..."
             rm -f ${BAK_FILE}
