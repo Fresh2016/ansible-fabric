@@ -67,8 +67,8 @@
 - name: mon-nodeexporter | setup cron jobs for backup of nodeexporter
   cron:
     name: backup /hfc-data/nodeexporter/
-    minute: "{{ ( ansible_host | hash('sha1') | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ ( ansible_host | hash | list | map('int',0,16) | sum ) % 3 + 1 }}"
+    minute: "{{ ( ansible_host | hash('sha1') | list | map('int',0,128) | sum ) % 60 }}"
+    hour: "{{ ( ansible_host | hash | list | map('int',0,128) | sum ) % 3 + 1 }}"
     user: root
     job: "/usr/local/bin/monitoring-backup.sh nodeexporter"
     cron_file: "nodeexporter-backup"

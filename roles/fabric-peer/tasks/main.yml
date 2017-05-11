@@ -70,8 +70,8 @@
 - name: fabric-peer | setup cron jobs for backup of fabric-peer
   cron:
     name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}
-    minute: "{{ ( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 60 }}"
-    hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 3) + 1 }}"
+    minute: "{{ ( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,128) | sum ) % 60 }}"
+    hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,128) | sum ) % 3) + 1 }}"
     user: root
     job: "/usr/local/bin/fabric-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
     cron_file: "{{ inventory_hostname|lower|replace('-','_')|replace('.','_') }}-backup"
