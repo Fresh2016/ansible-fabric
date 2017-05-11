@@ -2,7 +2,7 @@
 # file: roles/monitor-server/defaults/main.yml
 alertmanager_image: jack6liu/alertmanager:latest
 
-#alertmanager_listen_port: 9093
+alertmanager_listen_port: 9093
 alertmanager_expose_port: 9093
 
 smtp_from_email_account: alertmanager@hfc.jcloud.com

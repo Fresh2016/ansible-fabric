@@ -22,22 +22,22 @@
 
 # template: copy etc/dnsmasq.conf
 - name: dnsmasq | copy etc/dnsmasq.conf
-  template: 
+  template:
     src: dnsmasq.conf.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/dnsmasq.conf
     owner: root
     group: root
-    mode: 0644 
+    mode: 0644
     force: yes
 
 # template: copy dnsmasq.d/0.hosts.conf
 - name: dnsmasq | copy dnsmasq.d/0.hosts.conf
-  template: 
+  template:
     src: hosts.conf.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/dnsmasq.d/0.hosts.conf
     owner: root
     group: root
-    mode: 0644 
+    mode: 0644
     force: yes
 
 # docker-container: run dnsmasq
@@ -64,7 +64,7 @@
 
 # template: generate restore script for dnsmasq
 - name: dnsmasq | generate restore script for dnsmasq
-  template: 
+  template:
     src: run_new.sh.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
@@ -80,6 +80,7 @@
     mode: 0755
 
 # cron: setup cron jobs for backup of dnsmasq
+#       ONLY satinize the file name for /etc/cron.d, cause '.' is not supported!!
 - name: dnsmasq | setup cron jobs for backup of dnsmasq
   cron:
     name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/
@@ -87,4 +88,4 @@
     hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
     job: "/usr/local/bin/dnsmasq-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
-    cron_file: "{{ inventory_hostname|lower|replace('-','_') }}-backup"
+    cron_file: "{{ inventory_hostname|lower|replace('-','_')|replace('.','_') }}-backup"

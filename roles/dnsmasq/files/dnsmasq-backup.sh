@@ -19,17 +19,17 @@ local_time() {
 backup() {
     echo "==== Stopping ${CONTAINER_NAME} ..."
     docker stop ${CONTAINER_NAME}
-    
+
     echo "==== Wait 1 second before backup ..."
     sleep 1
-    
+
     echo "==== Backup ${DATA_SRC_DIR} to ${BACKUP_FILENAME}"
     mkdir -p ${BACKUP_DEST_DIR}
     tar -czf ${BACKUP_FILENAME} ${DATA_SRC_DIR}
-    
+
     echo "==== Wait 1 second after backup ..."
     sleep 1
-    
+
     echo "==== Starting ${CONTAINER_NAME} ..."
     docker start ${CONTAINER_NAME}
 }
@@ -37,7 +37,7 @@ backup() {
 prune_old_backup() {
     DATE_LIMIT=$(date +%Y%m%d --date="-7 day")
     for BAK_FILE in $(ls ${BACKUP_DEST_DIR}); do
-        BAK_DATE=$(echo ${BAK_FILE} | cut -d '.' -f 2)
+        BAK_DATE=$(echo ${BAK_FILE} | sed "s/${CONTAINER_NAME}//g" | cut -d '.' -f 2)
         if [[ "${BAK_DATE}" -lt "${DATE_LIMIT}" ]]; then
             echo "---- Deleting ${BAK_FILE} ..."
             rm -f ${BAK_FILE}

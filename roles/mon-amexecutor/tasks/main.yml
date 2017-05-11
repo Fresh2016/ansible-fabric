@@ -34,7 +34,7 @@
 
 # template: copy env_file for amexecutor
 - name: mon-amexecutor | copy env_file for amexecutor
-  template: 
+  template:
     src: env_file.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/env_file
 
@@ -63,22 +63,23 @@
 
 # template: generate restore script for amexecutor
 - name: mon-amexecutor | generate restore script for amexecutor
-  template: 
+  template:
     src: run_new.sh.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/restore/run-{{ inventory_hostname|lower|replace('-','_') }}.sh
     mode: 0755
 
 # copy: copy backup script for monitoring
 - name: mon-amexecutor | copy monitoring-backup.sh for monitoring
-  copy: 
+  copy:
     src: monitoring-backup.sh
     dest: /usr/local/bin/monitoring-backup.sh
     force: yes
     owner: root
     group: root
-    mode: 0755   
+    mode: 0755
 
 # cron: setup cron jobs for backup of amexecutor
+#       ONLY satinize the file name for /etc/cron.d, cause '.' is not supported!!
 - name: mon-amexecutor | setup cron jobs for backup of amexecutor
   cron:
     name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/
@@ -86,4 +87,4 @@
     hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
     job: "/usr/local/bin/monitoring-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
-    cron_file: "{{ inventory_hostname|lower|replace('-','_') }}-backup"
+    cron_file: "{{ inventory_hostname|lower|replace('-','_')|replace('.','_') }}-backup"

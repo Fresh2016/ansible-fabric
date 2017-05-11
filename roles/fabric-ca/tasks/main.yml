@@ -61,6 +61,7 @@
     mode: 0755
 
 # cron: setup cron jobs for backup of fabric-ca
+#       ONLY satinize the file name for /etc/cron.d, cause '.' is not supported!!
 - name: fabric-ca | setup cron jobs for backup of fabric-ca
   cron:
     name: backup /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}
@@ -68,4 +69,4 @@
     hour: "{{ (( inventory_hostname|lower|replace('-','_') | hash | list | map('int',0,16) | sum ) % 2) + 1 }}"
     user: root
     job: "/usr/local/bin/fabric-backup.sh {{ inventory_hostname|lower|replace('-','_') }}"
-    cron_file: "{{ inventory_hostname|lower|replace('-','_') }}-backup"
+    cron_file: "{{ inventory_hostname|lower|replace('-','_')|replace('.','_') }}-backup"

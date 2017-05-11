@@ -9,24 +9,24 @@ help() {
 }
 
 run_container() {
-    docker run                                                          \
-      --name {{ inventory_hostname|lower|replace('-','_') }}      \
-      --hostname {{ inventory_hostname|lower|replace('-','_') }}  \
-      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/:/etc/prometheus/  \
+    docker run      \
+      --name {{ inventory_hostname|lower|replace('-','_') }}        \
+      --hostname {{ inventory_hostname|lower|replace('-','_') }}        \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/:/etc/prometheus/      \
       --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/data/:/prometheus/     \
-      --publish 0.0.0.0:{{ prometheus_expose_port }}:9090               \
+      --publish 0.0.0.0:{{ prometheus_expose_port }}:9090       \
       --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
       --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
-      --dns-search {{ dnsmasq_domain }}                 \
-      --label com.jcloud.group="monitoring"             \
-      --label com.jcloud.nodetype="prometheus"          \
-      --restart always                                  \
-      --detach                                          \
-      {{ prometheus_image }}                            \
+      --dns-search {{ dnsmasq_domain }}     \
+      --label com.jcloud.group="monitoring"     \
+      --label com.jcloud.nodetype="prometheus"      \
+      --restart always      \
+      --detach      \
+      {{ prometheus_image }}        \
       -config.file=/etc/prometheus/prometheus.yml       \
-      -storage.local.path=/prometheus                   \
-      -storage.local.target-heap-size=536870912         \
-      -query.staleness-delta=10s                        \
+      -storage.local.path=/prometheus       \
+      -storage.local.target-heap-size=268435456     \
+      -query.staleness-delta=10s        \
       -web.external-url=http://{{ansible_host}}:{{ prometheus_expose_port }}
 
 }

@@ -9,28 +9,28 @@ help() {
 }
 
 run_container() {
-    docker run                                          \
-      --name nodeexporter                               \
-      --hostname nodeexporter                           \
-      --env NODE_EXPORTER_LISTEN_PORT=4321              \
-      --volume /proc:/host/proc:ro                      \
-      --volume /sys:/host/sys:ro                        \
-      --volume /:/rootfs:ro                             \
-      --volume /var/run/docker.sock:/var/run/docker.sock:ro \
-      --volume /hfc-data/nodeexporter/textfile:/textfile    \
-      --publish 0.0.0.0:{{ nodeexporter_expose_port }}:9100 \
-      --network host                                    \
+    docker run      \
+      --name nodeexporter       \
+      --hostname nodeexporter       \
+      --env NODE_EXPORTER_LISTEN_PORT={{ nodeexporter_listen_port }}      \
+      --volume /proc:/host/proc:ro      \
+      --volume /sys:/host/sys:ro        \
+      --volume /:/rootfs:ro     \
+      --volume /var/run/docker.sock:/var/run/docker.sock:ro     \
+      --volume /hfc-data/nodeexporter/textfile:/textfile        \
+      --publish 0.0.0.0:{{ nodeexporter_expose_port }}:9100     \
+      --network host        \
       --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
       --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
-      --dns-search {{ dnsmasq_domain }}                 \
-      --label com.jcloud.group="monitoring"             \
+      --dns-search {{ dnsmasq_domain }}     \
+      --label com.jcloud.group="monitoring"     \
       --label com.jcloud.nodetype="nodeexporter"        \
-      --restart always                                  \
-      --detach                                          \
-      {{ nodeexporter_image }}                          \
-      -collector.procfs /host/proc                      \
-      -collector.sysfs /host/sys                        \
-      -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)" \
+      --restart always      \
+      --detach      \
+      {{ nodeexporter_image }}      \
+      -collector.procfs /host/proc      \
+      -collector.sysfs /host/sys        \
+      -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"       \
       -collector.textfile.directory "/textfile"
 
 }

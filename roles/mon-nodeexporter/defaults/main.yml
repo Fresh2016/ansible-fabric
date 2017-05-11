@@ -2,5 +2,5 @@
 # file: roles/mon-nodeexporter/defaults/main.yml
 nodeexporter_image: jack6liu/nodeexporter:latest
 
-#nodeexporter_listen_port: 9100
+nodeexporter_listen_port: 4321
 nodeexporter_expose_port: 9100

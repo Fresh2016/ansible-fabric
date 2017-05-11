@@ -29,7 +29,7 @@
     hostname: nodeexporter
     image: "{{ nodeexporter_image }}"
     env:
-      NODE_EXPORTER_LISTEN_PORT: 4321
+      NODE_EXPORTER_LISTEN_PORT: "{{ nodeexporter_listen_port }}"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro

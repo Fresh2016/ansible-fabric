@@ -9,22 +9,22 @@ help() {
 }
 
 run_container() {
-    docker run                                                          \
-      --name {{ inventory_hostname|lower|replace('-','_') }}      \
-      --hostname {{ inventory_hostname|lower|replace('-','_') }}  \
-      --env-file ./env_file                                             \
-      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/data:/grafana/data  \
-      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/logs:/grafana/logs  \
-      --publish 0.0.0.0:{{ grafana_expose_port }}:3000  \
+    docker run      \
+      --name {{ inventory_hostname|lower|replace('-','_') }}        \
+      --hostname {{ inventory_hostname|lower|replace('-','_') }}        \
+      --env-file ./env_file     \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/data:/grafana/data     \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/logs:/grafana/logs     \
+      --publish 0.0.0.0:{{ grafana_expose_port }}:3000      \
       --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
       --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
-      --dns-search {{ dnsmasq_domain }}                 \
-      --label com.jcloud.group="monitoring"             \
-      --label com.jcloud.nodetype="grafana"             \
-      --restart always                                  \
-      --detach                                          \
+      --dns-search {{ dnsmasq_domain }}     \
+      --label com.jcloud.group="monitoring"     \
+      --label com.jcloud.nodetype="grafana"     \
+      --restart always      \
+      --detach      \
       {{ grafana_image }}
-      
+
 }
 echo ">> BEGIN"
 if [[ $# != '1' ]]; then
@@ -35,8 +35,8 @@ if [[ $# != '1' ]]; then
 fi
 if [[ "$1" == "--force" ]]; then
     echo ">> Deleting existing {{ inventory_hostname|lower|replace('-','_') }} ..."
-    docker rm -f {{ inventory_hostname|lower|replace('-','_') }} 
-    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."  
+    docker rm -f {{ inventory_hostname|lower|replace('-','_') }}
+    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 elif [[ "$1" == "--safe" ]]; then
     echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 else

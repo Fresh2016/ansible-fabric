@@ -9,25 +9,25 @@ help() {
 }
 
 run_container() {
-    docker run                                      \
-      --name cadvisor                               \
-      --hostname cadvisor                           \
-      --volume /:/rootfs:ro                         \
-      --volume /var/run:/var/run:rw                 \
-      --volume /sys:/sys:ro                         \
-      --volume /var/lib/docker/:/var/lib/docker:ro  \
-      --volume /hfc-data/cadvisor/etc/cadvisor.htpasswd:/etc/cadvisor/cadvisor.htpasswd \
-      --publish 0.0.0.0:{{ cadvisor_expose_port }}:8080 \
-      --network host                                    \
+    docker run      \
+      --name cadvisor       \
+      --hostname cadvisor       \
+      --volume /:/rootfs:ro     \
+      --volume /var/run:/var/run:rw     \
+      --volume /sys:/sys:ro     \
+      --volume /var/lib/docker/:/var/lib/docker:ro      \
+      --volume /hfc-data/cadvisor/etc/cadvisor.htpasswd:/etc/cadvisor/cadvisor.htpasswd     \
+      --publish 0.0.0.0:{{ cadvisor_expose_port }}:8080     \
+      --network host        \
       --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
       --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
-      --dns-search {{ dnsmasq_domain }}                 \
-      --label com.jcloud.group="monitoring"             \
-      --label com.jcloud.nodetype="cadvisor"            \
-      --restart always                                  \
-      --detach                                          \
-      {{ cadvisor_image }}                              \
-      --http_auth_file /etc/cadvisor/cadvisor.htpasswd  \
+      --dns-search {{ dnsmasq_domain }}     \
+      --label com.jcloud.group="monitoring"     \
+      --label com.jcloud.nodetype="cadvisor"        \
+      --restart always      \
+      --detach      \
+      {{ cadvisor_image }}      \
+      --http_auth_file /etc/cadvisor/cadvisor.htpasswd      \
       --http_auth_realm Restricted
 }
 echo ">> BEGIN"

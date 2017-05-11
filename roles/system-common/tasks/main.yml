@@ -4,7 +4,7 @@
 # file: rm /var/lib/cloud/instance/warnings/non_ec2_md
 - name: system-common | rm /var/lib/cloud/instance/warnings/non_ec2_md
   shell: if [ -e {{ item }} ]; then rm -rf {{ item }}/* ; fi
-  with_items: 
+  with_items:
     - /var/lib/cloud/instance/warnings/non_ec2_md
 
 # copy: config /etc/apt/resources.list

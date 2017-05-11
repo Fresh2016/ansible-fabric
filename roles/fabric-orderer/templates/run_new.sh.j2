@@ -9,20 +9,20 @@ help() {
 }
 
 run_container() {
-    docker run --name {{ inventory_hostname|lower|replace('-','_') }}        \
-      --hostname {{ inventory_hostname|lower|replace('-','_') }}             \
-      --env-file ./env_file                                         \
-      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/ 	\
-      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/data/:/var/hyperledger/ 	\
-      --publish 0.0.0.0:{{ orderer_expose_port }}:{{ orderder_listen_port }} 	\
-      --dns {{ hostvars[groups['dns-server'].0].ansible_host }}                 \
-      --dns {{ hostvars[groups['dns-server'].1].ansible_host }}                 \
-      --dns-search {{ dnsmasq_domain }}                             \
-      --label com.jcloud.group="fabric"                             \
-      --label com.jcloud.nodetype="orderer"                         \
-      --restart always                                              \
-      --detach                                                      \
-      {{ hfc_images.orderer.tags.0 }}                               \
+    docker run --name {{ inventory_hostname|lower|replace('-','_') }}       \
+      --hostname {{ inventory_hostname|lower|replace('-','_') }}        \
+      --env-file ./env_file     \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/configtx/:/etc/hyperledger/configtx/       \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/data/:/var/hyperledger/        \
+      --publish 0.0.0.0:{{ orderer_expose_port }}:{{ orderder_listen_port }}        \
+      --dns {{ hostvars[groups['dns-server'].0].ansible_host }}     \
+      --dns {{ hostvars[groups['dns-server'].1].ansible_host }}     \
+      --dns-search {{ dnsmasq_domain }}     \
+      --label com.jcloud.group="fabric"     \
+      --label com.jcloud.nodetype="orderer"     \
+      --restart always      \
+      --detach      \
+      {{ hfc_images.orderer.tags.0 }}       \
       orderer
 }
 echo ">> BEGIN"
@@ -34,8 +34,8 @@ if [[ $# != '1' ]]; then
 fi
 if [[ "$1" == "--force" ]]; then
     echo ">> Deleting existing {{ inventory_hostname|lower|replace('-','_') }} ..."
-    docker rm -f {{ inventory_hostname|lower|replace('-','_') }} 
-    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."  
+    docker rm -f {{ inventory_hostname|lower|replace('-','_') }}
+    echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 elif [[ "$1" == "--safe" ]]; then
     echo ">> Try to run new {{ inventory_hostname|lower|replace('-','_') }} ..."
 else
