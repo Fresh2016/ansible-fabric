@@ -131,14 +131,14 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
     echo "+--> started to fix the ${counter} alert ..."
 
     # 1.1 set alert information needed
-    local alert_action
-    local alert_host_uri
-    local alert_host
-    local alert_container_name
-    local alert_container_id
-    local alert_status
+    alert_action=''
+    alert_host_uri=''
+    alert_host=''
+    alert_container_name=''
+    alert_container_id=''
+    alert_status=''
 
-    local SKIP=0
+     SKIP=0
 
     eval "alert_action=\${AMX_ALERT_${counter}_LABEL_action}"
     eval "alert_host_uri=\${AMX_ALERT_${counter}_LABEL_instance}"
