@@ -15,6 +15,7 @@ export _script_name=$(basename ${_file_name})
 export _dir_name=$(dirname ${_file_name})
 
 export recover_script=${_dir_name}/recover_docker_instance.sh
+export ssh_keypair=${_dir_name}/id_rsa
 
 #
 # precheck script status by checking pid
@@ -74,12 +75,17 @@ echo "$$" > "${pidfile}"
 set_ssh_opts() {
     #
     # func:  generate ssh options for ssh/scp connection
-    # usage: set_ssh_opts SSH_OPTS
+    # usage: set_ssh_opts SSH_OPTS "${KEYPAIR_FILE}"
     #        SSH_OPTS will be the return value from set_ssh_opts
     #
     local SSH_BASE_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=3"
 
-    local KEYPAIR_FILE=${KEYPAIR_FILE:="/am-executor/scripts/id_rsa"}
+    local KEYPAIR_FILE=${KEYPAIR_FILE:="./id_rsa"}
+
+    if [[ $2 ]]; then
+        KEYPAIR_FILE=$2
+    fi
+
     if [[ ! -e "${KEYPAIR_FILE}" ]]; then
         echo -e "
                    ERROR: ${KEYPAIR_FILE} is not found!!!
@@ -200,7 +206,7 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
 
     if [[ ${SKIP} -eq 0 ]]; then
         # 1.3 set_ssh_opts
-        set_ssh_opts alert_ssh_opts
+        set_ssh_opts alert_ssh_opts "${ssh_keypair}"
 
         # 1.4 check_host_connectivity to ${alert_host}
         check_host_connectivity alert_host_connectivity ${alert_ssh_opts} ${alert_host}
