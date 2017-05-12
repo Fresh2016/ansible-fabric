@@ -64,7 +64,7 @@ if [[ -e "${pidfile}" ]] && [[ "${exist_pid}" != "$$" ]] ; then
 fi
 
 echo -e "
-                   INFO:  >>>> ${_script_name} started at `date +"%F %T(%:z)"` <<<<
+                   INFO:  >>>> ${_script_name} started at `date +"%F %T %:z"` <<<<
 "
 
 #
@@ -97,6 +97,7 @@ set_ssh_opts() {
                    "
         exit 1
     fi
+    # the private key must be 0600
     chmod 0600 ${KEYPAIR_FILE}
 
     local SSH_OPTS=${SSH_BASE_OPTS}" -i ${KEYPAIR_FILE}"
@@ -233,5 +234,5 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
     let counter+=1
 done
 echo -e "
-                   INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<
+                   INFO:  >>>> ${_script_name} finished at `date +"%F %T %:z"` <<<<
 "
