@@ -94,12 +94,12 @@ is_instance_running_by_id() {
 
 is_instance_running_by_name() {
     local instance_name=$1
-    printf "`docker ps -qa -f "status=running" -f name="${instance_name}"`"
+    printf "`docker ps -qa -f "status=running" -f name="${instance_name}$"`"
 }
 
 get_id_by_name() {
     local instance_name=$1
-    printf "`docker ps --no-trunc -qa -f name="${instance_name}" | tr -d '\n'`"
+    printf "`docker ps --no-trunc -qa -f name="${instance_name}$" | tr -d '\n'`"
 }
 
 
