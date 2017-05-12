@@ -139,7 +139,7 @@ set_restore_file_from_backup_tgz() {
     #
     local backup_tgz=$1
 
-    local instance_name=`echo ${backup_tgz} | cut -d '_' -f 1`
+    local instance_name=`basename ${backup_tgz} | cut -d '_' -f 1`
     local timestamp=`get_timestamp`
 
     # backup existing /hfc-data/${instance_name}
