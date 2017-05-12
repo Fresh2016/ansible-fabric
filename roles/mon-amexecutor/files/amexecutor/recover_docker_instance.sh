@@ -54,6 +54,8 @@ if [[ -e "${pidfile}" ]] && [[ "${exist_pid}" != "$$" ]] ; then
     exit 1
 fi
 
+echo "INFO:  >>>> ${_script_name} started at `date +"%F %T(%:z)"` <<<<"
+
 #
 # write current pid to ${pidfile}
 #
@@ -87,7 +89,7 @@ get_stopped_instances(){
 
 is_instance_running() {
     local instance_id=$1
-    printf "`docker ps -q -f id="${instance_id}"`"
+    printf "`docker ps -qa -f "status=running" -f id="${instance_id}"`"
 }
 
 get_backup_file_by_image() {
@@ -155,57 +157,59 @@ if [[ ! ${target_instance_id} ]]; then
     exit 1
 fi
 
-# 1. check dockerd status
+# 1. check dockerd status, try to start if dockerd is not running
 #    check dockerd running status by checking dockerd version
 dockerd_version=`get_dockerd_version`
 
 if [[ ! ${dockerd_version} ]]; then
-    #    if dockerd is not running, try to start
+    #    1.1 if dockerd is not running, try to start
     echo "ERROR: docker daemon is stopped !!!"
     echo "WARN:  trying to restart docker daemon ..."
 
-    #    try to start dockerd
+    #    1.2 try to start dockerd
     systemctl start docker.service
 
-    #    verify dockerd running status again
+    #    1.3 verify dockerd running status again
     daemon_state=`get_dockerd_version`
 
     if [[ ! ${daemon_state} ]]; then
         echo "ERROR: docker daemon cannot started !!!"
         echo "ERROR: Exit recovery operation now ..."
+        echo "INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<"
         exit 1
     fi
-
-    #    try to start all instances not in running state (exited, dead, paused)
-    echo "WARN:  trying to start all docker instances (exited, dead, paused) ..."
-    stopped_instances=`get_stopped_instances`
-    for instance in ${stopped_instances} ; do
-        #    try to start ${instance}
-        docker start ${instance}
-
-        #    verify ${instance} state
-        state=`is_instance_running "${instance}"`
-        if [[ ! ${state} ]]; then
-            name=`get_name_by_id "${instance}"`
-            echo "ERROR: instance id=${instance} name=${name} cannot be started !!!"
-        fi
-    done
 fi
 
-# 2. till now, dockerd should be running
+# 2. till now, dockerd should be running, try to start all instances status=exited/dead/paused
 echo "INFO:  docker daemon is running ..."
 
-# 3. try to start the target_instance
+echo "WARN:  trying to start all docker instances (exited, dead, paused) ..."
+stopped_instances=`get_stopped_instances`
+for instance in ${stopped_instances} ; do
+    #    2.1 try to start ${instance}
+    docker start ${instance}
+
+    #    2.2 verify ${instance} state
+    state=`is_instance_running "${instance}"`
+    if [[ ! ${state} ]]; then
+        name=`get_name_by_id "${instance}"`
+        echo "ERROR: instance id=${instance} name=${name} cannot be started !!!"
+    fi
+done
+
+# 3. try to start the target_instance, actually it should be started at step2.
 #    3.1 set instance info
 target_instance_name=`get_name_by_id "${target_instance_id}"`
 target_instance_image=`get_image_by_id "${target_instance_id}"`
-target_restore_script="/hfc-data/${target_instance_name}/restore/run-${target_instance_name}.sh"
+target_restore_dir="/hfc-data/${target_instance_name}/restore"
+target_restore_script="run-${target_instance_name}.sh"
 
 #    3.2 check the ${target_instance_id} exists or not
 if [[ ! ${target_instance_name} ]]; then
     echo "ERROR: the target instance id=${target_instance_id} was not found !!!"
     echo "ERROR: IS id=${target_instance_id} running on this host???"
     echo "ERROR: Exit recovery operation now ..."
+    echo "INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<"
     exit 1
 fi
 
@@ -224,13 +228,14 @@ if [[ ! ${state} ]]; then
         echo "WARN:  Try to restore from backup ..."
 
         #    3.3.2.1.1 check ${target_restore_script} exists or not
-        if [[ ! -f "${target_restore_script}" ]]; then
-            echo "WARN:  ${target_restore_script} is not found !!!"
+        if [[ ! -f "${target_restore_dir}/${target_restore_script}" ]]; then
+            echo "WARN:  ${target_restore_dir}/${target_restore_script} is not found !!!"
+            echo "WARN:  try to recover from backup tgz file ..."
 
             #    3.3.2.1.2 try to recover from ${latest_backup_tgz} if not found
             latest_backup_tgz=`get_backup_file_by_image "${target_instance_name}" "${target_instance_image}"`
 
-            if [[ ${latest_backup_tgz} ]]; then
+            if [[ ! ${latest_backup_tgz} ]]; then
                 echo "ERROR: NO backup tgz file found !!!"
                 echo "ERROR: target instance id=${target_instance_id} name=${target_instance_name} cannot be restored !!!"
                 echo "ERROR: IS IT the right host??? CHECK it manually !!!"
@@ -243,7 +248,10 @@ if [[ ! ${state} ]]; then
             fi
         fi
         #    3.3.2.2 try to restore ${target_instance_id} by run ${target_restore_script}
+        echo "INFO:  try to restore target instance id=${target_instance_id} name=${target_instance_name} now ..."
+        cd ${target_restore_dir}
         bash ${target_restore_script} --force
+        cd ${_dir_name}
 
         #    3.3.3.3 verify ${target_instance_id} state after restored
         state=`is_instance_running "${target_instance_id}"`
@@ -251,10 +259,12 @@ if [[ ! ${state} ]]; then
             echo "ERROR: target instance id=${target_instance_id} name=${target_instance_name} was restored but cannot started !!!"
             echo "ERROR: CHECK it manually !!!"
             echo "ERROR: Exit recovery operation now ..."
+            echo "INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<"
             exit 1
         fi
     fi
 else
     echo "WARN:  instance id=${target_instance_id} is already running !!!"
     echo "WARN:  There must be something wrong with the monitoring system or network !!!"
+    echo "INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<"
 fi

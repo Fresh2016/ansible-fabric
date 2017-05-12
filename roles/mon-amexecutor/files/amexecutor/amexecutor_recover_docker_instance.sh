@@ -63,6 +63,10 @@ if [[ -e "${pidfile}" ]] && [[ "${exist_pid}" != "$$" ]] ; then
     exit 1
 fi
 
+echo -e "
+                   INFO:  >>>> ${_script_name} started at `date +"%F %T(%:z)"` <<<<
+"
+
 #
 # write current pid to ${pidfile}
 #
@@ -89,6 +93,7 @@ set_ssh_opts() {
     if [[ ! -e "${KEYPAIR_FILE}" ]]; then
         echo -e "
                    ERROR: ${KEYPAIR_FILE} is not found!!!
+                   ERROR: exit ${_script_name} now ...
                    "
         exit 1
     fi
@@ -150,7 +155,7 @@ echo -e "
 counter=1
 while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
     echo "
-                   +--> started to fix the ${counter} alert ...
+                   +--> started to fix the #${counter} alert ...
                    "
 
     # 1.1 set alert information needed
@@ -180,7 +185,7 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
                           container host   -- ${alert_host}
                           container action -- ${alert_action}
                           container status -- ${alert_status}
-                   INFO:  exit with nothing did ...
+                   INFO:  skipping...
                    "
 
         # skip actions
@@ -198,7 +203,7 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
                           container host   -- ${alert_host}
                           container action -- ${alert_action}
                           container status -- ${alert_status}
-                   INFO:  exit with nothing did ...
+                   INFO:  skipping ...
                    "
 
         # skip actions
@@ -207,14 +212,26 @@ while [ ${counter} -le ${AMX_ALERT_LEN} ]; do
 
     if [[ ${SKIP} -eq 0 ]]; then
         # 1.3 set_ssh_opts
+        echo "
+                   +--> setting ssh connection for ${alert_container_name} @ #${counter} alert ...
+                   "
         set_ssh_opts alert_ssh_opts "${ssh_keypair}"
 
         # 1.4 check_host_connectivity to ${alert_host}
+        echo "
+                   +--> checking host connectivity for ${alert_container_name} @ #${counter} alert ...
+                   "
         check_host_connectivity alert_host_connectivity ${alert_ssh_opts} ${alert_host}
 
         # 1.5 copy_and_run_on_host
+        echo "
+                   +--> starting recover process for ${alert_container_name} @ #${counter} alert ...
+                   "
         copy_and_run_on_host "${alert_ssh_opts}" "${recover_script}" "${alert_host}" "${alert_container_id}"
     fi
     # let counter increase
     let counter+=1
 done
+echo -e "
+                   INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<
+"
