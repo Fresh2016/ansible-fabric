@@ -87,10 +87,21 @@ get_stopped_instances(){
     printf "`docker ps -qa -f "status=exited" -f "status=dead" -f "status=paused"`"
 }
 
-is_instance_running() {
+is_instance_running_by_id() {
     local instance_id=$1
     printf "`docker ps -qa -f "status=running" -f id="${instance_id}"`"
 }
+
+is_instance_running_by_name() {
+    local instance_name=$1
+    printf "`docker ps -qa -f "status=running" -f name="${instance_name}"`"
+}
+
+get_id_by_name() {
+    local instance_name=$1
+    printf "`docker ps -qa -f name="${instance_name}"`"
+}
+
 
 get_backup_file_by_image() {
     #
@@ -190,7 +201,7 @@ for instance in ${stopped_instances} ; do
     docker start ${instance}
 
     #    2.2 verify ${instance} state
-    state=`is_instance_running "${instance}"`
+    state=`is_instance_running_by_id "${instance}"`
     if [[ ! ${state} ]]; then
         name=`get_name_by_id "${instance}"`
         echo "ERROR: instance id=${instance} name=${name} cannot be started !!!"
@@ -214,13 +225,13 @@ if [[ ! ${target_instance_name} ]]; then
 fi
 
 #    3.3 check ${target_instance_id} running state
-state=`is_instance_running "${target_instance_id}"`
+state=`is_instance_running_by_id "${target_instance_id}"`
 if [[ ! ${state} ]]; then
     #    3.3.1 start ${target_instance_id} if not running
     docker start ${target_instance_id}
 
     #    3.3.2 verify ${target_instance_id} state
-    state=`is_instance_running "${target_instance_id}"`
+    state=`is_instance_running_by_id "${target_instance_id}"`
     if [[ ! ${state} ]]; then
         echo "ERROR: target instance id=${target_instance_id} name=${target_instance_name} cannot be started !!!"
 
@@ -254,7 +265,8 @@ if [[ ! ${state} ]]; then
         cd ${_dir_name}
 
         #    3.3.3.3 verify ${target_instance_id} state after restored
-        state=`is_instance_running "${target_instance_id}"`
+        #            NOTE, have to verify by ${target_instance_name} here, cause the id was changed after restore!!!
+        state=`is_instance_running_by_name "${target_instance_name}"`
         if [[ ! ${state} ]]; then
             echo "ERROR: target instance id=${target_instance_id} name=${target_instance_name} was restored but cannot started !!!"
             echo "ERROR: CHECK it manually !!!"
@@ -262,6 +274,9 @@ if [[ ! ${state} ]]; then
             echo "INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<"
             exit 1
         fi
+        new_instance_id=`get_id_by_name "${target_instance_name}"`
+        echo "INFO:  target instance id=${target_instance_id} name=${target_instance_name} restored successfully ..."
+        echo "INFO:  the restore instance is id=${new_instance_id} name=${target_instance_name} ..."
     fi
 else
     echo "WARN:  instance id=${target_instance_id} is already running !!!"
