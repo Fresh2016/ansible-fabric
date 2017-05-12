@@ -10,15 +10,6 @@ jcloud_container_cpu_usage_sum15m =
     sum(rate(container_cpu_usage_seconds_total{image!=''}[15m]))
     by (id, name, image, container_label_com_jcloud_group, container_label_com_jcloud_nodetype, instance, job)
 
-jcloud_node_cpu_avg_load1m =
-    (node_load1 / machine_cpu_cores) by (instance)
-
-jcloud_node_cpu_avg_load5m =
-    (node_load5 / machine_cpu_cores) by (instance)
-
-jcloud_node_cpu_avg_load15m =
-    (node_load15 / machine_cpu_cores) by (instance)
-
 jcloud_node_cpu_usage_sum1m =
     1 - (avg(irate(node_cpu{mode="idle"}[1m])) by (instance))
 

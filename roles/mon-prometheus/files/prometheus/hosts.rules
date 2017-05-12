@@ -1,6 +1,6 @@
 ALERT host_high_cpu_load
-  IF jcloud_node_cpu_avg_load1m > 1
-  FOR 30s
+  IF node_load1 > 1 * 2
+  FOR 60s
   LABELS {
     severity = "warning" ,
     action = "notify"
