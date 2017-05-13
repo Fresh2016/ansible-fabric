@@ -26,7 +26,9 @@ src_root="/root/ansible-fabric"
 src_orderer_node="orderer.hfc.jcloud.com"
 src_orderer_org="`echo ${src_orderer_node} | cut -d '.' -f 2-`"
 src_channel_tx="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/${channel_id}.tx"
-src_channel_js="${src_root}/channel.js"
+src_channel_js="${src_root}/client_conf/channel.js"
+src_network_js_tls="${src_root}/client_conf/tls.network.js"
+src_network_js_notls="${src_root}/client_conf/notls.network.js"
 src_orderer_tls="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/tls/ca.crt"
 
 # templating
@@ -115,10 +117,10 @@ echo "   Copying ${channel_id}.js ... "
 docker cp ${src_channel_js} ${instance_name}:${dst_conf_dir}/
 
 echo "   Copying notls.network.js ... "
-docker cp ${src_root}/notls.network.js ${instance_name}:${instance_name}:${dst_conf_dir}/
+docker cp ${src_network_js_notls} ${instance_name}:${instance_name}:${dst_conf_dir}/
 
 echo "   Copying tls.network.js ... "
-docker cp ${src_root}/tls.network.js ${instance_name}:${instance_name}:${dst_conf_dir}/
+docker cp ${src_network_js_tls} ${instance_name}:${instance_name}:${dst_conf_dir}/
 
 echo "   copying new tls files ... "
 for src_peer_node in ${src_peer_list}; do
