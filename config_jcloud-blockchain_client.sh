@@ -117,10 +117,10 @@ echo "   Copying ${channel_id}.js ... "
 docker cp ${src_channel_js} ${instance_name}:${dst_conf_dir}/
 
 echo "   Copying notls.network.js ... "
-docker cp ${src_network_js_notls} ${instance_name}:${instance_name}:${dst_conf_dir}/
+docker cp ${src_network_js_notls} ${instance_name}:${dst_conf_dir}/
 
 echo "   Copying tls.network.js ... "
-docker cp ${src_network_js_tls} ${instance_name}:${instance_name}:${dst_conf_dir}/
+docker cp ${src_network_js_tls} ${instance_name}:${dst_conf_dir}/
 
 echo "   copying new tls files ... "
 for src_peer_node in ${src_peer_list}; do
