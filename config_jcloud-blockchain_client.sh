@@ -17,7 +17,7 @@ dst_root="/jcloud-blockchain"
 dst_conf_dir="${dst_root}/app/manage/data"
 
 dst_channel_tx="${dst_conf_dir}/${channel_id}.tx"
-dst_channel_js="${dst_conf_dir}/${channel_id}.js"
+dst_channel_js="${dst_conf_dir}/channel.js"
 dst_tls_dir="${dst_conf_dir}/tls"
 dst_network_js="${dst_conf_dir}/network.js"
 
@@ -26,7 +26,7 @@ src_root="/root/ansible-fabric"
 src_orderer_node="orderer.hfc.jcloud.com"
 src_orderer_org="`echo ${src_orderer_node} | cut -d '.' -f 2-`"
 src_channel_tx="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/${channel_id}.tx"
-src_channel_js="${src_root}/${channel_id}.js"
+src_channel_js="${src_root}/channel.js"
 src_orderer_tls="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/tls/ca.crt"
 
 # templating
