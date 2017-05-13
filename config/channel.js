@@ -1,6 +1,6 @@
 var channel = {
     list: ["supplychain"],
-    mychannel: {
+    supplychain: {
         chainCode: {
             supplychain: {
                 name: "supplychain",
