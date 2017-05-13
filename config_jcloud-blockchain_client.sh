@@ -10,13 +10,14 @@ export _script_name=$(basename ${_file_name})
 #
 # global constant varialbes
 #
-channel_id="supplychain.tx"
+channel_id="supplychain"
 
 # dst
 dst_root="/jcloud-blockchain"
 dst_conf_dir="${dst_root}/app/manage/data"
 
-dst_channel_tx="${dst_conf_dir}/${channel_id}"
+dst_channel_tx="${dst_conf_dir}/${channel_id}.tx"
+dst_channel_js="${dst_conf_dir}/${channel_id}.js"
 dst_tls_dir="${dst_conf_dir}/tls"
 dst_network_js="${dst_conf_dir}/network.js"
 
@@ -24,7 +25,8 @@ dst_network_js="${dst_conf_dir}/network.js"
 src_root="/root/ansible-fabric"
 src_orderer_node="orderer.hfc.jcloud.com"
 src_orderer_org="`echo ${src_orderer_node} | cut -d '.' -f 2-`"
-src_channel_tx="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/${channel_id}"
+src_channel_tx="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/${channel_id}.tx"
+src_channel_js="${src_root}/${channel_id}.js"
 src_orderer_tls="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/tls/ca.crt"
 
 # templating
@@ -101,13 +103,16 @@ fi
 #
 echo ">> backup existing config files from ${instance_name} for ${channel_id}... "
 docker exec ${instance_name} bash -c "mv -f ${dst_channel_tx} ${dst_channel_tx}.`date +%Y%m%d-%H%M%S`"
+docker exec ${instance_name} bash -c "mv -f ${src_channel_js} ${src_channel_js}.`date +%Y%m%d-%H%M%S`"
 docker exec ${instance_name} bash -c "mv -f ${dst_tls_dir} ${dst_tls_dir}.`date +%Y%m%d-%H%M%S`"
 docker exec ${instance_name} bash -c "mv -f ${dst_network_js} ${dst_network_js}.`date +%Y%m%d-%H%M%S`"
 
 echo ">> copying new config files to ${instance_name} for ${channel_id}... "
-echo "   Copying ${channel_id} ... "
+echo "   Copying ${channel_id}.tx ... "
 docker cp ${src_channel_tx} ${instance_name}:${dst_conf_dir}/
 
+echo "   Copying ${channel_id}.js ... "
+docker cp ${src_channel_js} ${instance_name}:${dst_conf_dir}/
 
 echo "   Copying notls.network.js ... "
 docker cp ${src_root}/notls.network.js ${instance_name}:${instance_name}:${dst_conf_dir}/
