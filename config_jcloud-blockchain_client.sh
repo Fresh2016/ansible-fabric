@@ -26,9 +26,9 @@ src_root="/root/ansible-fabric"
 src_orderer_node="orderer.hfc.jcloud.com"
 src_orderer_org="`echo ${src_orderer_node} | cut -d '.' -f 2-`"
 src_channel_tx="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/${channel_id}.tx"
-src_channel_js="${src_root}/client_conf/channel.js"
-src_network_js_tls="${src_root}/client_conf/tls.network.js"
-src_network_js_notls="${src_root}/client_conf/notls.network.js"
+src_channel_js="${src_root}/config/channel.js"
+src_network_js_tls="${src_root}/config/tls.network.js"
+src_network_js_notls="${src_root}/config/notls.network.js"
 src_orderer_tls="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/tls/ca.crt"
 
 # templating
