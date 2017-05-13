@@ -103,7 +103,7 @@ fi
 #
 echo ">> backup existing config files from ${instance_name} for ${channel_id}... "
 docker exec ${instance_name} bash -c "mv -f ${dst_channel_tx} ${dst_channel_tx}.`date +%Y%m%d-%H%M%S`"
-docker exec ${instance_name} bash -c "mv -f ${src_channel_js} ${src_channel_js}.`date +%Y%m%d-%H%M%S`"
+docker exec ${instance_name} bash -c "mv -f ${dst_channel_js} ${dst_channel_js}.`date +%Y%m%d-%H%M%S`"
 docker exec ${instance_name} bash -c "mv -f ${dst_tls_dir} ${dst_tls_dir}.`date +%Y%m%d-%H%M%S`"
 docker exec ${instance_name} bash -c "mv -f ${dst_network_js} ${dst_network_js}.`date +%Y%m%d-%H%M%S`"
 
