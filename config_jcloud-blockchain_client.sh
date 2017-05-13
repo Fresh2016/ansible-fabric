@@ -24,13 +24,13 @@ dst_network_js="${dst_conf_dir}/network.js"
 src_root="/root/ansible-fabric"
 src_orderer_node="orderer.hfc.jcloud.com"
 src_orderer_org="`echo ${src_orderer_node} | cut -d '.' -f 2-`"
-src_channel_tx="${src_root}/roles/fabric-orderer/files/${orderer_org}/orderers/${src_orderer_node}/${channel_id}"
-src_orderer_tls="${src_root}/roles/fabric-orderer/files/${orderer_org}/orderers/${src_orderer_node}/tls/ca.crt"
+src_channel_tx="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/${channel_id}"
+src_orderer_tls="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/tls/ca.crt"
 
 # templating
 src_peer_node=""
-src_peer_org="`echo ${src_peer_node} | cut -d '.' -f 2-`"
-src_peer_tls="${src_root}/roles/fabric-peer/files/${src_peer_org}/peers/${src_peer_node}/tls/ca.crt"
+#src_peer_org="`echo ${src_peer_node} | cut -d '.' -f 2-`"
+#src_peer_tls="${src_root}/roles/fabric-peer/files/${src_peer_org}/peers/${src_peer_node}/tls/ca.crt"
 src_peer_list="peer1.org1.hfc.jcloud.com 
 peer2.org1.hfc.jcloud.com 
 peer3.org1.hfc.jcloud.com 
@@ -118,6 +118,8 @@ docker cp ${src_root}/tls.network.js ${instance_name}:${instance_name}:${dst_con
 echo "   copying new tls files ... "
 for src_peer_node in ${src_peer_list}; do
     echo "   Copying tls for ${src_peer_node}  ... "
+    src_peer_org="`echo ${src_peer_node} | cut -d '.' -f 2-`"
+    src_peer_tls="${src_root}/roles/fabric-peer/files/${src_peer_org}/peers/${src_peer_node}/tls/ca.crt"
     docker exec ${instance_name} bash -c "mkdir -p ${dst_conf_dir}/tls/${src_peer_node}"
     docker cp ${src_peer_tls} ${instance_name}:${dst_conf_dir}/tls/${src_peer_node}/
 done
