@@ -134,12 +134,18 @@ echo "   copying tls for ${src_orderer_node} ..."
 docker exec ${instance_name} bash -c "mkdir -p ${dst_conf_dir}/tls/${src_orderer_node}"
 docker cp ${src_orderer_tls} ${instance_name}:${dst_conf_dir}/tls/${src_orderer_node}/
 
-echo "   Config config.json ... "
+echo "   Config network.js ... "
 if [[ "${TLS}" == "yes" ]]; then
     docker exec ${instance_name} bash -c "cp -f ${dst_conf_dir}/tls.network.js ${dst_network_js}"
 else
     docker exec ${instance_name} bash -c "cp -f ${dst_conf_dir}/notls.network.js ${dst_network_js}"
 fi
+
+echo "   Temporarily replace common files ... "
+docker cp ${src_root}/config/app/manage/create-client.js  ${instance_name}:${dst_root}/app/manage/
+docker cp ${src_root}/config/app/manage/param-interceptor.js  ${instance_name}:${dst_root}/app/manage/
+docker cp ${src_root}/config/verify.js  ${instance_name}:${dst_root}/
+docker exec ${instance_name} bash -c "chmod +x ${dst_root}/verify.js"
 
 echo "++++++++ DONE ++++++++"
 
