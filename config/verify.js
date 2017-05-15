@@ -12,7 +12,7 @@ var manager = require('./app/manage/create-client.js');
 var interClient = require('./app/manage/param-interceptor.js');
 
 //process.env['HFC_LOGGING'] = '{"error": "console", "warn": "console", "debug":"console", "info": "console"}';
-process.env['HFC_LOGGING'] = '{"error": "/dev/null", "warn": "/dev/null", "debug":"/dev/null", "info": "/dev/null"}';
+process.env['HFC_LOGGING'] = '{"error": "console", "warn": "/dev/null", "debug":"/dev/null", "info ": "/dev/null"}';
 
 var paramsCreateChannel = {
     rpctime: '2017-04-17 10:00:00',
@@ -281,7 +281,8 @@ function produceOnePromise(operation, operationIndex, operationType, results) {
                 } else if ('invoke' == operation && 'rest' == operationType) {
                     return sendRequest('POST', 'http://localhost:8081/v1/supplychain', requestInvokeTransaction, operationIndex);
                 } else if ('query' == operation && 'rest' == operationType) {
-                    return sendRequest('GET', 'http://localhost:8081/v1/supplychain', requestQueryTransaction, operationIndex);
+                    //return sendRequest('GET', 'http:/ / localhost: 8081 / v1 / supplychain ', requestQueryTransaction, operationIndex);
+                    return sendRequest('GET', 'http://localhost:8081/v1/supplychain', requestQueryBlocknum, operationIndex);
                 } else {
                     return {};
                 }
@@ -387,9 +388,12 @@ function testConcurrency(opr_num_list) {
         }).then((result) => {
             console.log('TESTAPP: query channel concurrency performance %s', JSON.stringify(result));
             console.log('### shiying is aaa ###');
-
+            //force to exit
+            process.exit();
         }).catch((err) => {
             console.log('Quit with err: %s', err);
+            //force to exit
+            process.exit();
             return false;
         });
 }

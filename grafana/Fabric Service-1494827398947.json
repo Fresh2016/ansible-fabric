@@ -408,9 +408,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -435,7 +435,7 @@
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
+            "sort": 0,
             "value_type": "cumulative"
           },
           "type": "graph",
@@ -486,9 +486,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -515,7 +515,7 @@
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
+            "sort": 0,
             "value_type": "cumulative"
           },
           "type": "graph",
@@ -577,9 +577,9 @@
             "values": false
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -591,12 +591,12 @@
           "targets": [
             {
               "expr": "node_filesystem_size{fstype=\"xfs\",mountpoint=~\"/rootfs/hfc-data\"} - node_filesystem_free{fstype=\"xfs\",mountpoint=~\"/rootfs/hfc-data\"}",
-              "interval": "10s",
+              "interval": "30s",
               "intervalFactor": 2,
               "legendFormat": "{{ instance }}",
               "metric": "http_requests_total",
               "refId": "A",
-              "step": 20
+              "step": 60
             }
           ],
           "thresholds": [],
@@ -659,9 +659,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 2,
           "points": false,
@@ -764,5 +764,5 @@
   },
   "timezone": "browser",
   "title": "Fabric Service",
-  "version": 0
+  "version": 1
 }

@@ -26,9 +26,9 @@ src_root="/root/ansible-fabric"
 src_orderer_node="orderer.hfc.jcloud.com"
 src_orderer_org="`echo ${src_orderer_node} | cut -d '.' -f 2-`"
 src_channel_tx="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/${channel_id}.tx"
-src_channel_js="${src_root}/config/channel.js"
-src_network_js_tls="${src_root}/config/tls.network.js"
-src_network_js_notls="${src_root}/config/notls.network.js"
+src_channel_js="${src_root}/config/app/manage/data/channel.js"
+src_network_js_tls="${src_root}/config/app/manage/data/tls.network.js"
+src_network_js_notls="${src_root}/config/app/manage/data/notls.network.js"
 src_orderer_tls="${src_root}/roles/fabric-orderer/files/${src_orderer_org}/orderers/${src_orderer_node}/tls/ca.crt"
 
 # templating
@@ -110,17 +110,17 @@ docker exec ${instance_name} bash -c "mv -f ${dst_tls_dir} ${dst_tls_dir}.`date 
 docker exec ${instance_name} bash -c "mv -f ${dst_network_js} ${dst_network_js}.`date +%Y%m%d-%H%M%S`"
 
 echo ">> copying new config files to ${instance_name} for ${channel_id}... "
-echo "   Copying ${channel_id}.tx ... "
-docker cp ${src_channel_tx} ${instance_name}:${dst_conf_dir}/
+#echo "   Copying ${channel_id}.tx ... "
+#docker cp ${src_channel_tx} ${instance_name}:${dst_conf_dir}/
 
-echo "   Copying ${channel_id}.js ... "
-docker cp ${src_channel_js} ${instance_name}:${dst_conf_dir}/
+#echo "   Copying ${channel_id}.js ... "
+#docker cp ${src_channel_js} ${instance_name}:${dst_conf_dir}/
 
-echo "   Copying notls.network.js ... "
-docker cp ${src_network_js_notls} ${instance_name}:${dst_conf_dir}/
+#echo "   Copying notls.network.js ... "
+#docker cp ${src_network_js_notls} ${instance_name}:${dst_conf_dir}/
 
-echo "   Copying tls.network.js ... "
-docker cp ${src_network_js_tls} ${instance_name}:${dst_conf_dir}/
+#echo "   Copying tls.network.js ... "
+#docker cp ${src_network_js_tls} ${instance_name}:${dst_conf_dir}/
 
 echo "   copying new tls files ... "
 for src_peer_node in ${src_peer_list}; do
@@ -134,16 +134,16 @@ echo "   copying tls for ${src_orderer_node} ..."
 docker exec ${instance_name} bash -c "mkdir -p ${dst_conf_dir}/tls/${src_orderer_node}"
 docker cp ${src_orderer_tls} ${instance_name}:${dst_conf_dir}/tls/${src_orderer_node}/
 
-echo "   Config network.js ... "
-if [[ "${TLS}" == "yes" ]]; then
-    docker exec ${instance_name} bash -c "cp -f ${dst_conf_dir}/tls.network.js ${dst_network_js}"
-else
-    docker exec ${instance_name} bash -c "cp -f ${dst_conf_dir}/notls.network.js ${dst_network_js}"
-fi
+#echo "   Config network.js ... "
+#if [[ "${TLS}" == "yes" ]]; then
+#    docker exec ${instance_name} bash -c "cp -f ${dst_conf_dir}/tls.network.js ${dst_network_js}"
+#else
+#    docker exec ${instance_name} bash -c "cp -f ${dst_conf_dir}/notls.network.js ${dst_network_js}"
+#fi
 
 echo "   Temporarily replace common files ... "
-docker cp ${src_root}/config/app/manage/create-client.js  ${instance_name}:${dst_root}/app/manage/
-docker cp ${src_root}/config/app/manage/param-interceptor.js  ${instance_name}:${dst_root}/app/manage/
+#docker cp ${src_root}/config/app/manage/create-client.js  ${instance_name}:${dst_root}/app/manage/
+#docker cp ${src_root}/config/app/manage/param-interceptor.js  ${instance_name}:${dst_root}/app/manage/
 docker cp ${src_root}/config/verify.js  ${instance_name}:${dst_root}/
 docker exec ${instance_name} bash -c "chmod +x ${dst_root}/verify.js"
 

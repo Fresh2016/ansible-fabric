@@ -561,9 +561,9 @@
             "values": false
           },
           "lines": false,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -580,11 +580,11 @@
           "targets": [
             {
               "expr": "node_load1",
-              "interval": "10s",
+              "interval": "2s",
               "intervalFactor": 1,
               "legendFormat": "{{ instance }}",
               "refId": "A",
-              "step": 10
+              "step": 2
             }
           ],
           "thresholds": [],
@@ -642,9 +642,9 @@
             "values": false
           },
           "lines": false,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -656,26 +656,26 @@
             }
           ],
           "span": 4,
-          "stack": true,
+          "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "expr": "node_procs_running",
-              "interval": "10s",
+              "interval": "2s",
               "intervalFactor": 1,
               "legendFormat": "{{ instance }} - running",
               "metric": "node_procs_running",
               "refId": "A",
-              "step": 10
+              "step": 2
             },
             {
               "expr": "node_procs_blocked",
-              "interval": "10s",
+              "interval": "2s",
               "intervalFactor": 1,
               "legendFormat": "{{ instance }} - blocked by I/O",
               "metric": "node_procs_blocked",
               "refId": "B",
-              "step": 10
+              "step": 2
             }
           ],
           "thresholds": [],
@@ -685,7 +685,7 @@
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
+            "sort": 0,
             "value_type": "individual"
           },
           "type": "graph",
@@ -733,9 +733,9 @@
             "values": false
           },
           "lines": false,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -752,12 +752,12 @@
           "targets": [
             {
               "expr": " irate(node_intr[5m])",
-              "interval": "10s",
+              "interval": "2s",
               "intervalFactor": 1,
               "legendFormat": "{{ instance }} - interrupts",
               "metric": "node_intr",
               "refId": "A",
-              "step": 10
+              "step": 2
             }
           ],
           "thresholds": [],
@@ -815,7 +815,7 @@
           "decimals": 2,
           "editable": true,
           "error": false,
-          "fill": 4,
+          "fill": 1,
           "grid": {},
           "id": 5,
           "legend": {
@@ -832,9 +832,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -860,7 +860,7 @@
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
+            "sort": 0,
             "value_type": "individual"
           },
           "type": "graph",
@@ -908,7 +908,7 @@
           "decimals": 2,
           "editable": true,
           "error": false,
-          "fill": 4,
+          "fill": 1,
           "grid": {},
           "id": 6,
           "legend": {
@@ -925,9 +925,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "null",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -969,7 +969,7 @@
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
+            "sort": 0,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1032,9 +1032,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -1138,7 +1138,7 @@
           "decimals": 2,
           "editable": true,
           "error": false,
-          "fill": 4,
+          "fill": 1,
           "grid": {},
           "id": 8,
           "legend": {
@@ -1153,9 +1153,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -1189,7 +1189,7 @@
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
+            "sort": 0,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1237,7 +1237,7 @@
           "decimals": 2,
           "editable": true,
           "error": false,
-          "fill": 3,
+          "fill": 1,
           "grid": {},
           "id": 14,
           "legend": {
@@ -1252,9 +1252,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -1289,7 +1289,7 @@
           "tooltip": {
             "msResolution": true,
             "shared": true,
-            "sort": 2,
+            "sort": 0,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1339,9 +1339,9 @@
             "values": true
           },
           "lines": true,
-          "linewidth": 2,
+          "linewidth": 1,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -1444,5 +1444,5 @@
   },
   "timezone": "browser",
   "title": "Docker Host",
-  "version": 3
+  "version": 7
 }

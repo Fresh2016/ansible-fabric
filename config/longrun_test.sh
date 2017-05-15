@@ -42,6 +42,6 @@ while true; do
     printf "| invoke failed  # >> %-8s     << |\n"     "${test_failed}"
     printf "| success rate   %% >> %-8.4f%%    << |\n" "${invoke_success_rate}"
     printf "| current block  # >> %-8s     << |\n"     "${invoke_success_count}"
-    printf "+-------------------------------------+\n"
+    printf "+-------------------------------------+\n\n"
     printf ">>>>>> Test - ${counter} - Finished @ `long_time` <<<<<<\n"
 done
