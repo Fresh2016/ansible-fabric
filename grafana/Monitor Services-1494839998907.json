@@ -421,9 +421,9 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(container_cpu_user_seconds_total{container_label_com_jcloud_group=\"monitoring\"}[1m]) * 100  / count_scalar(node_cpu{mode=\"user\"})) by (name)",
+              "expr": "jcloud_container_cpu_usage_sum1m{container_label_com_jcloud_group=\"monitoring\"} * 100",
               "intervalFactor": 10,
-              "legendFormat": "{{ name }}",
+              "legendFormat": "{{ name }} @ {{instance}}",
               "refId": "A",
               "step": 10
             }
@@ -499,10 +499,10 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(container_memory_usage_bytes{container_label_com_jcloud_group=\"monitoring\"}) by (name)",
+              "expr": "sum(container_memory_usage_bytes{container_label_com_jcloud_group=\"monitoring\"}) by (name, instance)",
               "interval": "",
               "intervalFactor": 10,
-              "legendFormat": "{{ name }}",
+              "legendFormat": "{{ name }} @ {{instance}}",
               "metric": "container_memory_usage_bytes",
               "refId": "A",
               "step": 10
@@ -1328,5 +1328,5 @@
   },
   "timezone": "browser",
   "title": "Monitor Services",
-  "version": 1
+  "version": 3
 }
