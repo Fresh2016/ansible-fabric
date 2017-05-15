@@ -1,36 +1,44 @@
 #!/bin/bash
 
-OPTS=${OPTS:='-d'}
+OPTS=${OPTS:='-f'}
 if [[ $1 ]]; then
     OPTS=$1
 fi
 
 case ${OPTS} in
-    -vvv)
-        ansible-playbook $OPTS -i inventories/prod/hosts prod.yml
-        ;;
     -C)
+        printf "\n\n\n<<<checking prod_prepare.yml>>>\n\n\n"
         ansible-playbook $OPTS -i inventories/prod/hosts prod.yml
         ;;
-    -p|-P)
+    -a|-all)
         printf "\n\n\n<<<running prod_prepare.yml>>>\n\n\n"
         ansible-playbook -i inventories/prod/hosts prod_prepare.yml
+        printf "\n\n\n<<<running prod_dnsmasq.yml>>>\n\n\n"
+        ansible-playbook -i inventories/prod/hosts prod_dnsmasq.yml
+        printf "\n\n\n<<<running prod_monitor.yml>>>\n\n\n"
+        ansible-playbook -i inventories/prod/hosts prod_monitor.yml
         printf "\n\n\n<<<running prod.yml>>>\n\n\n"
         ansible-playbook -i inventories/prod/hosts prod.yml
         ;;
-    -d|-D)
+    -f|-fabric)
+        printf "\n\n\n<<<running prod.yml>>>\n\n\n"
         ansible-playbook -i inventories/prod/hosts prod.yml
         ;;
-    -m|-M)
-        ansible-playbook -i inventories/prod/hosts prod_monitoring.yml
+    -m|-monitor)
+        printf "\n\n\n<<<running prod_monitor.yml>>>\n\n\n"
+        ansible-playbook -i inventories/prod/hosts prod_monitor.yml
+        ;;
+    -n|-dnsmasq)
+        printf "\n\n\n<<<running prod_dnsmasq.yml>>>\n\n\n"
+        ansible-playbook -i inventories/prod/hosts prod_dnsmasq.yml
         ;;
     *)
         echo "Only 1 options accept: -vvv, -C, -p|-P, -d|-D"
-        echo "    -vvv,    verbose output"
-        echo "    -C,      dry run, check only"
-        echo "    -p|-P,   run <prod_prepare.yml> before running <prod.yml>"
-        echo "    -d|-D,   ONLY run <prod.yml>, to deploy monitoring and fabric without running prod_prepare.yml"
+        echo "    -C,           Dry run, check only"
+        echo "    -a|-all,      Fully deploy by running prod_prepare.yml, prod_dnsmasq.yml, prod_monitor.yml, prod.yml all together"
+        echo "    -f|-fabric,   [DEFAULT]ONLY run <prod.yml>, deploy fabric nodes only, DEFAULT"
         echo "             this is the DEFAULT choice"
-        echo "    -m|-M,   ONLY run <prod_monitoring.yml>, to only deploy monitoring"
+        echo "    -m|-monitor,  ONLY run <prod_monitor.yml>, deploy monitoring nodes only"
+        echo "    -n|-dnsmasq,  ONLY run <prod_monitor.yml>, deploy dnsmasq nodes only"
         ;;
 esac
