@@ -389,11 +389,11 @@ function testConcurrency(opr_num_list) {
             console.log('TESTAPP: query channel concurrency performance %s', JSON.stringify(result));
             console.log('### shiying is aaa ###');
             //force to exit
-            process.exit();
+            process.exit(0);
         }).catch((err) => {
             console.log('Quit with err: %s', err);
             //force to exit
-            process.exit();
+            process.exit(1);
             return false;
         });
 }
@@ -545,10 +545,12 @@ function testOperation(opr_num_list) {
 
             console.log('### shiying is aaa ###');
             // FORCE to exit
-            process.exit();
+            process.exit(0);
 
         }).catch((err) => {
             console.log('Quit with err: %s', err);
+            // FORCE to exit
+            process.exit(1);
             return false;
         });
 }
