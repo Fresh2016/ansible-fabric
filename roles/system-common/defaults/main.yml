@@ -12,4 +12,4 @@ common_apt_pkgs:
   - xfsprogs
   - python-software-properties
 
-docker_registry_local_mirror_url: http://103.237.5.178:5000
+docker_registry_local_mirror_url: http://registry.hfc.jcloud.com:5000

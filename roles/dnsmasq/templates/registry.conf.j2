@@ -1,0 +1,3 @@
+{% for host in groups['all'] %}
+address=/registry.hfc.jcloud.com/{{ registry_local_ip }}
+{% endfor -%}

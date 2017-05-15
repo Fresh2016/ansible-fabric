@@ -2,8 +2,8 @@
 #
 ### -- dnsmasq --
 [dns-server]
-dnsmasq1.hfc.jcloud.com	        ansible_host=103.237.5.178
-dnsmasq2.hfc.jcloud.com	        ansible_host=120.132.114.32
+dnsmasq1.hfc.jcloud.com	        ansible_host=103.237.5.178      registry_local_ip=192.168.10.7
+dnsmasq2.hfc.jcloud.com	        ansible_host=120.132.114.32     registry_local_ip=192.168.200.4
 
 ### -- monitor-server --
 [prometheus]
@@ -17,7 +17,7 @@ grafana1.hfc.jcloud.com         ansible_host=103.237.5.178
 
 [amexecutor]
 #
-# amexecutor is recommended to deploy toghether with alertmanager, 
+# amexecutor is recommended to deploy toghether with alertmanager,
 #            so can be accessed by the private IP address
 #
 amexecutor1.hfc.jcloud.com      ansible_host=103.237.5.178  amexecutor_private_ip=192.168.10.7

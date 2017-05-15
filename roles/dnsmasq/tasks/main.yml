@@ -30,6 +30,16 @@
     mode: 0644
     force: yes
 
+# template: copy dnsmasq.d/0.registry.conf
+- name: dnsmasq | copy dnsmasq.d/0.registry.conf
+  template:
+    src: registry.conf.j2
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/dnsmasq.d/0.registry.conf
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+
 # template: copy dnsmasq.d/0.hosts.conf
 - name: dnsmasq | copy dnsmasq.d/0.hosts.conf
   template:
