@@ -147,6 +147,10 @@ docker cp ${src_root}/config/app/manage/param-interceptor.js  ${instance_name}:$
 docker cp ${src_root}/config/verify.js  ${instance_name}:${dst_root}/
 docker exec ${instance_name} bash -c "chmod +x ${dst_root}/verify.js"
 
+echo "   Copying longrun-test.sh"
+docker cp ${src_root}/config/longrun_test.sh  ${instance_name}:${dst_root}/
+docker exec ${instance_name} bash -c "chmod +x ${dst_root}/longrun-test.sh"
+
 echo "++++++++ DONE ++++++++"
 
 #echo "   Login to ${instance_name} ... "
