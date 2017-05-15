@@ -103,11 +103,11 @@ fi
 #
 # cleanup old configs
 #
-echo ">> backup existing config files from ${instance_name} for ${channel_id}... "
-docker exec ${instance_name} bash -c "mv -f ${dst_channel_tx} ${dst_channel_tx}.`date +%Y%m%d-%H%M%S`"
-docker exec ${instance_name} bash -c "mv -f ${dst_channel_js} ${dst_channel_js}.`date +%Y%m%d-%H%M%S`"
-docker exec ${instance_name} bash -c "mv -f ${dst_tls_dir} ${dst_tls_dir}.`date +%Y%m%d-%H%M%S`"
-docker exec ${instance_name} bash -c "mv -f ${dst_network_js} ${dst_network_js}.`date +%Y%m%d-%H%M%S`"
+#echo ">> backup existing config files from ${instance_name} for ${channel_id}... "
+#docker exec ${instance_name} bash -c "mv -f ${dst_channel_tx} ${dst_channel_tx}.`date +%Y%m%d-%H%M%S`"
+#docker exec ${instance_name} bash -c "mv -f ${dst_channel_js} ${dst_channel_js}.`date +%Y%m%d-%H%M%S`"
+#docker exec ${instance_name} bash -c "mv -f ${dst_tls_dir} ${dst_tls_dir}.`date +%Y%m%d-%H%M%S`"
+#docker exec ${instance_name} bash -c "mv -f ${dst_network_js} ${dst_network_js}.`date +%Y%m%d-%H%M%S`"
 
 echo ">> copying new config files to ${instance_name} for ${channel_id}... "
 #echo "   Copying ${channel_id}.tx ... "
@@ -149,7 +149,7 @@ docker exec ${instance_name} bash -c "chmod +x ${dst_root}/verify.js"
 
 echo "   Copying longrun-test.sh"
 docker cp ${src_root}/config/longrun_test.sh  ${instance_name}:${dst_root}/
-docker exec ${instance_name} bash -c "chmod +x ${dst_root}/longrun-test.sh"
+docker exec ${instance_name} bash -c "chmod +x ${dst_root}/longrun_test.sh"
 
 echo "++++++++ DONE ++++++++"
 
