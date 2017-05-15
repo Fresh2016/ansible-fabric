@@ -14,7 +14,7 @@
 # set local resolv.conf to dnsmasq nodes
 - name: mon-common | config resolvconf
   lineinfile:
-    dest: /etc/resolvconf/resolv.conf.d/base
+    dest: /etc/resolvconf/resolv.conf.d/head
     insertafter: EOF
     line: nameserver {{ dns_local_ip }}
 

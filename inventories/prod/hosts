@@ -2,8 +2,8 @@
 #
 ### -- dnsmasq --
 [dns-server]
-dnsmasq1.hfc.jcloud.com	        ansible_host=103.237.5.178   local_ip=192.168.10.7   registry_local_ip=192.168.10.7
-dnsmasq2.hfc.jcloud.com	        ansible_host=120.132.114.32  local_ip=192.168.200.4  registry_local_ip=192.168.200.4
+dnsmasq1.hfc.jcloud.com	        ansible_host=103.237.5.178   dns_local_ip=192.168.10.7   registry_local_ip=192.168.10.7
+dnsmasq2.hfc.jcloud.com	        ansible_host=120.132.114.32  dns_local_ip=192.168.200.4  registry_local_ip=192.168.200.4
 
 ### -- monitor-server --
 [prometheus]
