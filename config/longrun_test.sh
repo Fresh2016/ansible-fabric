@@ -38,9 +38,9 @@ while true; do
     invoke_success_rate=`echo ${invoke_success_total}/${test_total}*100 | bc -l`
     printf "+-------------------------------------+\n"
     printf "| invoke success # >> %-8s     << |\n"     "${invoke_success_total}"
-    printf "| invoke test #    >> %-8s     << |\n"     "${test_total}"
-    printf "| invoke failed #  >> %-8s     << |\n"     "${test_failed}"
-    printf "| success rate  %%  >> %-8.4f%%    << |\n" "${invoke_success_rate}"
+    printf "| invoke test    # >> %-8s     << |\n"     "${test_total}"
+    printf "| invoke failed  # >> %-8s     << |\n"     "${test_failed}"
+    printf "| success rate   %% >> %-8.4f%%    << |\n" "${invoke_success_rate}"
     printf "| current block  # >> %-8s     << |\n"     "${invoke_success_count}"
     printf "+-------------------------------------+\n"
     printf ">>>>>> Test - ${counter} - Finished @ `long_time` <<<<<<\n"

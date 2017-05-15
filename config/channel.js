@@ -6,21 +6,21 @@ var channel = {
                 name: "supplychain",
                 version: "v0",
                 path: "github.com/supplychain",
-                peerList: ["peer101", "peer201"]
+                peerList: ["peer101", "peer102", "peer103", "peer201", "peer202", "peer203"]
 
             },
             trace: {
                 name: "trace",
                 version: "v0",
                 path: "github.com/trace",
-                peerList: ["peer102", "peer202"]
+                peerList: ["peer101", "peer102", "peer103", "peer201", "peer202", "peer203"]
 
             },
             sourceproduct: {
                 name: "sourceproduct",
                 version: "v0",
                 path: "github.com/sourceproduct",
-                peerList: ["peer101", "peer102", "peer201", "peer202"]
+                peerList: ["peer101", "peer102", "peer103", "peer201", "peer202", "peer203"]
 
             }
         },

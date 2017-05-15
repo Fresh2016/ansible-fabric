@@ -26,7 +26,7 @@ var data = {
         "server-hostname": "peer3.org1.hfc.jcloud.com",
         "tls_cacerts": "/jcloud-blockchain/app/manage/data/tls/peer3.org1.hfc.jcloud.com/ca.crt",
         "isAnchor": "true",
-        "assign": "org2"
+        "assign": "org1"
     },
     "peer201": {
         "requests": "grpc://120.132.114.37:7051",

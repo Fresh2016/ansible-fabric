@@ -12,7 +12,7 @@ var manager = require('./app/manage/create-client.js');
 var interClient = require('./app/manage/param-interceptor.js');
 
 //process.env['HFC_LOGGING'] = '{"error": "console", "warn": "console", "debug":"console", "info": "console"}';
-process.env['HFC_LOGGING'] = '{"error": "/dev/null", "warn": "/dev/null", "debug":"/dev/null", "info": "console"}';
+process.env['HFC_LOGGING'] = '{"error": "/dev/null", "warn": "/dev/null", "debug":"/dev/null", "info": "/dev/null"}';
 
 var paramsCreateChannel = {
     rpctime: '2017-04-17 10:00:00',
