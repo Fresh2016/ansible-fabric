@@ -21,7 +21,7 @@ docker run  -d \
             -e LOCK_PWD=blockgodie \
             -v ${channel_tx}:${dst_path}/data/supplychain.tx \
             -v ${channel_js}:${dst_path}/data/channel.js \
-            -v ${network_js}:${dst_path}/data/tls.network.js \
+            -v ${network_js}:${dst_path}/data/network.js \
             -v ${create_client_js}:${dst_path}/create-client.js \
             -v ${param_interceptor_js}:${dst_path}/param-interceptor.js \
             --name=${instance_name} \
