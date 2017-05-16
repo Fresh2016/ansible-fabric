@@ -10,7 +10,7 @@
 #
 hfc_images:
   couchdb:
-    image: shiying/fabric-couchdb:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-couchdb:x86_64-1.0.0-alpha2
     tags:
       - hyperledger/fabric-couchdb:latest
   baseos:
@@ -20,20 +20,20 @@ hfc_images:
     image: hyperledger/fabric-baseimage:x86_64-0.3.1
     tags: []
   ca:
-    image: shiying/fabric-ca:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-ca:x86_64-1.0.0-alpha2
     tags:
       - hyperledger/fabric-ca:latest
   ccenv:
-    image: shiying/fabric-ccenv:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-ccenv:x86_64-1.0.0-alpha2
     tags:
       - hyperledger/fabric-ccenv:latest
       - hyperledger/fabric-ccenv:x86_64-1.0.0-alpha2
   orderer:
-    image: shiying/fabric-orderer:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-orderer:x86_64-1.0.0-alpha2
     tags:
       - hyperledger/fabric-orderer:latest
   peer:
-    image: shiying/fabric-peer:x86_64-1.0.0-alpha2
+    image: hyperledger/fabric-peer:x86_64-1.0.0-alpha2
     tags:
       - hyperledger/fabric-peer:latest
 
