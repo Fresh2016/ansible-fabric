@@ -30,6 +30,16 @@
     mode: 0644
     force: yes
 
+# template: copy etc/dnsmasq.resolv.conf
+- name: dnsmasq | copy etc/dnsmasq.resolv.conf
+  template:
+    src: dnsmasq.conf.j2
+    dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/dnsmasq.resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+
 # template: copy dnsmasq.d/0.registry.conf
 - name: dnsmasq | copy dnsmasq.d/0.registry.conf
   template:
@@ -59,6 +69,7 @@
     volumes:
       - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/dnsmasq.d/:/etc/dnsmasq.d/
       - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/dnsmasq.conf:/etc/dnsmasq.conf
+      - /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/dnsmasq.resolv.conf:/etc/dnsmasq.resolv.conf
     ports:
       - 0.0.0.0:53:53/tcp
       - 0.0.0.0:53:53/udp

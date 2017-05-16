@@ -15,6 +15,7 @@ run_container() {
       --cap-add NET_ADMIN       \
       --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/dnsmasq.d/:/etc/dnsmasq.d/        \
       --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/dnsmasq.conf:/etc/dnsmasq.conf        \
+      --volume /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/dnsmasq.resolv.conf:/etc/dnsmasq.resolv.conf       \
       --publish 0.0.0.0:53:53/tcp       \
       --publish 0.0.0.0:53:53/udp       \
       --label com.jcloud.group="common"     \

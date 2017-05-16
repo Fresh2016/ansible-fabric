@@ -2,3 +2,9 @@
 # file: roles/dnsmasq/defaults/main.yml
 dnsmasq_image: jack6liu/dnsmasq:latest
 dnsmasq_domain: hfc.jcloud.com
+
+cache_size: 0
+dns_forward_max: 300
+dns_forward_list:
+  - 223.5.5.5
+  - 223.6.6.6
