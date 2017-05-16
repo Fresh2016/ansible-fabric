@@ -33,7 +33,7 @@
 # template: copy etc/dnsmasq.resolv.conf
 - name: dnsmasq | copy etc/dnsmasq.resolv.conf
   template:
-    src: dnsmasq.conf.j2
+    src: dnsmasq.resolv.conf.j2
     dest: /hfc-data/{{ inventory_hostname|lower|replace('-','_') }}/etc/dnsmasq.resolv.conf
     owner: root
     group: root
