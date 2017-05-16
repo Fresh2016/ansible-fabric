@@ -10,3 +10,13 @@
     owner: root
     group: root
     mode: 0755
+
+# set local resolv.conf to dnsmasq nodes
+- name: mon-common | config resolvconf
+  lineinfile:
+    dest: /etc/resolvconf/resolv.conf.d/head
+    insertafter: EOF
+    line: nameserver {{ dns_local_ip }}
+
+- name: mon-common | update resolvconf
+  command: resolvconf -u
