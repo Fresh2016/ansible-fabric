@@ -14,13 +14,16 @@
       **注意：** 部署前会清理所有fabric相关的容器及fabric生成的镜像.
 
   - 目前支持的fabric部署拓扑为：
+
     ```bash
     2 * dnsmasq
     1 * orderer --> solo模式
     n * ca      --> 1 ca / org
     m * peer    --> m = m1/org1 + m2/org2 + ... + mx/orgx
     ```
+
   - 监控系统的拓扑为：
+
     ```bash
     1 * grafana
     1 * prometheus
@@ -62,7 +65,6 @@ shiying/fabric-peer:x86_64-1.0.0-snapshot-56b6d12
 shiying/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
 hyperledger/fabric-baseimage:x86_64-0.3.0
 hyperledger/fabric-baseos:x86_64-0.3.0
-
 ```
 
 **注意：** 因此版本存在bug，因此默认禁用tls。
