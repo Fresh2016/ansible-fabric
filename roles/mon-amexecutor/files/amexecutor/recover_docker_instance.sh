@@ -69,6 +69,10 @@ get_timestamp() {
     printf "%.19s" "$(date +%Y%m%d.%H%M%S.%N)"
 }
 
+format_output() {
+    "$@" 2>&1 | while read -r line; do echo -e "\\t\t $line"; done
+}
+
 get_dockerd_version() {
     printf "`docker version --format {{.Server.Version}} 2>/dev/null`"
 }
@@ -178,7 +182,7 @@ if [[ ! ${dockerd_version} ]]; then
     echo "WARN:  trying to restart docker daemon ..."
 
     #    1.2 try to start dockerd
-    systemctl start docker.service
+    format_output systemctl start docker.service
 
     #    1.3 verify dockerd running status again
     daemon_state=`get_dockerd_version`
@@ -196,7 +200,7 @@ if [[ ! ${dockerd_version} ]]; then
         stopped_container_ids=`get_stopped_container_ids`
         for container_id in ${stopped_container_ids} ; do
             #    2.1 try to start ${container_id}
-            docker start ${container_id}
+            format_output docker start ${container_id}
 
             #    2.2 verify ${container_id} state
             state=`is_running_by_container_id "${container_id}"`
@@ -228,7 +232,7 @@ fi
 state=`is_running_by_container_id "${target_container_id}"`
 if [[ ! ${state} ]]; then
     #    3.3.1 start ${target_container_id} if not running
-    docker start ${target_container_id}
+    format_output docker start ${target_container_id}
 
     #    3.3.2 verify ${target_container_id} state
     state=`is_running_by_container_id "${target_container_id}"`
