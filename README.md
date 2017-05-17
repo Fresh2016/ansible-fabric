@@ -2,71 +2,73 @@
 
 ## 功能
 
-- 准备，
-  - 独立云硬盘`/dev/vdb`，用于挂载`/var/lib/docker`，docker存储建议使用`overlay`
-  - 独立云硬盘`/dev/vdc`，用于挂载`/hfc-data/`，其中
-    - `/hfc-data/<容器节点名>/configtx`，用来存储各容器节点的配置文件
-    - `/hfc-data/<容器节点名>/restore`，用来存储各容器节点的手工恢复脚本
-    - `/hfc-data/<容器节点名>/data`，用来存储各peer容器节点的数据
-- 安装前，自动清理目标机器，
-  - 删除所有的fabric容器实例(不会删除monitor client实例)
-  - 删除所有hyperledger fabric自动生成的镜像
-  - 删除fabric节点产生的所有相关数据
-- 安装跨区多节点的hyperledger fabric环境
-  - 多节点<支持启用tls>：
-    - 2x ca, 1x orderer, 4x peer, ~~1x couchdb~~, 1x monitor server
-    - 每台云主机均部署1x nodeexport + 1x cadvisor
-  - 节点部署结构如下
+- prod_prepare.yml
+  - 对目标机器进行必要的准备，以使该机器可以进行后续的fabric部署
+- prod_dnsmasq.yml
+  - 根据inventory里面的主机，部署dnsmasq本地dns解析服务
+- prod_monitor.yml
+  - 部署基于grafana+prometheus+cadvisor的监控系统
+- prod_fabric.yml
+  - 部署多节点的fabric系统
 
-  ```bash
-    Ansible_host:                   103.237.5.178 @ Huabei
-        |---- monitor_server        103.237.5.178 @ Huabei
-        |---- dnsmasq_server        103.237.5.178 @ Huabei
-        |
-        |---- ordererorg1orderer1:  113.209.68.126 @ Huabei
-        |---- ca_peerorg1:          113.209.68.127 @ Huabei
-        |---- peerorg1peer1:        113.209.68.128 @ Huabei
-        |---- peerorg1peer2:        120.132.114.36 @ ${Huanan}
-        |---- ca_peerorg2:          120.132.114.32 @ ${Huanan}
-        |---- peerorg2peer1:        120.132.114.37 @ ${Huanan}
-        |---- peerorg2peer2:        113.209.68.131 @ Huabei
+      **注意：** 部署前会清理所有fabric相关的容器及fabric生成的镜像.
 
-  ```
+  - 目前支持的fabric部署拓扑为：
+    ```bash
+    2 * dnsmasq
+    1 * orderer --> solo模式
+    n * ca      --> 1 ca / org
+    m * peer    --> m = m1/org1 + m2/org2 + ... + mx/orgx
+    ```
+  - 监控系统的拓扑为：
+    ```bash
+    1 * grafana
+    1 * prometheus
+    1 * alertmanager
+    1 * prometheus-am-executor
+    n * nodeexporter    --> 所有节点数量
+    n * cadvisor        --> 所有节点数量
+    ```
 
-- 安装后，
-  - 设置备份 -- 自动设置cron任务，每天各容器的配置文件、恢复脚本及所有的数据
-  - 设置监控 -- 自动添加所有客户端至monitor server，并添加相应的报警机制
+## 准备
 
-- grafana的dashboard模板位于`ansible-fabric/grafana/`
+所有节点，含监控系统的节点，建议采用如下系统拓扑：
+
+- 独立云硬盘`/dev/vdb`
+  - 挂载点 `/var/lib/docker`
+  - docker存储建议使用`overlay`
+- 独立云硬盘`/dev/vdc`
+  - 挂载点 `/hfc-data/`，用于存储各节点容器的配置、数据及恢复文件
+  - 例如，fabric各节点
+    - `/hfc-data/<容器名>/configtx`，用来存储各容器节点的配置文件
+    - `/hfc-data/<容器名>/restore`，用来存储各容器节点的手工恢复脚本
+    - `/hfc-data/<容器名>/data`，用来存储各peer容器节点的数据
+
+## 其他
+
+- `config/`目录，为临时客户端所用
+- `config_jcloud-blockchain_client.sh` 为临时测试客户端所用
+- `grafana/`目录，为grafana的dashboard模板
 
 ## 版本
 
-目前用来部署石颖同学的`snapshot build` 包含如下镜像及tag：
+目前可以正常工作的版本为石颖同学的`1.0.0-snapshot-56b6d12`：
 
 ```bash
-docker pull shiying/fabric-ca:x86_64-1.0.0-snapshot-f0f86b7
-docker pull shiying/fabric-couchdb:x86_64-1.0.0-snapshot-56b6d12
-docker pull shiying/fabric-orderer:x86_64-1.0.0-snapshot-56b6d12
-docker pull shiying/fabric-peer:x86_64-1.0.0-snapshot-56b6d12
-docker pull shiying/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
-docker pull hyperledger/fabric-baseimage:x86_64-0.3.0
-docker pull hyperledger/fabric-baseos:x86_64-0.3.0
+shiying/fabric-ca:x86_64-1.0.0-snapshot-f0f86b7
+shiying/fabric-couchdb:x86_64-1.0.0-snapshot-56b6d12
+shiying/fabric-orderer:x86_64-1.0.0-snapshot-56b6d12
+shiying/fabric-peer:x86_64-1.0.0-snapshot-56b6d12
+shiying/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
+hyperledger/fabric-baseimage:x86_64-0.3.0
+hyperledger/fabric-baseos:x86_64-0.3.0
 
-
-docker tag shiying/fabric-ca:x86_64-1.0.0-snapshot-f0f86b7 \
-       hyperledger/fabric-ca:latest
-docker tag shiying/fabric-couchdb:x86_64-1.0.0-snapshot-56b6d12 \
-       hyperledger/fabric-couchdb:latest
-docker tag shiying/fabric-orderer:x86_64-1.0.0-snapshot-56b6d12 \
-           hyperledger/fabric-orderer:latest
-docker tag shiying/fabric-peer:x86_64-1.0.0-snapshot-56b6d12 \
-           hyperledger/fabric-peer:latest
-docker tag shiying/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12 \
-           hyperledger/fabric-ccenv:latest
-docker tag shiying/fabric-ccenv:x86_64-1.0.0-snaps
-hot-56b6d12 \
-           hyperledger/fabric-ccenv:x86_64-1.0.0-snapshot-56b6d12
 ```
+
+**注意：** 因此版本存在bug，因此默认禁用tls。
+
+**注意：** 已经更新至最新的`v1.0.0-alpha2`，待客户端更新之后测试及调优。
+
 
 ## 进展
 
@@ -80,39 +82,54 @@ hot-56b6d12 \
 
 1. 登陆`docker-registry`主机
 1. 切换到playbook将要存放的目录，如
+
     ```bash
     mkdir -p /tmp/playbook/
     cd /tmp/playbook/
     ```
-1. 通过git下载playbook
+
+1. 通过git下载playbook，并切换至相应的tag
+
     ```bash
     git clone http://103.237.5.178:3000/fabric/ansible-fabric.git
-    git checkout v1.0.0-1
+    git checkout tags/v1.0.0-Release-3
     ```
+
 1. 根据实际修改`inventories/prod/hosts`中的ip地址及角色分配。
-1. 执行部署脚本：
-    - prod环境， `bash run_prod_playbook.sh`
+
+1. 执行部署脚本：`bash run_prod_playbook.sh <option>`，可用的option， 可通过 `bash run_prod_playbook.sh -help`查看。
+
 1. 各容器节点默认端口：
-    - ca: 7054
-    - orderer: 7050
-    - peer: 7051、7053
-    - grafana: 9095
-    - prometheus: 9090
-    - altermanager: 9093
-    - nodeexporter: 9100
-    - cadvisor: 8080
-1. jcloud blockchain客户端需要更新`config.json`和相应的`certs`文件（如果启用tls的话）,如果客户端容器实例在本机，可以执行脚本`config_client_shiying.sh`进行配置
-1. 每天定期备份容器节点的脚本位于每台容器节点的`/etc/cron.d/<容器名>-backup`
-1. 每个容器的恢复脚本及配置信息位于每台容器节点的`/hfc-data/<容器名>/restore/`
+- fabric服务
+  - ca: 7054
+  - orderer: 7050
+  - peer:
+    - grpc: 7051
+    - event: 7053
+- 监控服务
+  - grafana: 9095
+  - prometheus: 9090
+  - altermanager: 9093
+  - nodeexporter: 9100 <127.0.0.1:4321>
+  - cadvisor: 8080
+
 1. 所有云主机及云主机上的容器均加入prometheus监控，默认设置邮件报警，默认邮件会发送至liuchenglong3@jd.com
+
+**注意：** 以上参数可通过修改`inventories/prod/hosts`和`inventories/prod/group_vars/*`等文件进行按需调整。
 
 ## 关于容器恢复
 
-在执行`/hfc-data/<容器名>/restore/run-<容器名>.sh`之前，需要确保：
+如果需要手工执行恢复脚本，请确保：
 
 - `/hfc-data/<容器名>/configtx/`已经存在并且数据完整
 - `/hfc-data/<容器名>/restore/`已经存在并且数据完整
   - 根据节点信息，确保`hosts`文件中该节点的IP信息正确
   - 根据实际节点的信息，确认`env.list`中的必要更新
-- 如果是peer节点，需要确保`/hfc-data/<容器名>/data/`已经存在并且数据完整
-- 同时确保没有同名容器存在，在确认安全的前提下，执行`docker rm -f <容器名>`
+- 如果是peer节点和orderer节点，需要确保`/hfc-data/<容器名>/data/`已经存在并且数据完整
+- 默认备份文件存放在:
+  - /var/lib/docker/dnsmasq-backup
+  - /var/lib/docker/monitor-backup
+  - /var/lib/docker/hfc-backup
+- 备份文件以tgz格式存放
+- 备份文件默认只保留7天
+
