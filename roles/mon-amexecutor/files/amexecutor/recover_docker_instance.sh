@@ -79,12 +79,12 @@ get_dockerd_version() {
 
 get_name_by_container_id(){
     local container_id=$1
-    printf "`docker ps -a -f id="${container_id}" --format {{.Names}}`"
+    printf "`docker ps -a --no-trunc -f id="${container_id}" --format {{.Names}}`"
 }
 
 get_image_by_container_id(){
     local container_id=$1
-    printf "`docker ps -a -f id="${container_id}" --format {{.Image}} | awk -F '/|-|:' '{print $2}'`"
+    printf "`docker ps -a --no-trunc -f id="${container_id}" --format {{.Image}} | awk -F '/|-|:' '{print $2}'`"
 }
 
 get_stopped_container_ids(){
@@ -93,17 +93,17 @@ get_stopped_container_ids(){
 
 is_running_by_container_id() {
     local container_id=$1
-    printf "`docker ps -qa -f "status=running" -f id="${container_id}"`"
+    printf "`docker ps -qa --no-trunc -f "status=running" -f id="${container_id}"`"
 }
 
 is_running_by_container_name() {
     local container_name=$1
-    printf "`docker ps -qa -f "status=running" -f name="${container_name}$"`"
+    printf "`docker ps -qa --no-trunc  -f "status=running" -f name="${container_name}$"`"
 }
 
 get_id_by_container_name() {
     local container_name=$1
-    printf "`docker ps --no-trunc -qa -f name="${container_name}$" | tr -d '\n'`"
+    printf "`docker ps -qa --no-trunc -f name="${container_name}$" | tr -d '\n'`"
 }
 
 
@@ -203,6 +203,7 @@ if [[ ! ${dockerd_version} ]]; then
             format_output docker start ${container_id}
 
             #    2.2 verify ${container_id} state
+            sleep 0.5
             state=`is_running_by_container_id "${container_id}"`
             if [[ ! ${state} ]]; then
                 name=`get_name_by_container_id "${container_id}"`
@@ -235,6 +236,7 @@ if [[ ! ${state} ]]; then
     format_output docker start ${target_container_id}
 
     #    3.3.2 verify ${target_container_id} state
+    sleep 0.5
     state=`is_running_by_container_id "${target_container_id}"`
     if [[ ! ${state} ]]; then
         echo "ERROR: target instance id=${target_container_id} name=${target_container_name} cannot be started !!!"
@@ -270,6 +272,7 @@ if [[ ! ${state} ]]; then
 
         #    3.3.3.3 verify ${target_container_id} state after restored
         #            NOTE, have to verify by ${target_container_name} here, cause the id was changed after restore!!!
+        sleep 0.5
         state=`is_running_by_container_name "${target_container_name}"`
         if [[ ! ${state} ]]; then
             echo "ERROR: target instance id=${target_container_id} name=${target_container_name} was restored but cannot started !!!"
