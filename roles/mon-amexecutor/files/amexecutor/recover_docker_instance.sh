@@ -188,25 +188,25 @@ if [[ ! ${dockerd_version} ]]; then
         echo "ERROR: Exit recovery operation now ..."
         echo "INFO:  >>>> ${_script_name} finished at `date +"%F %T(%:z)"` <<<<"
         exit 1
+    else
+        # 2. till now, dockerd should be running, try to start all instances status=exited/dead/paused
+        echo "INFO:  docker daemon is running ..."
+
+        echo "WARN:  trying to start all docker instances (exited, dead, paused) ..."
+        stopped_container_ids=`get_stopped_container_ids`
+        for container_id in ${stopped_container_ids} ; do
+            #    2.1 try to start ${container_id}
+            docker start ${container_id}
+
+            #    2.2 verify ${container_id} state
+            state=`is_running_by_container_id "${container_id}"`
+            if [[ ! ${state} ]]; then
+                name=`get_name_by_container_id "${container_id}"`
+                echo "ERROR: instance id=${container_id} name=${name} cannot be started !!!"
+            fi
+        done
     fi
 fi
-
-# 2. till now, dockerd should be running, try to start all instances status=exited/dead/paused
-echo "INFO:  docker daemon is running ..."
-
-echo "WARN:  trying to start all docker instances (exited, dead, paused) ..."
-stopped_container_ids=`get_stopped_container_ids`
-for container_id in ${stopped_container_ids} ; do
-    #    2.1 try to start ${container_id}
-    docker start ${container_id}
-
-    #    2.2 verify ${container_id} state
-    state=`is_running_by_container_id "${container_id}"`
-    if [[ ! ${state} ]]; then
-        name=`get_name_by_container_id "${container_id}"`
-        echo "ERROR: instance id=${container_id} name=${name} cannot be started !!!"
-    fi
-done
 
 # 3. try to start the target_instance, actually it should be started at step2.
 #    3.1 set instance info
