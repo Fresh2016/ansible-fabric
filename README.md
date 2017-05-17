@@ -71,15 +71,6 @@ hyperledger/fabric-baseos:x86_64-0.3.0
 
 **注意：** 已经更新至最新的`v1.0.0-alpha2`，待客户端更新之后测试及调优。
 
-
-## 进展
-
-- 多机部署测试`bash run_prod_playbook.sh` --> 通过
-- 备份脚本测试 --> 通过
-- 恢复脚本测试 --> 通过
-- 监控及报警   --> 通过
-- TLS启用/禁用 --> 通过
-
 ## 用法
 
 1. 登陆`docker-registry`主机
